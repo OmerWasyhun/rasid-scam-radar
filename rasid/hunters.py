@@ -93,15 +93,14 @@ def age_days(iso: str | None) -> float | None:
 def crtsh(term: str, days: int = 30) -> list[dict]:
     """Recent certificates whose names contain `term` (crt.sh full-text). Slow: give it time."""
     url = "https://crt.sh/"
-    for attempt in range(2):
+    for attempt in range(1):
         try:
-            r = httpx.get(url, params={"q": f"%{term}%", "output": "json"}, timeout=45)
+            r = httpx.get(url, params={"q": f"%{term}%", "output": "json"}, timeout=25)
             if r.status_code == 200:
                 rows = r.json()
                 break
         except (httpx.HTTPError, ValueError):
             pass
-        time.sleep(2)
     else:
         return []
     cutoff = dt.datetime.utcnow() - dt.timedelta(days=days)

@@ -2,7 +2,7 @@
 __pycache__/
 *.pyc
 .env
-data/rasid.db*
+data/*.db*
 data/packs/
 .pytest_cache/
 data/nrd/

@@ -110,7 +110,7 @@ def hunt(watch_id: int, job_id: str, include_nrd=True, include_ct=True):
                     extra[d] = {"age": 1.0, "signals": [{"text": f"In the newly-registered list for {day}", "points": 5}],
                                 "evidence": {"newborn": {"source": "whoisds NRD", "day": day}}}
         if include_ct:
-            for b in bases[:2]:
+            for b in bases[:1]:
                 log(f"Searching Certificate Transparency logs for '{b}'")
                 for c in hunters.crtsh(b, days=30):
                     p, why = generator.similarity(c["host"], bases)

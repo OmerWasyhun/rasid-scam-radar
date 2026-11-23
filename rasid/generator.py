@@ -75,7 +75,7 @@ def slugs(name: str, domain: str | None = None) -> list[str]:
     words = [w for w in re.sub(r"[^a-z0-9 ]", " ", name.lower().replace("&", " and ")).split() if w and w not in STOP]
     if words:
         out += ["".join(words), "-".join(words)]
-        if len(words) > 1:
+        if len(words) > 2:
             out.append("".join(w[0] for w in words))
         if "grand" in words and "prix" in words:
             core = [w for w in words if w not in ("grand", "prix")]
