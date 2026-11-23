@@ -83,7 +83,7 @@ def _p(*alts):
 LURES = {
     "fee for visa or job": _p(r"visa\s*(processing\s*)?fees?", r"pay\s+(for\s+)?(the\s+)?visa", r"processing\s+fee", r"registration\s+fee",
                               r"رسوم\s*(ال)?تأشيرة", r"رسوم\s*(ال)?فيزا", r"वीज़ा\s*फ़?फीस", r"(?<!निः)शुल्क",r"जमा\s*कर", r"ویزا\s*فیس", r"فیس\s*(صرف|جمع)",
-                              r"ഫീസ്", r"கட்டணம்", r"ගාස්තු", r"bayad\s+(lang\s+)?(sa\s+)?visa", r"placement\s+fee", r"ভিসা\s*ফি", r"fees?\s+(de|dein|jama)"),
+                              r"ഫീസ്", r"கட்டணம்", r"ගාස්තු", r"bayad\s+(lang\s+)?(sa\s+)?visa", r"placement\s+fee", r"ভিসা\s*ফি", r"ফি\s*দিতে", r"fees?\s+(de|dein|jama)"),
     "free visa": _p(r"free\s+visa", r"visa\s+free", r"تأشيرة\s+مجان", r"فيزا\s+مجان", r"वीज़ा\s*फ्री", r"फ्री\s*वीज़ा", r"मुफ़्त\s*वीज़ा",
                     r"ویزا\s*فری", r"فری\s*ویزا", r"مفت\s*ویزا", r"വിസ\s*(ഫ്രീ|സൗജന്യം)", r"സൗജന്യ\s*വിസ", r"விசா\s*இலவச", r"இலவச\s*விசா",
                     r"වීසා\s*නොමිලේ", r"libre\s+(ang\s+)?visa", r"ফ্রি\s*ভিসা", r"ভিসা\s*ফ্রি", r"भिसा\s*निःशुल्क"),
@@ -103,7 +103,7 @@ LURES = {
 JOB_WORDS = _p(r"\bjobs?\b", r"hiring", r"vacanc", r"recruit", r"وظائف", r"وظيفة", r"مطلوب", r"नौकरी", r"نوکری", r"ജോലി", r"வேலை", r"රැකියා",
                r"trabaho", r"চাকরি", r"रोजगारी", r"naukri", r"\bkaam\b")
 LOW_WAGE_ROLES = _p(r"driver", r"cleaner", r"guard", r"helper", r"labou?r", r"waiter", r"housemaid", r"construction", r"سائق", r"حارس",
-                    r"ڈرائیور", r"گارڈ", r"ड्राइवर", r"गार्ड", r"ഡ്രൈവർ", r"டிரைவர்", r"ড্রাইভার", r"security")
+                    r"ڈرائیور", r"گارڈ", r"ड्राइवर", r"गार्ड", r"सफाई", r"ഡ്രൈവർ", r"டிரைவர்", r"ஓட்டுநர்", r"ড্রাইভার", r"কনস্ট্রাকশন", r"ক্লিনার", r"හෝටල්", r"security")
 SALARY = re.compile(r"(\d{1,3}(?:,\d{3})+|\d{3,6})\s*(?:aed|dhs?|dirhams?|درهم|درہم|दिरहम)", re.I)
 GMAIL = re.compile(r"[\w.+-]+@(gmail|yahoo|hotmail|outlook)\.com", re.I)
 

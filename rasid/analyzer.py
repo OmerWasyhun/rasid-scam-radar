@@ -115,7 +115,7 @@ def analyze(host: str, brand_names: list[str] | None = None) -> dict:
                                   ("Emirates ID", EID_PAT), ("password/PIN", PASS_PAT)] if p.search(blob)})
     raw = page["body"]
     lower = (title + " " + text).lower()
-    brands = [b for b in (brand_names or []) if len(b) > 2 and b.lower() in lower]
+    brands = [b for b in (brand_names or []) if len(b) > 2 and re.search(r"(?<![a-z0-9])" + re.escape(b.lower()) + r"(?![a-z0-9])", lower)]
 
     mobile = _get(page["url"], MOBILE_UA)
     bot = _get(f"https://{host}/", BOT_UA) or _get(f"http://{host}/", BOT_UA)

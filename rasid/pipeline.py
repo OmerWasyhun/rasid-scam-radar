@@ -6,6 +6,7 @@ import time
 import uuid
 
 from . import analyzer, cluster, db, generator, hunters, nrd
+from .sensors.maps import norm_phone
 
 ANALYZE_CAP = 25
 
@@ -34,7 +35,8 @@ def _store(host, w, sensor, sim, why, info, ages, geo, extra_sig=None, extra_ev=
     if page and page.get("reachable"):
         feats = {"favicon_hash": page.get("favicon_hash"), "dom_hash": page.get("dom_hash"),
                  "telegram": page.get("telegram_tokens", []) + page.get("telegram_chats", []),
-                 "analytics": page.get("analytics_ids"), "phone": page.get("phones"), "whatsapp": page.get("whatsapp")}
+                 "analytics": page.get("analytics_ids"), "whatsapp": page.get("whatsapp"),
+                 "phone": sorted({norm_phone(p) for p in (page.get("phones") or []) + (page.get("whatsapp") or []) if norm_phone(p)})}
     if ip:
         feats["ip"] = ip
     if info.get("dns"):

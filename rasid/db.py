@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS jobs (
 );
 """
 
-JSON_FIELDS = {"official_domains", "official_phones", "langs", "signals", "evidence", "features", "progress", "result"}
+JSON_FIELDS = {"explanation", "official_domains", "official_phones", "langs", "signals", "evidence", "features", "progress", "result"}
 
 
 def _connect():

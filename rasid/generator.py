@@ -20,6 +20,9 @@ CYRILLIC = {"a": "а", "e": "е", "o": "о", "p": "р", "c": "с", "x": "х", "y
 TLDS = [".com", ".net", ".co", ".online", ".top", ".xyz", ".shop", ".info", ".live", ".vip", ".cc", ".site", ".org"]
 STOP = {"the", "of", "and", "al", "el", "careers", "career"}
 OFFICIAL_CACHE: set[str] = set()  # registrable official domains, filled by the pipeline
+LURE_WORDS = sorted({w for ws in DOMAIN_LURES.values() for w in ws} | {
+    "bank", "app", "help", "care", "service", "services", "pay", "card", "cards", "account", "online", "net", "ae", "uae",
+    "dubai", "abudhabi", "gov", "auth", "id", "sms", "otp", "track", "delivery", "post", "gift", "promo", "bonus"}, key=len, reverse=True)
 
 # skeleton: map look-alike characters to one canonical form
 _SKEL = {"0": "o", "1": "l", "i": "l", "3": "e", "4": "a", "5": "s", "8": "b", "9": "g", "q": "g", "v": "u"}
@@ -144,6 +147,29 @@ def registrable(host: str) -> str:
     return ".".join(parts[-2:]) if len(parts) >= 2 else host
 
 
+_LS: list[str] = []
+
+
+def _lure_skel() -> list[str]:
+    if not _LS:
+        _LS.extend(sorted({skeleton(w) for w in LURE_WORDS if skeleton(w)}, key=len, reverse=True))
+    return _LS
+
+
+def _lure_sequence(s: str) -> bool:
+    """True when s is made only of lure words and digits, e.g. 'securelogin', 'pay2026'."""
+    s = re.sub(r"\d+", "", s)
+    if not s:
+        return True
+    ok = [True] + [False] * len(s)
+    for i in range(len(s)):
+        if ok[i]:
+            for w in _lure_skel():
+                if s.startswith(w, i):
+                    ok[i + len(w)] = True
+    return ok[len(s)]
+
+
 def similarity(host: str, bases: list[str]) -> tuple[int, str]:
     """0-25 points for how closely a host imitates any base label, plus a reason."""
     reg = registrable(host)
@@ -160,12 +186,17 @@ def similarity(host: str, bases: list[str]) -> tuple[int, str]:
         if sl == sb and label != b:
             return 25, f"homoglyph of '{b}' ({to_unicode(label)})"
         d = levenshtein(sl, sb)
-        if d == 1 and len(sb) >= 3:
-            best, why = max((best, why), (22, f"one character away from '{b}'"))
-        elif d == 2 and len(sb) >= 5:
+        if d == 1:
+            # short names (4 letters) collide with random words, so one edit is weak evidence on its own
+            best, why = max((best, why), (22 if len(sb) >= 5 else 10, f"one character away from '{b}'"))
+        elif d == 2 and len(sb) >= 7:
             best, why = max((best, why), (16, f"two characters away from '{b}'"))
         if sb in sl and sl != sb:
-            bounded = len(sb) >= 6 or sl.startswith(sb) or sl.endswith(sb) or any(skeleton(t) == sb for t in tokens)
+            rest = sl.replace(sb, "", 1)
+            bounded = (any(skeleton(t) == sb for t in tokens)
+                       or (len(sb) >= 6)
+                       or ((sl.startswith(sb) or sl.endswith(sb))
+                           and (_lure_sequence(rest) or _lure_sequence(skeleton(re.sub(r"\d+", "", label.lower().replace(b.lower(), "", 1)))))))
             if bounded:
                 best, why = max((best, why), (18, f"contains '{b}' plus extra words (combosquat)"))
         if any(skeleton(p) == sb for p in full[:-2]):
