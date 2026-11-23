@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+data/rasid.db*
+data/packs/
+.pytest_cache/
+data/nrd/
