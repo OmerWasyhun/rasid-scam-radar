@@ -23,7 +23,7 @@ CT_POLL = os.getenv("RASID_CT_POLL", "0") == "1"
 CT_POLL_MINUTES = int(os.getenv("RASID_CT_POLL_MINUTES", "20") or 20)
 
 # Network behaviour for fetching suspect pages: read-only GETs, never submit forms.
-FETCH_TIMEOUT = 12.0
+FETCH_TIMEOUT = 8.0
 FETCH_MAX_BYTES = 1_500_000
 DESKTOP_UA = (
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "

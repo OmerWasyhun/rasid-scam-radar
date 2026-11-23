@@ -69,7 +69,7 @@ def investigate(hosts: dict, w: dict, log, sensor_of=None, extra_of=None):
         return h, rd, page
 
     log(f"Analysing {len(order)} live sites (RDAP, page, fingerprints)")
-    with cf.ThreadPoolExecutor(8) as ex:
+    with cf.ThreadPoolExecutor(16) as ex:
         for h, rd, page in ex.map(work, order):
             info[h]["rdap"] = rd
             info[h]["page"] = page

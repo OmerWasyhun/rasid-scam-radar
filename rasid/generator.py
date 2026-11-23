@@ -22,7 +22,7 @@ STOP = {"the", "of", "and", "al", "el", "careers", "career"}
 OFFICIAL_CACHE: set[str] = set()  # registrable official domains, filled by the pipeline
 LURE_WORDS = sorted({w for ws in DOMAIN_LURES.values() for w in ws} | {
     "bank", "app", "help", "care", "service", "services", "pay", "card", "cards", "account", "online", "net", "ae", "uae",
-    "dubai", "abudhabi", "gov", "auth", "id", "sms", "otp", "track", "delivery", "post", "gift", "promo", "bonus"}, key=len, reverse=True)
+    "dubai", "abudhabi", "gov", "auth", "id", "sms", "otp", "track", "tracking", "delivery", "redelivery", "parcel", "customs", "fee", "fees", "shipping", "post", "gift", "promo", "bonus", "topup", "recharge", "branch", "customer"}, key=len, reverse=True)
 
 # skeleton: map look-alike characters to one canonical form
 _SKEL = {"0": "o", "1": "l", "i": "l", "3": "e", "4": "a", "5": "s", "8": "b", "9": "g", "q": "g", "v": "u"}
@@ -194,7 +194,7 @@ def similarity(host: str, bases: list[str]) -> tuple[int, str]:
         if sb in sl and sl != sb:
             rest = sl.replace(sb, "", 1)
             bounded = (any(skeleton(t) == sb for t in tokens)
-                       or (len(sb) >= 6)
+                       or (len(sb) >= 9)
                        or ((sl.startswith(sb) or sl.endswith(sb))
                            and (_lure_sequence(rest) or _lure_sequence(skeleton(re.sub(r"\d+", "", label.lower().replace(b.lower(), "", 1)))))))
             if bounded:

@@ -8,6 +8,7 @@ import hashlib
 import ipaddress
 import re
 import socket
+import time
 from urllib.parse import urljoin, urlparse
 
 import httpx
@@ -50,10 +51,10 @@ def _get(url: str, ua: str):
         with httpx.Client(follow_redirects=True, timeout=FETCH_TIMEOUT, verify=False,
                           headers={"User-Agent": ua, "Accept-Language": "en-AE,ar;q=0.8"}) as c:
             with c.stream("GET", url) as r:
-                body = b""
+                body, t0 = b"", time.monotonic()
                 for chunk in r.iter_bytes():
                     body += chunk
-                    if len(body) > FETCH_MAX_BYTES:
+                    if len(body) > FETCH_MAX_BYTES or time.monotonic() - t0 > FETCH_TIMEOUT:
                         break
                 hops = [str(h.url) for h in r.history] + [str(r.url)]
                 if not all(_safe_host(urlparse(h).hostname or "") for h in hops):
@@ -117,9 +118,10 @@ def analyze(host: str, brand_names: list[str] | None = None) -> dict:
     lower = (title + " " + text).lower()
     brands = [b for b in (brand_names or []) if len(b) > 2 and re.search(r"(?<![a-z0-9])" + re.escape(b.lower()) + r"(?![a-z0-9])", lower)]
 
-    mobile = _get(page["url"], MOBILE_UA)
-    bot = _get(f"https://{host}/", BOT_UA) or _get(f"http://{host}/", BOT_UA)
     cloak = None
+    suspicious = bool(asks or brands or lure_hits(text) or soup.find("form"))
+    mobile = _get(page["url"], MOBILE_UA) if suspicious else None
+    bot = (_get(f"https://{host}/", BOT_UA) or _get(f"http://{host}/", BOT_UA)) if suspicious else None
     if mobile and bot:
         def sig(p):
             s = BeautifulSoup(p["body"], "html.parser")

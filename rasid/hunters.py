@@ -43,7 +43,7 @@ def resolve_many(hosts, workers=48):
 def rdap(domain: str) -> dict:
     """Registration date, registrar and abuse contact via rdap.org (follows to the right registry)."""
     try:
-        r = httpx.get(f"https://rdap.org/domain/{domain}", timeout=10, follow_redirects=True)
+        r = httpx.get(f"https://rdap.org/domain/{domain}", timeout=8, follow_redirects=True)
         if r.status_code != 200:
             return {}
         j = r.json()
