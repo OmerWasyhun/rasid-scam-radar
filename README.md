@@ -1,4 +1,4 @@
-# RASID راصد: proactive scam radar for the UAE
+# RASID راصد: the Call Guardian and scam radar for the UAE
 
 Built for the **ScamShield AI Hackathon** (42 Abu Dhabi × Abu Dhabi Police), challenge: *Detecting Fraudulent Links and Websites Used in Cybercrimes and Financial Fraud.*
 
@@ -8,9 +8,22 @@ Walkthrough: https://omerwasyhun.github.io/rasid-scam-radar/presentation/ · Pit
 
 ## The problem
 
-Scam sites in the UAE copy banks, TAMM, UAE PASS, traffic-fine payment, couriers, events (F1, National Day, Hajj and Umrah) and job agencies. They reach victims through new lookalike domains, paid ads, Google search results, fake Google Maps listings with fake helpline numbers, and posts written in the languages migrant workers read. Most tools only react after a victim pastes a link or files a report. By then the site has done its damage and often moved to a new domain.
+Scam sites in the UAE copy banks, TAMM, UAE PASS, traffic-fine payment, couriers, events (F1, National Day, Hajj and Umrah) and job agencies. They reach victims through new lookalike domains, paid ads, Google search results, fake Google Maps listings with fake helpline numbers, and posts written in the languages migrant workers read. Almost every one of them ends in a phone call that asks for the OTP, the card or a transfer. Most tools only react after a victim pastes a link or files a report. By then the site has done its damage and often moved to a new domain.
 
 ## Our solution
+
+### Main feature: the Call Guardian
+
+The scammer is on the line, and so is RASID. During a call you are unsure about, put the phone on **speakerphone** next to the laptop and press **Listen**. RASID hears both people, stays quiet while the call is normal, and **warns out loud in Arabic and English** the moment the scam script starts, so the scammer hears the warning too. One click then reports the call as a case in the police console.
+
+- **What it catches:** OTP and verification codes, card number/CVV/PIN, Emirates ID and passport, transfers and gift cards, AnyDesk and remote access, secrecy and pressure, arrest and fine threats, prizes with fees, links by SMS, and fake bank, police or government identities. Reassurances such as "we will never ask for your PIN" are not counted.
+- **How it decides:** 10 rule families score every sentence instantly and offline; with an `ANTHROPIC_API_KEY`, Claude also reads the whole call so far and writes the spoken warning. 50+ is a caution, 80+ a warning.
+- **Tested:** on the 5 synthetic sample calls it gets 5/5 right: fake bank OTP (Arabic) 100, fake police fine + AnyDesk (English) 100, parcel link 50, a friend's call (Arabic) 0, a real bank reminder (English) 10.
+- **Private and free:** no app, no phone number, no paid voice service. The browser does speech in and out; no audio is recorded and no transcript is kept.
+
+Details: [docs/call-guardian.md](docs/call-guardian.md).
+
+### Behind every call is a link: the scam radar
 
 RASID hunts first. An officer names a brand, a government service or an event. RASID then:
 
@@ -21,12 +34,11 @@ RASID hunts first. An officer names a brand, a government service or an event. R
 5. **Links scam sites into networks.** Sites sharing a favicon hash, Telegram bot, analytics ID, phone/WhatsApp number or hosting fingerprint are grouped into one *actor*.
 6. **Exports evidence for takedown:** a strike pack with screenshots, WHOIS/RDAP, DNS, hosting location, timestamps, the reasons, and pre-filled abuse letters to the registrar and host. Claude writes the case note in Arabic and English. Nothing is sent automatically.
 
-The console also has a **Call Guardian** tab: a listener for phone scams. Put a suspicious call on speakerphone next to the laptop and press **Listen**. RASID hears the call, warns out loud in Arabic or English when it hears scam signs (OTP or card requests, AnyDesk, transfers, fake police or bank), and one click files the call as a case in the console.
-
 ## Sensors
 
 | Sensor | What it does | Needs |
 |---|---|---|
+| **Call Guardian** (main) | Speakerphone listener: live scam risk, spoken warnings in Arabic and English, one-click report. | Claude optional |
 | **Lookalike Radar** | Generates typos, homoglyphs (punycode), combosquats with lure words (`naukri`, `trabaho`, `fine`, `tickets`…), TLD swaps and subdomain tricks for every watchlist; checks which exist. Watchlists come preloaded with UAE banks, TAMM, police, telcos, couriers, Salik, RTA, ICP, F1, National Day, DSF, Hajj/Umrah and recruiters; **+ Add** creates your own. | nothing |
 | **Newborn Domains** | Matches the daily newly-registered-domains list and Certificate Transparency logs (crt.sh) against every watchlist. | nothing |
 | **Maps Verifier** | Google Places listings for a brand in each emirate, checked against the official domains and phones; flags mobile numbers on bank/telco listings and numbers reused across brands. | `GOOGLE_MAPS_API_KEY` |
@@ -34,7 +46,6 @@ The console also has a **Call Guardian** tab: a listener for phone scams. Put a 
 | **Kit Fingerprint** | Union-find clustering of flagged sites on shared favicon hash, Telegram bot, analytics ID, phone/WhatsApp number, or two weak links (IP + NS + DOM hash). | nothing |
 | **Job & Visa Linguist** | Scores job and visa posts in Arabic, English, Hindi, Urdu, Roman Urdu, Malayalam, Tamil, Sinhala, Tagalog, Bengali and Nepali; reads public Telegram channels. Claude extracts employer, fee, salary and a translation. | Claude optional |
 | **Check a link** | Any link someone received: follows redirects and shorteners, opens the page in RASID's browser and scores it, including brand-agnostic checks (a known brand on a domain it does not own, a password form, free site builders). `POST /api/check` takes a list of links. | nothing |
-| **Call Guardian** | Speakerphone listener: live scam risk, spoken warnings, one-click report. | Claude optional |
 
 ## Technical choices
 
@@ -109,7 +120,7 @@ Open **http://localhost:8042**. Every key in `.env` is optional; a sensor withou
 
 - Suspect pages are visited read-only: no forms submitted, downloads capped, private/internal IPs refused.
 - Takedown letters are drafts for an officer to review and send.
-- The Call Guardian runs only on the officer's own computer (localhost). It records no audio and keeps no transcript, only the verdict and the red flags of a call that is reported.
+- The Call Guardian runs in the user's own browser; by default only on the computer running RASID, and on the hosted demo (`RASID_GUARDIAN_REMOTE=1`) for any visitor. It records no audio and keeps no transcript, only the verdict and the red flags of a call that is reported.
 - Keys stay in `.env`, which git ignores.
 
 ## Limitations (honest)

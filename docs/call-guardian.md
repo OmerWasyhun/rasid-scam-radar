@@ -10,7 +10,8 @@ No phone number, app or paid voice service is needed. No audio is recorded and n
 ## Use it
 
 1. Run the server (see the README) and open **http://localhost:8042/#guardian** in **Microsoft Edge** (it has free
-   Arabic voices) or Google Chrome. The listener only works on the computer running RASID.
+   Arabic voices) or Google Chrome. The listener works on the computer running RASID, or from any browser on the
+   hosted demo (https://rasid-scam-radar.onrender.com/#guardian, where `RASID_GUARDIAN_REMOTE=1`).
 2. Choose the call language (العربية or English), press **Listen** and allow the microphone.
 3. Talk normally. The risk meter and the red flags update live.
 4. Say **"RASID"** / **"راصد"** (or press **Ask RASID**) to hear its opinion; say **"RASID leave"** / **"راصد اطلع"** or
