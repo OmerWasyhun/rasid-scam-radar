@@ -28,8 +28,8 @@ SESSION_SECRET = os.getenv("RASID_SESSION_SECRET", "").strip()
 # Call Guardian listener (laptop listens to a speakerphone call)
 GUARDIAN_MODEL = os.getenv("RASID_GUARDIAN_MODEL", "").strip() or MODEL
 GUARDIAN_LANG = os.getenv("RASID_GUARDIAN_LANG", "ar-AE").strip() or "ar-AE"  # language heard first: ar-AE or en-US
-# Hosted demo: let signed-in officers use the listener from their own browser (needs RASID_PASSWORD and HTTPS)
-GUARDIAN_REMOTE = os.getenv("RASID_GUARDIAN_REMOTE", "0") == "1" and bool(RASID_PASSWORD)
+# Hosted demo: let visitors use the listener from their own browser (needs HTTPS for the microphone)
+GUARDIAN_REMOTE = os.getenv("RASID_GUARDIAN_REMOTE", "0") == "1"
 
 CT_POLL = os.getenv("RASID_CT_POLL", "0") == "1"
 CT_POLL_MINUTES = int(os.getenv("RASID_CT_POLL_MINUTES", "20") or 20)

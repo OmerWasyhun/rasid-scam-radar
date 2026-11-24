@@ -93,7 +93,7 @@ Open **http://localhost:8042**. Every key in `.env` is optional; a sensor withou
 
 ### Hosted demo
 
-- **From a laptop:** set `RASID_PASSWORD` in `.env`, install `cloudflared`, then run `deploy\live.ps1`. It serves RASID on port 8045 behind a public HTTPS link and lets signed-in officers use the Call Guardian from their own browser.
+- **From a laptop:** install `cloudflared`, then run `deploy\live.ps1`. It serves an open demo of RASID on port 8045 behind a public HTTPS link, and visitors can use the Call Guardian from their own browser.
 - **On a server:** the `Dockerfile` builds the app with Chromium; set the keys, `RASID_PASSWORD` and `RASID_GUARDIAN_REMOTE=1` as environment variables.
 
 ### Tests
