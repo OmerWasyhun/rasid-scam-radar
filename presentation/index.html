@@ -228,6 +228,7 @@ section.ch{padding-block:84px 72px;border-bottom:1px solid var(--rule);position:
   .stepdots{display:none}
 }
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
+.bub.rasidsays{background:color-mix(in oklab,var(--alarm) 22%,transparent);border:1px solid var(--alarm)}
 </style>
 
 <header class="bar" aria-label="Walkthrough">
@@ -245,7 +246,7 @@ section.ch{padding-block:84px 72px;border-bottom:1px solid var(--rule);position:
   <div class="wrap">
     <p class="kicker">ScamShield AI · Abu Dhabi Police × 42 Abu Dhabi · Our MVP</p>
     <h1>The scammer is on the line. <em>So is RASID.</em></h1>
-    <p class="lede">Every other team checks links. We protect the moment people actually lose money: the phone call. Press <b>Next</b> and watch one.</p>
+    <p class="lede">Fake sites and fake ads usually end in a phone call, and that call is where the money goes. Fatima puts the call on speaker next to her laptop and presses <b>Listen</b>. Press <b>Next</b> and watch.</p>
 
     <div class="stage" aria-live="polite">
       <div class="phone" id="phScam">
@@ -256,7 +257,7 @@ section.ch{padding-block:84px 72px;border-bottom:1px solid var(--rule);position:
       </div>
 
       <div class="agent" id="agent">
-        <div class="head"><div class="radar" id="radar"></div><div><b>RASID Guardian</b><span id="agStatus">Armed · waiting for a call</span></div></div>
+        <div class="head"><div class="radar" id="radar"></div><div><b>RASID Call Guardian · laptop</b><span id="agStatus">Ready · press Listen</span></div></div>
         <div class="wave" id="wave" aria-hidden="true"><i></i><i style="animation-delay:.1s"></i><i style="animation-delay:.2s"></i><i style="animation-delay:.3s"></i><i style="animation-delay:.15s"></i><i style="animation-delay:.25s"></i><i style="animation-delay:.05s"></i><i style="animation-delay:.35s"></i><i style="animation-delay:.2s"></i><i style="animation-delay:.1s"></i><i style="animation-delay:.3s"></i><i style="animation-delay:0s"></i></div>
         <div class="meter"><div class="mono" style="font-size:.66rem;color:var(--dim);letter-spacing:.14em">SCAM RISK</div><div class="n" id="risk">0</div><div class="bar2"><span id="riskBar"></span></div><div class="vd" id="riskVd">no scam signs</div></div>
         <div class="log" id="log"></div>
@@ -281,9 +282,9 @@ section.ch{padding-block:84px 72px;border-bottom:1px solid var(--rule);position:
     <p class="caption" id="caption"></p>
 
     <div class="ways">
-      <div class="way"><span class="st" style="color:var(--alarm)">Shown above · rooted Android pilot</span><h3>Hangs up for you</h3><p>A system app streams the call audio to RASID. Local Whisper turns it into text, the scam rules score it, and on "likely scam" the phone ends the call and explains why. No speakerphone. Tested end to end with synthetic calls; phone test next.</p></div>
-      <div class="way"><span class="st" style="color:var(--safe)">Any phone, iPhone too</span><h3>Add RASID to the call</h3><p>Tap <b>Add call</b>, dial the RASID number, tap <b>Merge</b>. It joins as a third person and warns out loud in Arabic and English, so the scammer hears it too, then texts a summary. Reply REPORT to send it to the police. (Twilio)</p></div>
-      <div class="way"><span class="st" style="color:var(--radar)">Free · inside the console</span><h3>The Call Guardian tab</h3><p>Next to Fraud Hunt in the police console. It keeps listening while you work, with a LIVE badge on the tab. Every reported call becomes a case on the map.</p></div>
+      <div class="way"><span class="st" style="color:var(--radar)">1 · Press Listen</span><h3>Speakerphone, next to the laptop</h3><p>The Call Guardian is a tab in the RASID console. Open it, choose Arabic or English, press <b>Listen</b> and talk normally. No app, no phone number, no paid voice service.</p></div>
+      <div class="way"><span class="st" style="color:var(--alarm)">2 · It warns out loud</span><h3>The caller hears it too</h3><p>Rules score every sentence instantly (OTP, card, AnyDesk, transfers, fake bank or police, threats, secrecy) and Claude reads the whole call. At "likely scam" RASID says so out loud in Arabic and English.</p></div>
+      <div class="way"><span class="st" style="color:var(--safe)">3 · One-click report</span><h3>A case for the police</h3><p>After the call, <b>Report</b> files it in the console with every red flag, next to the scam sites on the map. No audio is recorded and no transcript is kept.</p></div>
     </div>
 
     <div class="grid" style="display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:24px;margin-top:40px;align-items:start" id="gShots">
@@ -457,9 +458,9 @@ section.ch{padding-block:84px 72px;border-bottom:1px solid var(--rule);position:
     <p class="kicker">That's the shift</p>
     <h2>Hunt first. <em>Guard the call.</em> Warn in their language.</h2>
     <div class="stack">
-      <span class="tag">Python · FastAPI</span><span class="tag">Local Whisper</span><span class="tag">Playwright browser</span><span class="tag">Claude</span><span class="tag">Google Places</span><span class="tag">Meta Ad Library</span><span class="tag">SerpApi</span><span class="tag">crt.sh · RDAP · NRD</span><span class="tag">Twilio ConversationRelay</span><span class="tag">Expo + Kotlin (Android)</span>
+      <span class="tag">Python · FastAPI</span><span class="tag">Playwright browser</span><span class="tag">Claude</span><span class="tag">Google Places</span><span class="tag">Meta Ad Library</span><span class="tag">SerpApi</span><span class="tag">crt.sh · RDAP · NRD</span><span class="tag">Web Speech API</span>
     </div>
-    <p class="honest">Live today: the Call Guardian tab, the Root Guardian server with local speech recognition, hunts, newborn domains, site inspection with RASID's own screenshots, Maps verification, job and visa scoring, actors and strike packs, the console. Waiting on keys or hardware: the Twilio phone number, the rooted-phone test, Meta and Google ad sweeps, Safe Browsing and VirusTotal. The phishing clone and sample calls in this walkthrough are our own tests.</p>
+    <p class="honest">Live today: hunts, newborn domains, site inspection with RASID's own screenshots, Check a link (redirects and shorteners followed), Maps verification, job and visa scoring, actors and strike packs, and the Call Guardian listener. Needs keys to run in full: Meta and Google ad sweeps, Safe Browsing and VirusTotal. Limits: speech recognition needs internet and struggles on noisy calls; pages that hide behind cookies or a country check can look clean. The phishing clone and sample calls in this walkthrough are our own tests.</p>
   </div>
 </section>
 </main>
@@ -512,18 +513,19 @@ $('lb').addEventListener('click', e => { if (e.target === $('lb') || e.target.cl
 /* ---------- the call ---------- */
 const T = {
   scam: [
-    {ph: 'ring', cap: {en: '<b>An unknown number calls Fatima.</b> RASID is armed on her phone and waiting.', ar: ''}},
-    {ph: 'call', agent: 'Call answered · listening · speech to text on the RASID server (Arabic + English). Nothing is recorded.', cap: {en: '<b>She answers.</b> RASID starts listening to both sides of the call.'}},
+    {ph: 'ring', cap: {en: '<b>An unknown number calls Fatima.</b> Her laptop is open on the RASID Call Guardian tab.', ar: ''}},
+    {ph: 'call', agent: 'Speakerphone on · Listen pressed · hearing both sides (Arabic + English). Nothing is recorded.', cap: {en: '<b>She answers, turns on the speaker and presses Listen.</b> The laptop hears both sides of the call.'}},
     {who: 'scam', en: 'Hello, this is Ahmed from your bank’s security team.', ar: 'السلام عليكم، معك أحمد من قسم الحماية في البنك.', risk: 25, flag: {en: 'Claims to be a bank', ar: 'يدّعي أنه من البنك'}, cap: {en: '<b>The caller claims to be the bank.</b> RASID notes it. Not enough to act yet.'}},
     {who: 'you', en: 'Oh, hello. Is something wrong?', ar: 'وعليكم السلام، خير؟', risk: 25, cap: {en: '<b>Fatima is polite.</b> Scammers count on that.'}},
     {who: 'scam', en: 'Your account has been blocked. There was suspicious activity.', ar: 'حسابك موقوف بسبب عملية مشبوهة.', risk: 45, flag: {en: 'Threats or urgency', ar: 'تهديد أو استعجال'}, cap: {en: '<b>Fear.</b> Risk climbs to "suspicious".'}},
     {who: 'you', en: 'Blocked? What do I need to do?', ar: 'موقوف؟ شو المطلوب مني؟', risk: 45, cap: {en: '<b>She is worried now.</b> This is the moment people lose money.'}},
     {who: 'scam', en: 'Don’t tell anyone and stay on the line. It’s urgent.', ar: 'لا تخبر أحداً وابقَ على الخط، الأمر عاجل.', risk: 70, flag: {en: 'Pressure to keep it secret', ar: 'ضغط لإبقاء الأمر سراً'}, cap: {en: '<b>Secrecy and pressure.</b> No real bank says this.'}},
-    {who: 'scam', en: 'We just sent you a code by SMS. Read me the OTP.', ar: 'أرسلنا لك رمز تحقق برسالة، اقرأ لي الرمز الآن.', risk: 100, flag: {en: 'Asks for a one-time code (OTP)', ar: 'يطلب رمز التحقق (OTP)'}, act: 'Likely scam · hang-up command sent', cap: {en: '<b>The OTP request.</b> Risk 100. RASID sends the hang-up command before she reads the code.'}},
-    {ph: 'ended', cap: {en: '<b>Call ended by RASID.</b> Fatima sees why, in Arabic and English. The case goes to the police console and the number is flagged for everyone.'}},
+    {who: 'scam', en: 'We just sent you a code by SMS. Read me the OTP.', ar: 'أرسلنا لك رمز تحقق برسالة، اقرأ لي الرمز الآن.', risk: 100, flag: {en: 'Asks for a one-time code (OTP)', ar: 'يطلب رمز التحقق (OTP)'}, act: 'Likely scam · warning spoken out loud', cap: {en: '<b>The OTP request.</b> Risk 100. RASID speaks up before she reads the code.'}},
+    {who: 'rasid', en: 'RASID warning: this call matches a known scam. Banks and police never ask for codes. Hang up now.', ar: 'تحذير من راصد: هذه المكالمة تطابق أسلوب احتيال معروف. البنوك والشرطة لا تطلب الرمز أبداً. أنهِ المكالمة الآن.', risk: 100, cap: {en: '<b>Out loud, through the speaker.</b> Fatima hears it, and so does the caller.'}},
+    {ph: 'ended', cap: {en: '<b>Fatima hangs up</b> without reading the code. One click on Report files the case in the police console, with the caller’s number.'}},
   ],
   nice: [
-    {ph: 'ring', cap: {en: '<b>The dental clinic calls Fatima.</b> RASID is armed, as always.'}},
+    {ph: 'ring', cap: {en: '<b>The dental clinic calls Fatima.</b> She is unsure, so she presses Listen anyway.'}},
     {ph: 'call', agent: 'Call answered · listening', cap: {en: '<b>She answers.</b> RASID listens quietly.'}},
     {who: 'scam', en: 'Hi Fatima, it’s Sara from the dental clinic.', ar: 'مرحبا فاطمة، معك سارة من عيادة الأسنان.', risk: 0, cap: {en: '<b>No bank, no threats, no codes.</b> Risk stays at 0.'}},
     {who: 'you', en: 'Hi Sara!', ar: 'أهلاً سارة!', risk: 0, cap: {en: '<b>A normal chat.</b>'}},
@@ -563,7 +565,11 @@ function render(){
   steps.slice(0, step + 1).forEach((x, i) => {
     if (x.ph) phase = x.ph;
     if (x.ph === 'call') logLine(x.agent, 'act');
-    if (x.who) {
+    if (x.who === 'rasid') {
+      const txt = x[lang];
+      ['bbScam', 'bbYou'].forEach(id => { const b = bubble(txt, false, lang === 'ar' ? 'راصد عبر السماعة 🔊' : 'RASID on the speaker 🔊'); b.classList.add('rasidsays'); $(id).append(b); });
+      logLine('🔊 ' + txt, 'act'); risk = x.risk; if (i === step) talking = 'rasid';
+    } else if (x.who) {
       const txt = x[lang]; const fromScam = x.who === 'scam';
       const scamName = scen === 'scam' ? (lang === 'ar' ? 'المتصل' : 'Caller') : (lang === 'ar' ? 'العيادة' : 'Clinic');
       const youName = lang === 'ar' ? 'فاطمة' : 'Fatima';
@@ -586,9 +592,9 @@ function render(){
   $('radar').classList.toggle('off', phase === 'ring' || phase === 'ended' || phase === 'normalend');
   const secs = Math.max(0, step - 1) * 7;
   const t = '00:' + String(secs).padStart(2, '0');
-  $('stScam').textContent = phase === 'ring' ? 'calling…' : phase === 'ended' ? 'call ended by the other side' : phase === 'normalend' ? 'call ended' : 'on call · ' + t;
-  $('stYou').textContent = phase === 'ring' ? 'incoming call…' : phase === 'ended' ? 'call ended by RASID' : phase === 'normalend' ? 'call ended' : 'on call · ' + t;
-  $('agStatus').textContent = phase === 'ring' ? 'Armed · unknown number calling' : phase === 'ended' ? 'Call ended · case filed' : phase === 'normalend' ? 'Call ended · nothing kept' : risk >= 100 ? 'Ending the call…' : 'Listening';
+  $('stScam').textContent = phase === 'ring' ? 'calling…' : phase === 'ended' ? 'call ended by Fatima' : phase === 'normalend' ? 'call ended' : 'on call · ' + t;
+  $('stYou').textContent = phase === 'ring' ? 'incoming call…' : phase === 'ended' ? 'you hung up' : phase === 'normalend' ? 'call ended' : 'on call · ' + t;
+  $('agStatus').textContent = phase === 'ring' ? 'Ready · press Listen' : phase === 'ended' ? 'Call over · reported' : phase === 'normalend' ? 'Call over · nothing kept' : risk >= 100 ? 'Warning out loud' : 'Listening';
   // controls on the user's phone
   const ctl = $('ctlYou'); ctl.replaceChildren();
   if (phase === 'ring') {
@@ -600,12 +606,12 @@ function render(){
   // endings
   document.querySelectorAll('.notif,.endedcard').forEach(n => n.remove());
   if (ended) {
-    $('bbScam').replaceChildren(Object.assign(document.createElement('div'), {className: 'endedcard', innerHTML: '<b>Call ended</b>the line went dead'}));
+    $('bbScam').replaceChildren(Object.assign(document.createElement('div'), {className: 'endedcard', innerHTML: '<b>Call ended</b>Fatima hung up'}));
     const n = document.createElement('div'); n.className = 'notif';
-    n.innerHTML = `<b>🚨 RASID ended a scam call</b><p>+971 55 ••• 2233 · risk 100/100</p><p>Asked for your OTP · Claimed to be your bank · Pressure to keep it secret</p><p class="ar">انتهت مكالمة احتيال. لا تشارك أي رمز أو بيانات بطاقة مع أي متصل.</p>`;
+    n.innerHTML = `<b>🚨 RASID: likely scam call · reported</b><p>+971 55 ••• 2233 · risk 100/100</p><p>Asked for your OTP · Claimed to be your bank · Pressure to keep it secret</p><p class="ar">انتهت مكالمة احتيال. لا تشارك أي رمز أو بيانات بطاقة مع أي متصل.</p>`;
     $('phYou').append(n);
     logLine('📁 Case filed in the police console (Call Guardian)', 'act');
-    logLine('📵 +971 55 ••• 2233 flagged for every RASID user', 'act');
+    logLine('☎ Caller’s number attached to the case', 'act');
   }
   if (S()[step].ph === 'normalend') {
     $('bbScam').append(Object.assign(document.createElement('div'), {className: 'endedcard', innerHTML: '<b>Call ended</b>bye!'}));
