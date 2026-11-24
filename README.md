@@ -22,6 +22,10 @@ Most tools wait for a victim to paste a suspicious link. RASID hunts first. An i
 
 A phone number you add to a call you're unsure about: tap **Add call**, dial the Guardian, tap **Merge**. It listens, warns aloud in Arabic and English when the call matches a scam (OTP, card, AnyDesk, transfers, fake police or bank), texts you a summary, and lets you reply **REPORT** to open a case in this console. It works on Android and iPhone with no app. Setup, the keys to fill in and the demo script are in [docs/call-guardian.md](docs/call-guardian.md). **Test it for free:** run the server and open http://localhost:8042/guardian in Edge. Put a real call on speakerphone next to the laptop, or play a sample call. No Twilio and no keys are needed.
 
+## Call Guardian
+
+The console has two tabs: **Fraud Hunt** (the six sensors) and **Call Guardian** (the voice agent that listens to a suspicious call and warns out loud; see `docs/call-guardian.md`). The Call Guardian tab keeps running while you use Fraud Hunt; a **● LIVE** badge shows it is listening. Calls reported from it appear in the console as the *Call Guardian* sensor.
+
 ## Run it
 
 ```powershell

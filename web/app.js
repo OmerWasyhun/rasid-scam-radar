@@ -9,6 +9,7 @@ const SENS = {
   ads:     {name: 'Social & Search Ads', ar: 'إعلانات التواصل والبحث', c: '#ff7eb6'},
   kits:    {name: 'Kit Fingerprint', ar: 'بصمة الأدوات',          c: '#ff5470'},
   jobs:    {name: 'Job & Visa',      ar: 'الوظائف والتأشيرات',    c: '#5ee0a0'},
+  calls:   {name: 'Call Guardian',   ar: 'حارس المكالمات',        c: '#ff9f43'},
   calls:   {name: 'Call Guardian',   ar: 'حارس المكالمات',        c: '#f4a261'},
 };
 const LANGS = ['ALL', 'AR', 'EN', 'HI', 'UR', 'UR-L', 'ML', 'TA', 'SI', 'TL', 'BN', 'NE', 'RU', 'ZH'];
@@ -151,6 +152,13 @@ async function openCase(id) {
   if (place) { kv.push(['Listing', place.formattedAddress || '']); if (place.internationalPhoneNumber) kv.push(['Phone', place.internationalPhoneNumber]); if (place.websiteUri) kv.push(['Website', place.websiteUri]); if (place.googleMapsUri) kv.push(['Maps', place.googleMapsUri]); }
   if (ev.search) kv.push(['Found by', `${ev.search.kind} · “${ev.search.query}” (${ev.search.lang})`]);
   if (ev.newborn) kv.push(['Newborn', `${ev.newborn.source} · ${ev.newborn.day}`]);
+  if (c.sensor === 'calls') {
+    if (ev.scam_type) kv.push(['Scam type', ev.scam_type]);
+    if (ev.asks_for && ev.asks_for.length) kv.push(['Asked for', ev.asks_for.join(', ')]);
+    if (ev.reporter) kv.push(['Reported by', ev.reporter]);
+    if (ev.minutes) kv.push(['Call length', `${ev.minutes} min`]);
+    if (ev.analysed_by) kv.push(['Analysed by', ev.analysed_by === 'claude' ? 'rules + Claude' : 'rules only']);
+  }
   const rep = ev.reputation || {};
   if (rep.safe_browsing && rep.safe_browsing.listed !== undefined) kv.push(['Safe Browsing', rep.safe_browsing.listed ? 'LISTED: ' + rep.safe_browsing.threats.join(', ') : 'not listed']);
   if (rep.virustotal && rep.virustotal.known !== undefined) kv.push(['VirusTotal', rep.virustotal.known ? `${rep.virustotal.malicious} malicious · ${rep.virustotal.suspicious} suspicious` : 'not seen before']);
@@ -174,6 +182,7 @@ async function openCase(id) {
     ${ev.extracted && ev.extracted.translation_en ? `<div class="note"><p class="eyebrow">Translation</p><p>${esc(ev.extracted.translation_en)}</p></div>` : ''}
     <dl class="kv">${kv.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>
     <div id="shot">${shotHTML(shot)}</div>
+    ${c.sensor === 'calls' && (ev.summary_en || ev.summary_ar) ? `<div class="note"><p class="eyebrow">Call summary</p><p>${esc(ev.summary_en || '')}</p><p class="ar" dir="rtl">${esc(ev.summary_ar || '')}</p></div>` : ''}
     <div id="explain">${ex ? noteHTML(ex) : ''}</div>
     <div class="actions">
       <button class="btn" id="b-explain">${ex ? 'Re-explain' : 'Explain (AR + EN)'}</button>
@@ -410,8 +419,19 @@ function tickClock() {
   $('clockdate').textContent = d.toLocaleDateString('en-GB', {timeZone: 'Asia/Dubai', day: '2-digit', month: 'short', year: 'numeric'}).toUpperCase() + ' · GST';
 }
 
+function showView() {
+  const g = location.hash === '#guardian';
+  $('view-hunt').hidden = g;
+  $('view-guardian').hidden = !g;
+  $('cmdform').hidden = g;
+  $('nav-hunt').setAttribute('aria-selected', !g);
+  $('nav-guardian').setAttribute('aria-selected', g);
+  if (!g) { render(); drawPulse(); refresh(); }
+}
+addEventListener('hashchange', showView);
+
 async function boot() {
-  buildRail(); renderTools(); tickClock(); setInterval(tickClock, 1000);
+  buildRail(); renderTools(); tickClock(); setInterval(tickClock, 1000); showView();
   $('p-case').innerHTML = '<p class="hint">Type an entity in the command bar and press Hunt, or open Watch and run a sensor. Click any pin or feed row to open its case file.</p>';
   fetch('/web/world.json').then(r => r.json()).then(j => { st.geo = j; render(); }).catch(() => {});
   try { st.status = await api('/api/status'); renderKeys(); } catch {}

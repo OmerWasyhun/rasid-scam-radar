@@ -107,6 +107,7 @@ function micUi() {
   const m = $('mic');
   m.className = 'mic' + (st.speaking ? ' speak' : st.recogOn ? ' on' : '');
   $('micTxt').textContent = st.speaking ? 'RASID is speaking' : st.recogOn ? 'Listening' : st.open ? 'Connected' : 'Not listening';
+  document.body.classList.toggle('guardian-live', !!st.open);  // console tab shows LIVE while a call is being guarded
 }
 function note(t) { $('envNote').textContent = t; $('envNote').className = 'g-note bad'; }
 

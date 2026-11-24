@@ -169,3 +169,14 @@ form.stack textarea{min-height:90px;resize:vertical}
 .insp .small{margin-left:4px}
 .shots{display:grid;grid-template-columns:1fr 1fr;gap:6px}.shots figure{margin:0}.shots figcaption{font-family:var(--f-mono);font-size:.62rem;color:var(--muted);margin-top:2px}
 .shots:has(figure:only-child){grid-template-columns:1fr}
+
+/* view tabs in the console header: Fraud Hunt | Call Guardian */
+.views{display:flex;gap:4px;border:1px solid var(--line-2);border-radius:9px;padding:3px;background:var(--ink)}
+.views a{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.04em;padding:6px 12px;border-radius:6px;color:var(--muted);text-decoration:none;white-space:nowrap}
+.views a .ar{font-size:.8rem;margin-inline-start:4px}
+.views a[aria-selected="true"]{background:var(--accent);color:#04121c;font-weight:600}
+.views a:hover:not([aria-selected="true"]){color:var(--text);background:var(--panel-2)}
+.g-in-console{border-top:1px solid var(--line)}
+body.guardian-live #nav-guardian::after{content:"● LIVE";margin-inline-start:6px;color:var(--crit);font-weight:700;animation:blink 1.4s steps(2) infinite}
+@keyframes blink{50%{opacity:.35}}
+@media (prefers-reduced-motion: reduce){body.guardian-live #nav-guardian::after{animation:none}}

@@ -14,6 +14,16 @@ from .sensors import ads, jobs, maps, social_ads
 
 app = FastAPI(title="RASID", version="1.0")
 app.middleware("http")(auth.middleware)
+
+
+@app.middleware("http")
+async def no_stale_console(request, call_next):
+    """Browsers must re-check the console files, so an update is visible after a normal reload."""
+    resp = await call_next(request)
+    p = request.url.path
+    if p == "/" or p == "/guardian" or p.startswith("/web/"):
+        resp.headers["Cache-Control"] = "no-cache"
+    return resp
 app.add_api_route("/login", auth.login_page, methods=["GET"], include_in_schema=False)
 app.add_api_route("/login", auth.login_submit, methods=["POST"], include_in_schema=False)
 app.add_api_route("/logout", auth.logout, methods=["GET"], include_in_schema=False)
