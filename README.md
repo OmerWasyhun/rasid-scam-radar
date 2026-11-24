@@ -4,7 +4,7 @@ Built for the **ScamShield AI Hackathon** (42 Abu Dhabi × Abu Dhabi Police), ch
 
 **Live demo:** https://rasid-scam-radar.onrender.com (open, no login) · **Team:** Omer Wasiyehun · Ibrahim Abulaban · Ahmed Ismail Bulbul
 
-Pitch deck: [RASID-ScamShield-pitch.pptx](RASID-ScamShield-pitch.pptx) ([PDF](RASID-ScamShield-pitch.pdf)) · Project description: [RASID-project-description.pdf](RASID-project-description.pdf)
+Walkthrough: https://omerwasyhun.github.io/rasid-scam-radar/presentation/ · Pitch deck: [RASID-ScamShield-pitch.pptx](RASID-ScamShield-pitch.pptx) ([PDF](RASID-ScamShield-pitch.pdf)) · Project description: [RASID-project-description.pdf](RASID-project-description.pdf)
 
 ## The problem
 
