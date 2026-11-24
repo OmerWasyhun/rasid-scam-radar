@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 
 import httpx
 
-from .. import analyzer, cluster, db, generator, hunters, llm
+from .. import analyzer, cluster, db, enrich, generator, hunters, llm, verify
 from ..config import SERPAPI_KEY
 from ..lexicon import detect_langs, lure_hits
 from ..pipeline import investigate, refresh_official_cache, watch_bases
@@ -97,10 +97,10 @@ def inspect(text: str = "", url: str = "", image_b64: str = "", media_type: str 
     sig = []
     lures = lure_hits(full_text)
     if lures:
-        sig.append({"text": "Ad text uses lures: " + ", ".join(sorted({l['theme'] for l in lures})), "points": 10})
+        sig.append({"text": "Ad text uses lures: " + ", ".join(sorted({l["theme"] for l in lures})), "points": 10, "kind": "content"})
     for f in ((read or {}).get("red_flags") or [])[:4]:
         sig.append({"text": f"Screenshot: {f}", "points": 0})
-    page, rd, dns_info, age, geo = None, {}, None, None, None
+    page, rd, dns_info, age, geo, inspection = None, {}, None, None, None, None
     official = bool(host) and generator.registrable(host) in generator.OFFICIAL_CACHE
     if host and not official:
         dns_info = hunters.resolve(host)
@@ -109,6 +109,14 @@ def inspect(text: str = "", url: str = "", image_b64: str = "", media_type: str 
             age = hunters.age_days(rd.get("created"))
             page = analyzer.analyze(host, [target] if target else [])
             geo = hunters.geolocate([dns_info["a"][0]]).get(dns_info["a"][0])
+            wrow = db.get_watch(wid) if wid else None
+            if page.get("reachable"):
+                insp = verify.inspect(host, page, wrow)
+                sig += insp.pop("signals", [])
+                inspection = insp
+            page.pop("_html", None)
+            rep, rep_sig = enrich.reputation_signals(host, page.get("final_url"))
+            sig += rep_sig
         else:
             sig.append({"text": f"Landing domain {host} does not resolve (taken down or not live yet)", "points": 0, "ok": True})
     sc, signals = analyzer.score(best, why, age, page, official=official, extra=sig)
@@ -124,7 +132,7 @@ def inspect(text: str = "", url: str = "", image_b64: str = "", media_type: str 
     cid = db.upsert_case("ads", key, f"Ad: {title}", sc, target=target, watch_id=wid, langs=langs,
                          lat=geo["lat"] if geo else None, lon=geo["lon"] if geo else None,
                          where_txt=(f"Ad landing · {geo.get('city')}, {geo.get('country')}" if geo else "Ad (no live landing page)"),
-                         signals=signals, evidence={"text": full_text, "url": url, "screenshot_read": read, "page": page,
+                         signals=signals, evidence={"text": full_text, "url": url, "screenshot_read": read, "page": page, "inspection": inspection,
                                                      "rdap": rd, "dns": dns_info, "geo": geo}, features=feats)
     cluster.recluster()
     return cid

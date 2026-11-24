@@ -165,8 +165,9 @@ async function openCase(id) {
     <span class="chip" style="--c:${color}">${esc(SENS[c.sensor]?.name || c.sensor)}</span>${c.actor ? `<span class="chip" style="--c:#fff">actor ${esc(c.actor)}</span>` : ''}
     ${(c.langs || []).map(l => `<span class="chip">${esc(l)}</span>`).join('')}
     <h4>${esc(c.title)}</h4>
-    <div class="who">Impersonates <b>${esc(c.target || '—')}</b></div>
+    <div class="who">${['name only', 'unrelated business', 'parked'].includes((ev.inspection || {}).verdict) ? 'Name resembles' : 'Impersonates'} <b>${esc(c.target || '—')}</b></div>
     <div class="meter"><b style="color:${sev(c.score)}">${c.score}</b><div class="bar"><span style="width:${c.score}%;background:${sev(c.score)}"></span></div><span class="eyebrow">${verdict}</span></div>
+    ${inspHTML(ev.inspection)}
     <ul class="sig">${sigs}</ul>
     ${text ? `<div class="quote">${langText(text.slice(0, 700), (c.langs || [])[0])}</div>` : ''}
     ${ev.extracted && ev.extracted.translation_en ? `<div class="note"><p class="eyebrow">Translation</p><p>${esc(ev.extracted.translation_en)}</p></div>` : ''}
@@ -194,6 +195,27 @@ async function openCase(id) {
     catch (e) { $('explain').innerHTML = `<p class="err">${esc(e.message)}</p>`; b.textContent = 'Explain (AR + EN)'; }
     b.disabled = false;
   };
+}
+const VERDICTS = {
+  'impersonation': ['Impersonation', 'var(--crit)', 'Copies the brand and captures data or runs malicious code'],
+  'copies brand': ['Copies the brand', 'var(--high)', 'Looks like the official site'],
+  'malicious': ['Malicious', 'var(--crit)', 'Malicious links or code found'],
+  'payment capture': ['Payment capture', 'var(--high)', 'Uses the brand and asks for payment or card data'],
+  'name only': ['Name only', 'var(--muted)', 'Only the name is similar'],
+  'unrelated business': ['Unrelated business', 'var(--ok)', 'A different, genuine-looking business'],
+  'parked': ['Parked / for sale', 'var(--muted)', 'Nothing live yet; kept on watch'],
+};
+function inspHTML(i) {
+  if (!i || !i.verdict) return '';
+  const [label, color, hint] = VERDICTS[i.verdict] || [i.verdict, 'var(--muted)', ''];
+  const ui = i.ui ? `<div class="kv" style="grid-template-columns:110px 1fr"><dt>UI match</dt><dd><b>${Math.round(i.ui.score * 100)}%</b> · ` +
+    Object.entries(i.ui.parts).map(([k, v]) => `${k} ${Math.round(v * 100)}%`).join(' · ') + `</dd></div>` : '';
+  const list = (title, arr) => arr && arr.length ? `<p class="eyebrow mt">${title}</p><ul class="gen">${arr.map(x => `<li><span>${esc(x)}</span></li>`).join('')}</ul>` : '';
+  return `<div class="insp" style="border-color:${color}"><p class="eyebrow">Site inspection</p>
+    <span class="chip" style="--c:${color}">${esc(label)}</span><span class="small">${esc(hint)}</span>
+    ${ui}${i.ui_note ? `<p class="small">${esc(i.ui_note)}</p>` : ''}
+    ${list('Malicious links', i.links)}${list('Suspicious code', i.code)}${list('Payment / data capture', i.payment)}
+    ${(i.hotlinks || []).length ? list('Loads files from the official site', i.hotlinks) : ''}</div>`;
 }
 function shotHTML(r) {
   if (!r || !r.screenshot) return '';

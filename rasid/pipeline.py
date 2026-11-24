@@ -5,7 +5,7 @@ import threading
 import time
 import uuid
 
-from . import analyzer, cluster, db, enrich, generator, hunters, nrd
+from . import analyzer, cluster, db, enrich, generator, hunters, nrd, verify
 from .sensors.maps import norm_phone
 
 ANALYZE_CAP = 25
@@ -67,11 +67,19 @@ def investigate(hosts: dict, w: dict, log, sensor_of=None, extra_of=None):
         rd = hunters.rdap(reg)
         page = analyzer.analyze(h, brand_names)
         rep, rep_sig = enrich.reputation_signals(h, (page or {}).get("final_url"))
-        return h, rd, page, rep, rep_sig
+        insp = None
+        if page.get("reachable"):
+            try:
+                insp = verify.inspect(h, page, w)
+            except Exception as e:  # never let one odd page break a hunt
+                insp = {"verdict": "inspection failed", "error": str(e)[:200], "signals": []}
+        page.pop("_html", None)
+        return h, rd, page, rep, rep_sig, insp
 
     log(f"Analysing {len(order)} live sites (RDAP, page, fingerprints)")
     with cf.ThreadPoolExecutor(16) as ex:
-        for h, rd, page, rep, rep_sig in ex.map(work, order):
+        for h, rd, page, rep, rep_sig, insp in ex.map(work, order):
+            info[h]["inspection"] = insp
             info[h]["rdap"] = rd
             info[h]["page"] = page
             info[h]["reputation"] = rep
@@ -84,9 +92,12 @@ def investigate(hosts: dict, w: dict, log, sensor_of=None, extra_of=None):
     ids = []
     for h in order:
         ex = (extra_of or {}).get(h, {})
+        insp = info[h].get("inspection") or {}
         ev = {**(ex.get("evidence") or {}), **({"reputation": info[h]["reputation"]} if any(info[h]["reputation"].values()) else {})}
+        if insp:
+            ev["inspection"] = {k: v for k, v in insp.items() if k != "signals"}
         ids.append(_store(h, w, (sensor_of or {}).get(h, "domains"), hosts[h][0], hosts[h][1], info[h], ages, geo,
-                          (ex.get("signals") or []) + info[h]["rep_sig"], ev))
+                          (ex.get("signals") or []) + info[h]["rep_sig"] + (insp.get("signals") or []), ev))
     return ids
 
 

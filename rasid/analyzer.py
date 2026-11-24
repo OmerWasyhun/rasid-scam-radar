@@ -150,7 +150,11 @@ def analyze(host: str, brand_names: list[str] | None = None) -> dict:
         "dom_hash": _dom_hash(soup),
         "cloaking": cloak,
         "text_sample": text[:600],
+        "_html": raw,  # used by verify.inspect, stripped before storage
     }
+
+
+NAME_ONLY_CAP = 35  # below the 50 "flag" line: stays visible as "watch"
 
 
 def score(sim_points: int, sim_reason: str, age: float | None, page: dict | None, *, official: bool = False,
@@ -168,15 +172,15 @@ def score(sim_points: int, sim_reason: str, age: float | None, page: dict | None
             sig.append({"text": f"Domain is {age / 365:.0f} years old", "points": -10, "ok": True})
     if page and page.get("reachable"):
         if page.get("asks_for"):
-            sig.append({"text": "Page asks for " + ", ".join(page["asks_for"]), "points": 20})
+            sig.append({"text": "Page asks for " + ", ".join(page["asks_for"]), "points": 20, "kind": "content"})
         if page.get("brands_mentioned"):
             sig.append({"text": "Page presents itself as " + ", ".join(page["brands_mentioned"][:3]), "points": 10})
         if page.get("lures"):
             sig.append({"text": "Lure language: " + ", ".join(sorted({l['theme'] for l in page['lures']})), "points": 10})
         if page.get("cloaking"):
-            sig.append({"text": "Cloaking: Googlebot and a mobile phone see different pages", "points": 10})
+            sig.append({"text": "Cloaking: Googlebot and a mobile phone see different pages", "points": 10, "kind": "content"})
         if page.get("telegram_tokens"):
-            sig.append({"text": "Telegram bot token in page code (typical card-data exfiltration)", "points": 15})
+            sig.append({"text": "Telegram bot token in page code (typical card-data exfiltration)", "points": 15, "kind": "content"})
         if page.get("whatsapp") and not page.get("asks_for"):
             sig.append({"text": "Contact through WhatsApp only", "points": 5})
     elif page is not None:
@@ -186,4 +190,9 @@ def score(sim_points: int, sim_reason: str, age: float | None, page: dict | None
     for e in extra or []:
         sig.append(e)
     total = max(0, min(100, sum(s["points"] for s in sig)))
+    # Gate: a lookalike name, a young domain or brand words alone never flag a site. Something on the site itself
+    # (copied UI, data or payment capture, malicious links or code, bad reputation, cloaking) has to back it up.
+    if not any(s.get("kind") == "content" and s.get("points", 0) > 0 for s in sig) and total > NAME_ONLY_CAP:
+        total = NAME_ONLY_CAP
+        sig.append({"text": "Only the name looks similar: nothing on the site copies the brand, takes payments or runs malicious code", "points": 0, "ok": True, "kind": "gate"})
     return total, sig

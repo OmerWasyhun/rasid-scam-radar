@@ -165,3 +165,5 @@ form.stack textarea{min-height:90px;resize:vertical}
 .loginbox{display:flex;flex-direction:column;gap:10px;width:min(340px,92vw);padding:24px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
 .loginbox label{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .loginbox input{font:inherit;color:var(--text);background:var(--panel-2);border:1px solid var(--line-2);border-radius:8px;padding:9px 10px}
+.insp{border:1px solid var(--line-2);border-left-width:3px;border-radius:8px;padding:8px 10px;margin:0 0 10px;background:var(--panel-2)}
+.insp .small{margin-left:4px}

