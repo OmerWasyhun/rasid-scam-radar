@@ -13,8 +13,9 @@ Most tools wait for a victim to paste a suspicious link. RASID hunts first. An i
 | **Analyser** (all web sensors) | Read-only fetch: card/CVV/OTP/Emirates ID fields, brand claims, multilingual lure text, cloaking (Googlebot vs UAE phone), Telegram exfil tokens, analytics IDs, favicon hash, DOM hash, RDAP age, hosting location. | nothing |
 | **Kit Fingerprint** | Union-find clustering of flagged items on shared favicon hash, Telegram bot, analytics ID, phone/WhatsApp number, or two weak links (IP + NS + DOM). | nothing |
 | **Maps Verifier** | Google Places listings for a brand in each emirate, checked against official domains and phones; flags mobile numbers on bank/telco listings and numbers reused across brands. | `GOOGLE_MAPS_API_KEY` |
-| **Ads & Search** | Google results and sponsored ads from the UAE for lure queries in several languages; paste-an-ad inspector with screenshot reading. | `SERPAPI_KEY` (sweep), `ANTHROPIC_API_KEY` (screenshots) |
+| **Social & Search Ads** | Meta Ad Library (Facebook, Instagram, WhatsApp, Messenger, Threads) and Google Ads Transparency Center (UAE) for ads using a watched name from someone else; Google results from the UAE in several languages; paste-an-ad inspector with screenshot reading. | `META_ACCESS_TOKEN`, `SERPAPI_KEY`, `ANTHROPIC_API_KEY` (screenshots) |
 | **Job & Visa Linguist** | Scores posts in Arabic, English, Hindi, Urdu, Roman Urdu, Malayalam, Tamil, Sinhala, Tagalog, Bengali, Nepali; reads public Telegram channels. Claude extracts employer, fee, salary and translation. | Claude optional |
+| **Evidence & reputation** | Full-page screenshots and verdicts from urlscan.io; Google Safe Browsing and VirusTotal checks on every live site. | `URLSCAN_API_KEY`, `GOOGLE_SAFE_BROWSING_KEY`, `VIRUSTOTAL_API_KEY` |
 | **Case notes & strike packs** | Claude writes the case note in Arabic and English; strike pack bundles evidence and pre-filled abuse letters. Nothing is sent automatically. | Claude optional (template fallback) |
 
 ## Run it
@@ -37,7 +38,11 @@ All keys go in `.env` (see `.env.example`). Every sensor without a key says so i
 | `ANTHROPIC_API_KEY` | Case notes (AR + EN), job-post extraction and translation, ad screenshot reading |
 | `GOOGLE_MAPS_API_KEY` | Maps Verifier (enable **Places API (New)** in Google Cloud) |
 | `SERPAPI_KEY` | Search & ads sweep |
-| `URLSCAN_API_KEY`, `GOOGLE_SAFE_BROWSING_KEY` | Optional enrichment (reserved) |
+| `META_ACCESS_TOKEN` | Meta Ad Library sweep (Facebook / Instagram ads) |
+| `URLSCAN_API_KEY` | Page screenshots and verdicts |
+| `GOOGLE_SAFE_BROWSING_KEY` | Google's phishing/malware list check |
+| `VIRUSTOTAL_API_KEY` | Security-vendor reputation of each domain |
+| `RASID_PASSWORD` | Officer login for the console (off when empty) |
 
 ## Before the demo
 
