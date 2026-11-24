@@ -9,7 +9,7 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from . import auth, browser, cluster, config, db, enrich, generator, llm, pipeline, seeds, strike, voice
+from . import auth, browser, cluster, config, db, enrich, generator, llm, pipeline, rootguard, seeds, strike, voice
 from .sensors import ads, jobs, maps, social_ads
 
 app = FastAPI(title="RASID", version="1.0")
@@ -28,6 +28,7 @@ app.add_api_route("/login", auth.login_page, methods=["GET"], include_in_schema=
 app.add_api_route("/login", auth.login_submit, methods=["POST"], include_in_schema=False)
 app.add_api_route("/logout", auth.logout, methods=["GET"], include_in_schema=False)
 app.include_router(voice.router)
+app.include_router(rootguard.router)
 WEB = config.ROOT / "web"
 
 

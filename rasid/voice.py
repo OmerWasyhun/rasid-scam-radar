@@ -30,8 +30,8 @@ from fastapi.responses import Response
 from pydantic import BaseModel, Field
 
 from . import db, guardian
-from .config import (GUARDIAN_ALLOWED, GUARDIAN_LANG, GUARDIAN_NUMBER, GUARDIAN_SMS_FROM, PUBLIC_BASE_URL,
-                     TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+from .config import (GUARDIAN_ALLOWED, GUARDIAN_LANG, GUARDIAN_MAX_MINUTES, GUARDIAN_NUMBER, GUARDIAN_SMS_FROM, PUBLIC_BASE_URL,
+                     TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, twilio_rest_auth)
 from .guardian import LEAVE, LINES, WAKE, CallState
 
 log = logging.getLogger("rasid.voice")
@@ -86,14 +86,14 @@ def _prune() -> None:
 
 async def send_sms(to: str, body: str) -> bool:
     """Text the person through Twilio's REST API. Returns False (and logs) when SMS is not configured or fails."""
-    if not (TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN and GUARDIAN_SMS_FROM and digits(to)):
+    if not (TWILIO_ACCOUNT_SID and twilio_rest_auth() and GUARDIAN_SMS_FROM and digits(to)):
         log.info("SMS not sent (Twilio not configured): %s", body.replace("\n", " | "))
         return False
     url = f"https://api.twilio.com/2010-04-01/Accounts/{TWILIO_ACCOUNT_SID}/Messages.json"
     sender = GUARDIAN_SMS_FROM if not digits(GUARDIAN_SMS_FROM) or GUARDIAN_SMS_FROM.startswith("+") else "+" + GUARDIAN_SMS_FROM
     try:
         async with httpx.AsyncClient(timeout=10) as c:
-            r = await c.post(url, auth=(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN),
+            r = await c.post(url, auth=twilio_rest_auth(),
                              data={"To": "+" + digits(to), "From": sender, "Body": body[:1500]})
         if r.status_code >= 300:
             log.warning("Twilio SMS failed %s: %s", r.status_code, r.text[:300])
@@ -152,6 +152,7 @@ class Session:
         self.alert_sms_sent = False
         self.ended = False
         self.worker: asyncio.Task | None = None
+        self.limiter: asyncio.Task | None = None
 
     async def send(self, msg: dict) -> None:
         async with self.lock:
@@ -240,10 +241,23 @@ class Session:
                 await self.maybe_warn()
                 await self.push_state()
 
+    async def time_limit(self, seconds: float) -> None:
+        """Leave the call after a fixed time so a forgotten call can't drain the Twilio balance."""
+        await asyncio.sleep(seconds)
+        if not self.ended:
+            log.info("Guardian time limit reached (%ss), leaving the call", int(seconds))
+            await self.leave()
+            try:
+                await self.ws.close()
+            except Exception:
+                pass
+
     async def finish(self) -> None:
         self.ended = True
         if self.worker:
             self.worker.cancel()
+        if self.limiter:
+            self.limiter.cancel()
         if not self.state.lines:
             return
         s = self.state.summary()
@@ -266,6 +280,8 @@ async def listen(ws: WebSocket):
                     return
                 sess = Session(ws, ctx["user"] or digits(msg.get("from")), local=ctx.get("local", False), lang=ctx.get("lang"))
                 sess.worker = asyncio.create_task(sess.analyse_loop())
+                if not sess.local and GUARDIAN_MAX_MINUTES > 0:
+                    sess.limiter = asyncio.create_task(sess.time_limit(GUARDIAN_MAX_MINUTES * 60))
                 ACTIVE.add(sess)
                 await sess.greet()
             elif sess is None:

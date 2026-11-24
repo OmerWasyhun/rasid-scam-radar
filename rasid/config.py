@@ -27,12 +27,24 @@ SESSION_SECRET = os.getenv("RASID_SESSION_SECRET", "").strip()
 
 # Call Guardian: the voice agent people merge into a suspicious call (Twilio Voice + ConversationRelay).
 TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID", "").strip()
-TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN", "").strip()
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN", "").strip()         # also verifies Twilio's webhook signatures
+TWILIO_API_KEY_SID = os.getenv("TWILIO_API_KEY_SID", "").strip()       # optional API key (SK...) for REST calls
+TWILIO_API_KEY_SECRET = os.getenv("TWILIO_API_KEY_SECRET", "").strip()
+
+
+def twilio_rest_auth() -> tuple[str, str] | None:
+    """Credentials for Twilio's REST API: an API key if set, otherwise Account SID + Auth Token."""
+    if TWILIO_API_KEY_SID and TWILIO_API_KEY_SECRET:
+        return (TWILIO_API_KEY_SID, TWILIO_API_KEY_SECRET)
+    if TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN:
+        return (TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+    return None
 GUARDIAN_NUMBER = os.getenv("RASID_GUARDIAN_NUMBER", "").strip()          # the number people add to their call
 GUARDIAN_SMS_FROM = os.getenv("RASID_GUARDIAN_SMS_FROM", "").strip() or GUARDIAN_NUMBER
 PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "").strip().rstrip("/")     # https address Twilio can reach
 GUARDIAN_MODEL = os.getenv("RASID_GUARDIAN_MODEL", "").strip() or MODEL
 GUARDIAN_LANG = os.getenv("RASID_GUARDIAN_LANG", "ar-AE").strip() or "ar-AE"  # language heard first: ar-AE or en-US
+GUARDIAN_MAX_MINUTES = float(os.getenv("RASID_GUARDIAN_MAX_MINUTES", "5") or 5)  # Guardian leaves a call after this (saves credit)
 GUARDIAN_ALLOWED = {x.strip().lstrip("+") for x in os.getenv("RASID_GUARDIAN_ALLOWED", "").split(",") if x.strip()}
 
 CT_POLL = os.getenv("RASID_CT_POLL", "0") == "1"

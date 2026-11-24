@@ -7,3 +7,4 @@ data/packs/
 .pytest_cache/
 data/nrd/
 data/shots/
+data/models/

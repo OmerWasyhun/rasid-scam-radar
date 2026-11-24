@@ -1,0 +1,4 @@
+{
+  "platforms": ["android"],
+  "android": { "modules": ["ae.rasid.rootguard.RasidRootModule"] }
+}
