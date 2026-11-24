@@ -2,6 +2,10 @@
 __pycache__/
 *.pyc
 .env
+.env.*
+!.env.example
+*.pem
+*.key
 data/*.db*
 data/packs/
 .pytest_cache/
