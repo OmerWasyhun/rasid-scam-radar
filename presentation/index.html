@@ -1,0 +1,559 @@
+<title>RASID Walkthrough</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=JetBrains+Mono:wght@400;600&family=Noto+Nastaliq+Urdu&family=Noto+Sans+Devanagari&family=Noto+Sans+Malayalam&family=Noto+Sans+Tamil&family=Noto+Sans+Sinhala&family=Noto+Sans+Bengali&display=swap">
+<style>
+/* Layout: a night-shift story told down one long scroll; each chapter pairs a short line of narrative with a real
+   screen from RASID and one thing to touch. Single deliberate dark look (police ops room at 3 a.m.). */
+:root{
+  color-scheme: dark;
+  --night:#05080f; --deck:#0b1220; --deck-2:#111b2e; --rule:#1d2b44; --rule-2:#2a3d60;
+  --ink:#e6edf7; --dim:#8ea0bb; --faint:#56698a;
+  --radar:#4cc9f0; --sand:#f2c14e; --alarm:#ff4d6d; --safe:#4fe0a2; --violet:#b48cff;
+  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --f-ar:"IBM Plex Sans Arabic",Tahoma,sans-serif;
+  --f-ur:"Noto Nastaliq Urdu","IBM Plex Sans Arabic",serif;
+  --f-indic:"Noto Sans Devanagari","Noto Sans Malayalam","Noto Sans Tamil","Noto Sans Sinhala","Noto Sans Bengali","Nirmala UI",sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-snap-type:y proximity}
+body{margin:0;background:var(--night);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.02;letter-spacing:-.02em;text-wrap:balance}
+p{margin:0}
+.mono{font-family:var(--f-mono)} .ar{font-family:var(--f-ar)} .ur{font-family:var(--f-ur);line-height:2.1} .indic{font-family:var(--f-indic)}
+.kicker{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;color:var(--radar)}
+:focus-visible{outline:2px solid var(--radar);outline-offset:3px}
+button{font:inherit;color:inherit;cursor:pointer}
+img{max-width:100%;display:block}
+
+/* top bar */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--night)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--night) 86%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
+.bar .wrap{display:flex;align-items:center;gap:14px;padding-block:10px}
+.logo{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:800;letter-spacing:.04em}
+.logo .ar{color:var(--radar);font-weight:700}
+.dots{display:flex;gap:6px;flex:1;justify-content:center;flex-wrap:wrap}
+.dots a{width:9px;height:9px;border-radius:50%;background:var(--rule-2);display:block}
+.dots a.on{background:var(--radar);box-shadow:0 0 0 4px color-mix(in srgb,var(--radar) 25%,transparent)}
+.present{font-family:var(--f-mono);font-size:.72rem;border:1px solid var(--rule-2);background:none;border-radius:999px;padding:5px 12px;color:var(--dim)}
+.present:hover{color:var(--ink);border-color:var(--radar)}
+.progress{position:absolute;left:0;bottom:-1px;height:2px;background:var(--radar);width:0}
+
+section.ch{scroll-snap-align:start;padding-block:88px 72px;border-bottom:1px solid var(--rule);position:relative}
+.ch .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:48px;align-items:center}
+.ch .grid.rev{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
+.ch .grid.rev .text{order:2}
+.text{display:flex;flex-direction:column;gap:16px;min-width:0}
+.text h2{font-size:clamp(2.1rem,4.6vw,3.6rem)}
+.text .lede{font-size:1.12rem;color:var(--dim);max-width:46ch}
+.feat{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.feat li{display:grid;grid-template-columns:18px 1fr;gap:8px;font-size:.96rem}
+.feat li::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--radar);margin-top:9px}
+.feat b{color:#fff;font-weight:600}
+.shot{border:1px solid var(--rule-2);border-radius:14px;overflow:hidden;background:var(--deck);box-shadow:0 30px 80px -30px rgba(0,0,0,.8)}
+.shot figcaption{font-family:var(--f-mono);font-size:.7rem;color:var(--faint);padding:8px 12px;border-top:1px solid var(--rule)}
+.aside{font-size:.88rem;color:var(--faint);border-left:2px solid var(--sand);padding-left:12px}
+.aside b{color:var(--sand);font-weight:600}
+.num{font-family:var(--f-display);font-weight:800;font-size:clamp(3rem,8vw,5.5rem);line-height:1;color:var(--sand);font-variant-numeric:tabular-nums}
+
+/* hero */
+.hero{padding-block:72px 64px}
+.hero h1{font-size:clamp(2.8rem,8vw,6.4rem);max-width:13ch}
+.hero h1 em{font-style:normal;color:var(--radar)}
+.hero .lede{font-size:1.2rem;color:var(--dim);max-width:52ch;margin-top:18px}
+.hero .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:22px}
+.tag{font-family:var(--f-mono);font-size:.72rem;border:1px solid var(--rule-2);border-radius:999px;padding:4px 10px;color:var(--dim)}
+
+/* spot the fake */
+.game{margin-top:40px;border:1px solid var(--rule-2);border-radius:18px;background:var(--deck);padding:22px;display:flex;flex-direction:column;gap:14px}
+.game h3{font-size:1.5rem}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:10px}
+.opt{all:unset;cursor:pointer;border:1px solid var(--rule-2);border-radius:12px;padding:14px;background:var(--deck-2);display:flex;flex-direction:column;gap:6px;min-width:0}
+.opt:focus-visible{outline:2px solid var(--radar)}
+.opt .d{font-family:var(--f-mono);font-size:1.15rem;color:#fff;overflow-wrap:anywhere}
+.opt .v{font-size:.85rem;color:var(--dim);display:none}
+.game.done .opt .v{display:block}
+.game.done .opt{cursor:default}
+.game.done .opt.good{border-color:var(--safe)} .game.done .opt.bad{border-color:var(--alarm)} .game.done .opt.meh{border-color:var(--sand)}
+.opt .pill{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase;display:none}
+.game.done .opt .pill{display:inline}
+.opt.good .pill{color:var(--safe)} .opt.bad .pill{color:var(--alarm)} .opt.meh .pill{color:var(--sand)}
+.result{font-size:1rem;color:var(--sand);min-height:1.4em}
+
+/* compare slider */
+.compare{position:relative;border:1px solid var(--rule-2);border-radius:14px;overflow:hidden;aspect-ratio:1366/900;max-width:100%;background:#000;user-select:none}
+.compare img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.compare .top{clip-path:inset(0 0 0 50%)}
+.compare .handle{position:absolute;top:0;bottom:0;left:50%;width:2px;background:var(--sand);transform:translateX(-1px);pointer-events:none}
+.compare .handle::after{content:"⇆";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;border-radius:50%;background:var(--sand);color:#1a1200;display:grid;place-items:center;font-weight:700}
+.compare input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+.compare .lbl{position:absolute;top:10px;font-family:var(--f-mono);font-size:.7rem;padding:3px 8px;border-radius:6px;background:rgba(0,0,0,.7)}
+.compare .l1{left:10px;color:var(--safe)} .compare .l2{right:10px;color:var(--alarm)}
+.verdict{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{font-family:var(--f-mono);font-size:.72rem;padding:3px 9px;border-radius:7px;border:1px solid var(--c,var(--rule-2));color:var(--c,var(--dim))}
+
+/* tabs of checks */
+.checks{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:12px;margin-top:34px}
+.check{border:1px solid var(--rule);border-radius:12px;padding:16px;background:var(--deck)}
+.check h3{font-size:1.1rem;margin-bottom:6px}
+.check p{font-size:.9rem;color:var(--dim)}
+
+/* languages */
+.langs{display:flex;flex-wrap:wrap;gap:6px}
+.langs button{border:1px solid var(--rule-2);background:none;border-radius:8px;padding:5px 10px;font-family:var(--f-mono);font-size:.78rem;color:var(--dim)}
+.langs button[aria-pressed="true"]{border-color:var(--radar);color:var(--radar);background:color-mix(in srgb,var(--radar) 12%,transparent)}
+.lure{border:1px solid var(--rule-2);border-radius:14px;padding:18px;background:var(--deck);display:flex;flex-direction:column;gap:8px;min-height:150px}
+.lure .t{font-size:1.4rem;color:#fff}
+.lure .g{color:var(--dim);font-size:.95rem}
+.lure .flags{display:flex;flex-wrap:wrap;gap:6px}
+
+/* hotspots */
+.hot{position:relative}
+.hot .spot{position:absolute;width:26px;height:26px;margin:-13px 0 0 -13px;border-radius:50%;background:var(--sand);color:#1a1200;font-family:var(--f-mono);font-weight:700;font-size:.75rem;border:0;display:grid;place-items:center;box-shadow:0 0 0 6px color-mix(in srgb,var(--sand) 25%,transparent);animation:pulse 2.4s infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 12px color-mix(in srgb,var(--sand) 0%,transparent)}}
+.hot .spot[aria-pressed="true"]{background:var(--radar)}
+.spotinfo{min-height:3.2em;margin-top:12px;font-size:1rem;color:var(--ink)}
+.spotinfo b{color:var(--radar)}
+
+/* finale: call simulator */
+.finale{background:radial-gradient(ellipse at 70% 20%,color-mix(in srgb,var(--alarm) 14%,transparent),transparent 60%)}
+.sim{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:28px;margin-top:30px;align-items:start}
+.lines{display:flex;flex-direction:column;gap:8px}
+.lines button{all:unset;cursor:pointer;border:1px solid var(--rule-2);border-radius:12px;padding:11px 14px;background:var(--deck);font-size:.98rem}
+.lines button:hover:not([disabled]){border-color:var(--radar)}
+.lines button[disabled]{opacity:.35;cursor:default}
+.lines button:focus-visible{outline:2px solid var(--radar)}
+.lines .who{font-family:var(--f-mono);font-size:.68rem;color:var(--faint);display:block}
+.phone{border:2px solid var(--rule-2);border-radius:34px;background:#000;padding:16px 14px;min-height:470px;display:flex;flex-direction:column;gap:12px;position:relative;overflow:hidden}
+.phone .notch{width:90px;height:18px;border-radius:12px;background:#111;margin:0 auto}
+.phone .caller{text-align:center;display:flex;flex-direction:column;gap:2px}
+.phone .caller b{font-family:var(--f-display);font-size:1.4rem}
+.phone .caller span{font-family:var(--f-mono);font-size:.74rem;color:var(--dim)}
+.meter{border:1px solid var(--rule);border-radius:14px;padding:12px;background:var(--deck)}
+.meter .n{font-family:var(--f-display);font-weight:800;font-size:2.6rem;line-height:1;font-variant-numeric:tabular-nums}
+.meter .bar2{height:7px;border-radius:4px;background:var(--rule);margin:8px 0 6px;overflow:hidden}
+.meter .bar2 span{display:block;height:100%;width:0;background:var(--safe);transition:width .5s,background .5s}
+.meter .vd{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.1em;text-transform:uppercase}
+.heard{font-size:.82rem;color:var(--dim);flex:1;overflow:hidden}
+.ended{position:absolute;inset:0;background:color-mix(in srgb,#2a0710 94%,transparent);display:flex;flex-direction:column;justify-content:center;gap:10px;padding:22px;text-align:left}
+.ended b{font-family:var(--f-display);font-size:1.6rem;color:#fff}
+.ended p{font-size:.88rem;color:#ffd5dc}
+.ended .ar{direction:rtl;text-align:right}
+.simctl{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.btn{border:1px solid var(--rule-2);background:none;border-radius:10px;padding:8px 14px;font-family:var(--f-mono);font-size:.78rem}
+.btn.primary{background:var(--radar);color:#04121c;border-color:var(--radar);font-weight:600}
+.ways{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px;margin-top:40px}
+.way{border:1px solid var(--rule);border-radius:14px;padding:18px;background:var(--deck);display:flex;flex-direction:column;gap:8px}
+.way h3{font-size:1.25rem}
+.way p{font-size:.92rem;color:var(--dim)}
+.way .st{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase}
+
+.closing{text-align:left;padding-block:96px}
+.closing h2{font-size:clamp(2.6rem,7vw,5.4rem);max-width:14ch}
+.closing h2 em{font-style:normal;color:var(--radar)}
+.stack{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
+.honest{margin-top:30px;font-size:.9rem;color:var(--faint);max-width:70ch}
+
+@media (max-width:900px){
+  .ch .grid,.ch .grid.rev{grid-template-columns:minmax(0,1fr)}
+  .ch .grid.rev .text{order:0}
+  .sim{grid-template-columns:minmax(0,1fr)}
+  .phone{min-height:420px}
+  section.ch{padding-block:64px 56px}
+}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}.hot .spot{animation:none}.meter .bar2 span{transition:none}}
+</style>
+
+<header class="bar" aria-label="Walkthrough">
+  <div class="wrap">
+    <div class="logo"><svg width="22" height="22" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="#4cc9f0" stroke-width="2"/><path d="M15 15 L26 8" stroke="#4cc9f0" stroke-width="2"/><circle cx="21" cy="11.5" r="2.4" fill="#ff4d6d"/></svg>RASID <span class="ar">راصد</span></div>
+    <nav class="dots" id="dots" aria-label="Chapters"></nav>
+    <button class="present" id="present" type="button">Present ⛶</button>
+  </div>
+  <div class="progress" id="progress"></div>
+</header>
+
+<main>
+<!-- 0 · hero -->
+<section class="ch hero" id="start" data-title="Start">
+  <div class="wrap">
+    <p class="kicker">ScamShield AI · Abu Dhabi Police × 42 Abu Dhabi</p>
+    <h1>Scammers don't wait for you to <em>paste a link.</em></h1>
+    <p class="lede">So RASID doesn't either. It hunts fake sites, fake shops on the map, fake ads and fake job offers before anyone clicks, and when a scammer calls, it can end the call for you. This is a walk through the real product, one night shift at a time.</p>
+    <div class="meta"><span class="tag">Real screenshots, nothing mocked</span><span class="tag">11 languages</span><span class="tag">Use ← → to move between chapters</span></div>
+
+    <div class="game" id="game" aria-live="polite">
+      <p class="kicker">Warm-up · 10 seconds</p>
+      <h3>Which one is the real ADCB?</h3>
+      <div class="opts">
+        <button class="opt good" data-k="real"><span class="pill">Official</span><span class="d">adcb.com</span><span class="v">The real bank. On RASID's official list, so it can never be flagged.</span></button>
+        <button class="opt bad" data-k="cyr"><span class="pill">Homoglyph · 25/25 name points</span><span class="d">аdcb.com</span><span class="v">That first "а" is Cyrillic. Your browser shows it as <span class="mono">xn--dcb-5cd.com</span>. RASID generates these before scammers register them.</span></button>
+        <button class="opt bad" data-k="combo"><span class="pill">Combosquat · strike queue</span><span class="d">adcb-secure-verify.top</span><span class="v">Brand + "secure" + "verify" on a cheap TLD. The classic.</span></button>
+        <button class="opt meh" data-k="pool"><span class="pill">Unrelated business · 3/100</span><span class="d">adcbilliardcare.com</span><span class="v">A real pool-table cleaning company in Utah. RASID opened it, saw no bank, no card form, and let it go. Sorry for the scare, ADC Billiard Care.</span></button>
+      </div>
+      <p class="result" id="gameResult">Tap one.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 1 · the brief -->
+<section class="ch" id="brief" data-title="The brief">
+  <div class="wrap grid">
+    <div class="text">
+      <p class="kicker">The brief</p>
+      <h2>Find the fraud where people actually look.</h2>
+      <p class="lede">The challenge asks for tools that detect fraudulent links and sites on the open internet, including search engines and Maps. Most teams built a link checker. Victims never paste the link: they search, they tap a Maps pin, they trust an ad.</p>
+      <ul class="feat">
+        <li><span><b>Proactive</b>: RASID goes looking; nobody has to report anything first.</span></li>
+        <li><span><b>For the police</b>: a console with evidence and takedown packs.</span></li>
+        <li><span><b>For the person on the phone</b>: the Call Guardian, at the end of this story.</span></li>
+      </ul>
+    </div>
+    <div>
+      <p class="num" id="nrd">0</p>
+      <p class="lede" style="margin-top:8px">new domains are registered every day. RASID reads all of them, every morning, before breakfast.</p>
+      <p class="aside" style="margin-top:18px"><b>Fun fact:</b> scammers book fake F1 ticket sites about three weeks before race weekend. RASID starts watching events earlier.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · name it, hunt it -->
+<section class="ch" id="hunt" data-title="Hunt">
+  <div class="wrap grid rev">
+    <div class="text">
+      <p class="kicker">Chapter 1 · Name it, hunt it</p>
+      <h2>Type a name. RASID imagines every way to fake it.</h2>
+      <p class="lede">An officer types "ADCB", "Abu Dhabi Grand Prix" or "Tadbeer" into the command bar, or presses <b>+</b> on a watchlist. RASID generates hundreds of lookalikes and checks which ones are alive.</p>
+      <ul class="feat">
+        <li><span><b>Watchlists</b> for brands, government services, events and recruiters, each with official domains and phones.</span></li>
+        <li><span><b>Lookalike generator</b>: typos, l↔1↔I, rn→m, Cyrillic letters, "-secure-verify", TLD swaps, subdomain tricks.</span></li>
+        <li><span><b>Lure words in transliteration</b>: <span class="mono">naukri</span>, <span class="mono">trabaho</span>, <span class="mono">joli</span>, <span class="mono">velai</span> end up in scam domains, so they're in RASID too.</span></li>
+        <li><span><b>Event countdowns</b> for National Day, the Grand Prix, Ramadan and Hajj.</span></li>
+      </ul>
+    </div>
+    <figure class="shot" style="margin:0"><img src="shots/04-seeds.jpg" alt="RASID's lookalike seeds for ADCB with Cyrillic homoglyphs and combosquats" loading="lazy" width="900" height="1300"><figcaption>Watch → Seeds: 82 lookalikes for ADCB, Cyrillic ones first</figcaption></figure>
+  </div>
+</section>
+
+<!-- 3 · newborn -->
+<section class="ch" id="newborn" data-title="Newborn">
+  <div class="wrap grid">
+    <div class="text">
+      <p class="kicker">Chapter 2 · Born yesterday</p>
+      <h2>Catch the site on its birthday.</h2>
+      <p class="lede">Phishing sites are usually days old when they strike. RASID reads the daily list of newly registered domains and the Certificate Transparency logs, and matches every new name against every watchlist.</p>
+      <ul class="feat">
+        <li><span><b>Newly registered domains</b>: about 70,000 a day, free, no key.</span></li>
+        <li><span><b>Certificate logs</b> (crt.sh): new HTTPS certificates that contain a brand.</span></li>
+        <li><span><b>Smart matching</b>: "tammpay2026" matches TAMM; "trungtammot" (a Vietnamese site) doesn't.</span></li>
+        <li><span><b>DNS, RDAP and hosting</b>: age, registrar, abuse contact, country and network for every live hit.</span></li>
+      </ul>
+    </div>
+    <figure class="shot" style="margin:0"><img src="shots/01-console.jpg" alt="RASID console with the world map of detections" loading="lazy" width="1440" height="900"><figcaption>The map: arcs run from where a fake is hosted to the UAE brand it copies</figcaption></figure>
+  </div>
+</section>
+
+<!-- 4 · inspection -->
+<section class="ch" id="inspect" data-title="Inspect">
+  <div class="wrap">
+    <div class="text" style="max-width:780px">
+      <p class="kicker">Chapter 3 · Don't judge a domain by its name</p>
+      <h2>RASID opens every site in its own browser and looks.</h2>
+      <p class="lede">A similar name alone can never flag a site. RASID takes its own screenshot, compares it with the official site, and reads the page the way a victim would see it. Drag the handle.</p>
+    </div>
+    <div class="grid" style="margin-top:30px;align-items:start">
+      <div class="text">
+        <ul class="feat">
+          <li><span><b>Looks like the official site?</b> Visual match from RASID's own screenshots, plus favicon, layout, text and styles.</span></li>
+          <li><span><b>Malicious links</b>: forms that post to a Telegram bot, shorteners, APK downloads, links to known scam sites.</span></li>
+          <li><span><b>Malicious code</b>: self-decoding scripts, hidden frames, wallet drainers, "no right-click" tricks.</span></li>
+          <li><span><b>Payment capture</b>: card, CVV, OTP, Emirates ID fields, IBANs, crypto wallets, "Pay AED 450".</span></li>
+          <li><span><b>Reputation</b>: Google Safe Browsing and VirusTotal, when keys are added.</span></li>
+        </ul>
+        <p class="aside"><b>Plot twist:</b> RASID flagged appl-e.com, then noticed it forwards to apple.com. Brands buy their own typos. RASID now marks those as safe.</p>
+      </div>
+      <div>
+        <div class="compare" id="compare">
+          <img src="shots/13-official.jpg" alt="Official Abu Dhabi Police homepage" width="1366" height="900">
+          <img class="top" id="cmpTop" src="shots/12-clone.jpg" alt="Phishing clone of the Abu Dhabi Police homepage with a card form" width="1366" height="900">
+          <span class="lbl l1">official site</span><span class="lbl l2">phishing clone</span>
+          <span class="handle" id="cmpHandle"></span>
+          <input type="range" id="cmpRange" min="0" max="100" value="50" aria-label="Compare the official site and the clone">
+        </div>
+        <div class="verdict"><span class="chip" style="--c:var(--alarm)">Impersonation · 100/100</span><span class="chip" style="--c:var(--sand)">81% visual match</span><span class="chip">same favicon</span><span class="chip">asks to pay AED 450</span><span class="chip">loads files from adpolice.gov.ae</span></div>
+      </div>
+    </div>
+    <div class="checks">
+      <div class="check"><h3>Unrelated business</h3><p>adpuae.com sells Cummins spare parts in Sharjah. 3% UI match, no card form. Score 10. Left alone.</p></div>
+      <div class="check"><h3>Parked / for sale</h3><p>Nothing live yet. Kept on watch in case someone switches it on.</p></div>
+      <div class="check"><h3>Name only</h3><p>Looks like a brand on paper, but nothing on the page copies it. Capped below the flag line.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · maps -->
+<section class="ch" id="maps" data-title="Maps">
+  <div class="wrap grid rev">
+    <div class="text">
+      <p class="kicker">Chapter 4 · The fake branch on the map</p>
+      <h2>"ADCB Customer Care 24/7", on a mobile number?</h2>
+      <p class="lede">People search Google Maps for "bank customer service" and call whatever pin comes up. RASID checks every listing for a watched brand, emirate by emirate.</p>
+      <ul class="feat">
+        <li><span><b>Phone and website vs. the official registry.</b></span></li>
+        <li><span><b>Mobile or WhatsApp numbers</b> on bank and telco listings.</span></li>
+        <li><span><b>One number, many masks</b>: the same phone on Aramex, e& and a job post means one actor.</span></li>
+        <li><span><b>UAE ground view</b>: every checked listing pinned across the emirates.</span></li>
+      </ul>
+      <p class="aside"><b>Live test:</b> 130 real Aramex and ADCB listings checked with Google's Places API; none were fake. Good news for Aramex.</p>
+    </div>
+    <figure class="shot" style="margin:0"><img src="shots/02-uae-ground.jpg" alt="UAE ground view with checked Google Maps listings" loading="lazy" width="1100" height="560"><figcaption>UAE ground: Maps listings, green verified, red flagged</figcaption></figure>
+  </div>
+</section>
+
+<!-- 6 · ads -->
+<section class="ch" id="ads" data-title="Ads">
+  <div class="wrap grid">
+    <div class="text">
+      <p class="kicker">Chapter 5 · The VIP pass for AED 99</p>
+      <h2>Ads and search results that wear someone else's name.</h2>
+      <p class="lede">The sponsored result above the real one is a favourite trick. RASID searches like a person in the UAE would, in several languages, and follows every ad to its landing page.</p>
+      <ul class="feat">
+        <li><span><b>Meta Ad Library</b>: Facebook, Instagram, WhatsApp, Messenger and Threads ads using a brand's name from someone else.</span></li>
+        <li><span><b>Google Ads Transparency Center</b> for the UAE.</span></li>
+        <li><span><b>Search sweep</b>: "pay fines Abu Dhabi", "دفع المخالفات", "Dubai naukri visa".</span></li>
+        <li><span><b>Paste an ad</b>, text, link or screenshot; Claude reads the screenshot.</span></li>
+        <li><span><b>Cloaking check</b>: Googlebot and a UAE phone get different pages? Caught.</span></li>
+      </ul>
+    </div>
+    <figure class="shot" style="margin:0"><img src="shots/08-tools.jpg" alt="RASID tools: newborn sweep, inspect an ad, job and visa posts" loading="lazy" width="900" height="1300"><figcaption>Tools: newborn sweep, ad inspector, job-post scoring</figcaption></figure>
+  </div>
+</section>
+
+<!-- 7 · languages -->
+<section class="ch" id="langs" data-title="Languages">
+  <div class="wrap grid rev">
+    <div class="text">
+      <p class="kicker">Chapter 6 · Scams don't speak English</p>
+      <h2>"Visa free. Just pay the fee." In eleven languages.</h2>
+      <p class="lede">Job and visa scams target workers in their own language, often in Roman script. RASID reads public posts and Telegram channels and scores them in Arabic, English, Hindi, Urdu, Roman Urdu, Malayalam, Tamil, Sinhala, Tagalog, Bengali and Nepali.</p>
+      <div class="langs" id="langBtns" role="group" aria-label="Choose a language"></div>
+      <div class="lure" id="lure" aria-live="polite"></div>
+    </div>
+    <figure class="shot" style="margin:0"><img src="shots/06-job-scam.jpg" alt="A Tagalog job scam case scored 100 in RASID" loading="lazy" width="900" height="1300"><figcaption>A Tagalog post: fee for a visa, visit visa for work, WhatsApp only → 100</figcaption></figure>
+  </div>
+</section>
+
+<!-- 8 · actors + strike -->
+<section class="ch" id="actors" data-title="Actors">
+  <div class="wrap grid">
+    <div class="text">
+      <p class="kicker">Chapter 7 · Same kit, same crook</p>
+      <h2>Take down the operation, not one website.</h2>
+      <p class="lede">Scam sites come in families. RASID joins items that share a favicon, a Telegram bot, an analytics ID, a phone number or hosting, and builds one evidence pack per actor.</p>
+      <ul class="feat">
+        <li><span><b>Kit fingerprints</b> → actors, drawn as constellations on the map.</span></li>
+        <li><span><b>Strike pack</b>: every site, registrar, hosting, screenshots, signals and ready-to-send abuse letters.</span></li>
+        <li><span><b>Case notes in Arabic and English</b>, written by Claude from the evidence.</span></li>
+        <li><span><b>Nothing is sent automatically</b>: an officer approves every takedown.</span></li>
+      </ul>
+      <p class="aside"><b>Real example:</b> three job posts in Malayalam, Urdu and Tagalog used the same WhatsApp number. RASID joined them into one actor without being told.</p>
+    </div>
+    <figure class="shot" style="margin:0"><img src="shots/10-strike-pack.jpg" alt="Strike pack for an actor with case notes and abuse letters" loading="lazy" width="1440" height="900"><figcaption>Strike pack A-026: three posts, three languages, one number</figcaption></figure>
+  </div>
+</section>
+
+<!-- 9 · console tour -->
+<section class="ch" id="console" data-title="Console">
+  <div class="wrap">
+    <div class="text" style="max-width:760px">
+      <p class="kicker">Chapter 8 · The ops room</p>
+      <h2>One screen for the whole night shift.</h2>
+      <p class="lede">Tap the dots.</p>
+    </div>
+    <div class="hot shot" style="margin-top:24px" id="hot">
+      <img src="shots/01-console.jpg" alt="RASID console overview" width="1440" height="900">
+    </div>
+    <p class="spotinfo" id="spotinfo"><b>Start anywhere.</b> Every dot is a real part of the console.</p>
+  </div>
+</section>
+
+<!-- 10 · finale -->
+<section class="ch finale" id="guardian" data-title="Call Guardian">
+  <div class="wrap">
+    <div class="text" style="max-width:820px">
+      <p class="kicker">Finale · The Call Guardian <span class="ar">حارس المكالمات</span></p>
+      <h2>And when they call you instead?</h2>
+      <p class="lede">The last button in the console. The Guardian listens to a suspicious call, scores it with the same scam rules in Arabic and English, and steps in before you read out the code. Play the scammer below.</p>
+    </div>
+    <div class="sim">
+      <div>
+        <div class="lines" id="lines"></div>
+        <div class="simctl"><button class="btn" id="simReset" type="button">Start over</button><button class="btn" id="simNice" type="button">Try a normal call</button></div>
+      </div>
+      <div class="phone" id="phone" aria-live="polite">
+        <div class="notch"></div>
+        <div class="caller"><b id="callerName">+971 55 ••• 2233</b><span id="callTime">on call · 00:00</span></div>
+        <div class="meter"><div class="eyebrow mono" style="font-size:.66rem;color:var(--dim);letter-spacing:.14em">SCAM RISK</div><div class="n" id="risk">0</div><div class="bar2"><span id="riskBar"></span></div><div class="vd" id="riskVd">no scam signs</div></div>
+        <div class="heard" id="heard">RASID is listening.</div>
+        <div class="ended" id="ended" hidden>
+          <b>🚨 RASID ended a scam call</b>
+          <p>Risk 100/100 · Asks for a one-time code · Claims to be your bank · Pressure to keep it secret</p>
+          <p class="ar">انتهت مكالمة احتيال. لا تشارك أي رمز أو بيانات بطاقة.</p>
+          <p style="color:#fff">Filed in the police console under Call Guardian.</p>
+        </div>
+      </div>
+    </div>
+    <div class="ways">
+      <div class="way"><span class="st" style="color:var(--safe)">Works on any phone</span><h3>Add RASID to the call</h3><p>Tap <b>Add call</b>, dial the RASID number, tap <b>Merge</b>. It joins as a third person, warns out loud in Arabic and English so the scammer hears it too, and texts you a summary. Reply REPORT to send it to the police. (Twilio)</p></div>
+      <div class="way"><span class="st" style="color:var(--radar)">Free, on the laptop</span><h3>The console tab</h3><p>Open <b>Call Guardian</b> next to Fraud Hunt. It keeps listening while you work; a LIVE badge stays on the tab. Reported calls appear as a sensor on the map.</p></div>
+      <div class="way"><span class="st" style="color:var(--alarm)">Pilot · rooted Android</span><h3>Hang up for you</h3><p>A system app streams the call to RASID, local Whisper transcribes it, and on "likely scam" the phone <b>ends the call</b> and shows why. No speakerphone, no waiting.</p></div>
+    </div>
+    <figure class="shot" style="margin:40px 0 0"><img src="shots/09-call-guardian.jpg" alt="The Call Guardian tab in the console during a fake-bank call, risk 100" loading="lazy" width="1440" height="900"><figcaption>The real Call Guardian tab: Arabic fake-bank call, warning spoken, risk 100</figcaption></figure>
+  </div>
+</section>
+
+<!-- 11 · closing -->
+<section class="ch closing" id="end" data-title="End">
+  <div class="wrap">
+    <p class="kicker">That's the shift</p>
+    <h2>Hunt first. <em>Warn in their language.</em> Hang up on scammers.</h2>
+    <div class="stack">
+      <span class="tag">Python · FastAPI</span><span class="tag">Playwright browser</span><span class="tag">Local Whisper</span><span class="tag">Claude (case notes, screenshots)</span><span class="tag">Google Places</span><span class="tag">Meta Ad Library</span><span class="tag">SerpApi</span><span class="tag">crt.sh · RDAP · NRD</span><span class="tag">Twilio ConversationRelay</span><span class="tag">Expo + Kotlin (Android)</span>
+    </div>
+    <p class="honest">What's live today: hunts, newborn domains, site inspection with RASID's own screenshots, Maps verification, job and visa scoring, actors and strike packs, the console and the Call Guardian tab. Waiting on keys or hardware: Meta and Google ad sweeps, Safe Browsing and VirusTotal, the Twilio phone number, and the rooted-phone pilot. Sample cases in this walkthrough are labelled as tests where they were made by us.</p>
+  </div>
+</section>
+</main>
+
+<script>
+(function(){
+'use strict';
+const $ = id => document.getElementById(id);
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* chapter dots, progress, keyboard */
+const chapters = [...document.querySelectorAll('section.ch')];
+$('dots').innerHTML = chapters.map(c => `<a href="#${c.id}" title="${c.dataset.title}" aria-label="${c.dataset.title}"></a>`).join('');
+const dots = [...$('dots').children];
+function current(){ let i = 0; chapters.forEach((c, k) => { if (c.getBoundingClientRect().top < innerHeight * 0.4) i = k; }); return i; }
+function onScroll(){
+  const i = current(); dots.forEach((d, k) => d.classList.toggle('on', k === i));
+  const h = document.documentElement; $('progress').style.width = (h.scrollTop / Math.max(1, h.scrollHeight - innerHeight) * 100) + '%';
+}
+addEventListener('scroll', onScroll, {passive: true}); onScroll();
+addEventListener('keydown', e => {
+  if (e.target.closest('input,textarea')) return;
+  const i = current();
+  if (['ArrowRight','PageDown','ArrowDown'].includes(e.key) && e.key !== 'ArrowDown') { e.preventDefault(); chapters[Math.min(chapters.length - 1, i + 1)].scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); }
+  if (['ArrowLeft','PageUp'].includes(e.key)) { e.preventDefault(); chapters[Math.max(0, i - 1)].scrollIntoView({behavior: reduce ? 'auto' : 'smooth'}); }
+});
+$('present').onclick = () => { const el = document.documentElement; (el.requestFullscreen ? el.requestFullscreen() : Promise.reject()).catch(() => { $('present').textContent = 'Use ← →'; }); };
+
+/* warm-up game */
+const msgs = {real: 'Correct. Now imagine doing that 70,000 times a day.', cyr: 'Gotcha. That "а" is Cyrillic. Most people pick this one.', combo: 'That one is a phishing site. Very confident-looking though.', pool: 'That is a pool-table cleaner in Utah. It just wants your billiards.'};
+document.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => {
+  const g = $('game'); if (g.classList.contains('done')) return;
+  g.classList.add('done'); $('gameResult').textContent = msgs[b.dataset.k];
+  b.style.boxShadow = '0 0 0 3px var(--radar)';
+}));
+
+/* counter */
+const nrd = $('nrd'); let counted = false;
+new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting || counted) return; counted = true;
+  if (reduce) { nrd.textContent = '≈70,000'; return; }
+  const t0 = performance.now();
+  (function step(t){ const p = Math.min(1, (t - t0) / 1400); nrd.textContent = '≈' + Math.round(70000 * (1 - Math.pow(1 - p, 3))).toLocaleString('en'); if (p < 1) requestAnimationFrame(step); })(t0);
+}), {threshold: .4}).observe(nrd);
+nrd.textContent = '≈70,000';
+
+/* compare slider */
+const top = $('cmpTop'), handle = $('cmpHandle');
+$('cmpRange').addEventListener('input', e => { const v = e.target.value; top.style.clipPath = `inset(0 0 0 ${v}%)`; handle.style.left = v + '%'; });
+
+/* languages */
+const L = [
+  ['TL', 'Tagalog', 'Hiring sa Abu Dhabi! Walang experience, bayad lang sa visa processing.', 'Hiring in Abu Dhabi! No experience, just pay for visa processing.', ['fee for visa', 'no experience', 'WhatsApp only'], ''],
+  ['ML', 'Malayalam', 'ദുബായിൽ ജോലി, വിസ സൗജന്യം', 'Job in Dubai, free visa', ['free visa'], 'indic'],
+  ['UR', 'Urdu', 'ابوظہبی میں سیکیورٹی گارڈ کی نوکری، ویزا فیس صرف ۵۰۰ درہم', 'Security guard job in Abu Dhabi, visa fee only 500 dirhams', ['fee for visa'], 'ur'],
+  ['UR-L', 'Roman Urdu', 'Abu Dhabi mein job, visa free, sirf WhatsApp karein', 'Job in Abu Dhabi, visa free, just WhatsApp', ['free visa', 'WhatsApp only'], ''],
+  ['HI', 'Hindi', 'दुबई में ड्राइवर की नौकरी, वीज़ा फ्री। सिर्फ ₹40,000 जमा करें', 'Driver job in Dubai, visa free. Just deposit ₹40,000', ['free visa', 'deposit'], 'indic'],
+  ['SI', 'Sinhala', 'ඩුබායි රැකියා, වීසා නොමිලේ!', 'Dubai jobs, free visa!', ['free visa'], 'indic'],
+  ['TA', 'Tamil', 'துபாயில் வேலை, விசா இலவசம்', 'Job in Dubai, free visa', ['free visa'], 'indic'],
+  ['BN', 'Bengali', 'দুবাইতে চাকরি, ফ্রি ভিসা', 'Job in Dubai, free visa', ['free visa'], 'indic'],
+  ['NE', 'Nepali', 'दुबईमा रोजगारी, भिसा निःशुल्क', 'Employment in Dubai, visa free', ['free visa'], 'indic'],
+  ['AR', 'Arabic', 'مطلوب سائقين في أبوظبي، رسوم التأشيرة على العامل', 'Drivers wanted in Abu Dhabi, the worker pays the visa fee', ['fee for visa'], 'ar'],
+  ['EN', 'English', 'Hiring cabin crew. Apply only through the official careers site. We never ask for fees.', 'A genuine post, for contrast', [], ''],
+];
+function showLang(i){
+  const [code, name, t, g, flags, cls] = L[i];
+  [...$('langBtns').children].forEach((b, k) => b.setAttribute('aria-pressed', k === i));
+  const rtl = code === 'UR' || code === 'AR';
+  $('lure').innerHTML = `<span class="mono" style="font-size:.7rem;color:var(--faint)">${name} · what the post says</span>
+    <span class="t ${cls}" ${rtl ? 'dir="rtl"' : ''}>${t}</span><span class="g">“${g}”</span>
+    <span class="flags">${flags.length ? flags.map(f => `<span class="chip" style="--c:var(--alarm)">${f}</span>`).join('') : '<span class="chip" style="--c:var(--safe)">no scam signs</span>'}</span>`;
+}
+$('langBtns').innerHTML = L.map((l, i) => `<button type="button" aria-pressed="false" data-i="${i}">${l[0]}</button>`).join('');
+[...$('langBtns').children].forEach(b => b.onclick = () => showLang(+b.dataset.i));
+showLang(0);
+
+/* console hotspots (positions as % of the 1440x900 screenshot) */
+const S = [
+  [29, 4.7, 'Two tools, one console', '<b>Fraud Hunt</b> and <b>Call Guardian</b> tabs. The Guardian keeps running in the background with a LIVE badge.'],
+  [62, 4.7, 'Command bar', '<b>Hunt any name</b>: brand, event or recruiter. RASID creates the watchlist if it is new.'],
+  [8, 30, 'Seven sensors', '<b>Maps, lookalikes, newborn domains, ads, kit fingerprints, job & visa, Call Guardian.</b> Toggle any of them on the map.'],
+  [9, 66, 'Victim language', '<b>Filter everything by language</b>: "show me what targets Malayalam speakers this week".'],
+  [8, 86, 'Keys', '<b>Free sensors run with no keys.</b> Paid ones light up as keys are added.'],
+  [52, 30, 'The map', '<b>Arcs from hosting to the brand being copied</b>; green arcs are recruitment corridors from Kochi, Lahore, Manila, Colombo, Dhaka, Kathmandu.'],
+  [88, 15, 'Case file', '<b>Every signal and its points</b>, site inspection, screenshots, registrar, abuse contact, Explain (AR + EN), Strike pack.'],
+  [30, 11, 'The numbers', '<b>Sites analysed, flagged, strike queue, actors.</b> Sample counts from our test runs.'],
+];
+$('hot').insertAdjacentHTML('beforeend', S.map((s, i) => `<button class="spot" type="button" style="left:${s[0]}%;top:${s[1]}%" aria-pressed="false" aria-label="${s[2]}" data-i="${i}">${i + 1}</button>`).join(''));
+$('hot').querySelectorAll('.spot').forEach(b => b.onclick = () => {
+  $('hot').querySelectorAll('.spot').forEach(x => x.setAttribute('aria-pressed', x === b));
+  const s = S[+b.dataset.i]; $('spotinfo').innerHTML = `${s[2]}: ${s[3]}`;
+});
+
+/* call simulator */
+const SCAM = [
+  ['Hello, this is Ahmed from your bank’s security team.', 25, 'Claims to be your bank'],
+  ['Your account is blocked because of suspicious activity.', 45, 'Threats or urgency'],
+  ['Don’t tell anyone and stay on the line, it’s urgent.', 70, 'Pressure to keep it secret'],
+  ['I just sent you a one-time code. Read me the OTP.', 100, 'Asks for a one-time code'],
+];
+const NICE = [
+  ['Hi, it’s Sara from the dental clinic.', 0, ''],
+  ['Just reminding you about tomorrow at five.', 0, ''],
+  ['If you need another time, call us back. Have a nice evening!', 0, ''],
+];
+let script = SCAM, step = 0, t0 = 0, timer = null;
+function setRisk(r){
+  const c = r >= 80 ? 'var(--alarm)' : r >= 40 ? 'var(--sand)' : 'var(--safe)';
+  $('risk').textContent = r; $('risk').style.color = c;
+  $('riskBar').style.width = r + '%'; $('riskBar').style.background = c;
+  $('riskVd').textContent = r >= 80 ? 'likely scam' : r >= 40 ? 'suspicious' : 'no scam signs'; $('riskVd').style.color = c;
+}
+function renderLines(){
+  $('lines').innerHTML = script.map((l, i) => `<button type="button" data-i="${i}" ${i !== step ? 'disabled' : ''}><span class="who">${script === SCAM ? 'scammer says' : 'caller says'} · line ${i + 1}</span>${l[0]}</button>`).join('');
+  $('lines').querySelectorAll('button').forEach(b => b.onclick = () => say(+b.dataset.i));
+}
+function say(i){
+  if (i !== step) return;
+  if (!timer) { t0 = Date.now(); timer = setInterval(() => { const s = Math.floor((Date.now() - t0) / 1000); $('callTime').textContent = 'on call · 00:' + String(s).padStart(2, '0'); }, 500); }
+  const [text, risk, flag] = script[i];
+  setRisk(risk);
+  $('heard').innerHTML = `<span class="mono" style="font-size:.66rem;color:var(--faint)">RASID HEARD</span><br>“${text}”` + (flag ? `<br><span class="chip" style="--c:var(--alarm);display:inline-block;margin-top:6px">${flag}</span>` : '');
+  step++;
+  if (risk >= 100) { clearInterval(timer); timer = null; setTimeout(() => { $('ended').hidden = false; $('callTime').textContent = 'call ended by RASID'; }, reduce ? 0 : 700); }
+  else if (step >= script.length) { clearInterval(timer); timer = null; $('callTime').textContent = 'call ended normally · left alone'; }
+  renderLines();
+}
+function reset(s){ script = s; step = 0; clearInterval(timer); timer = null; $('ended').hidden = true; setRisk(0); $('heard').textContent = 'RASID is listening.'; $('callTime').textContent = 'on call · 00:00'; $('callerName').textContent = s === SCAM ? '+971 55 ••• 2233' : 'Dental Clinic'; renderLines(); }
+$('simReset').onclick = () => reset(SCAM);
+$('simNice').onclick = () => reset(NICE);
+reset(SCAM);
+})();
+</script>
