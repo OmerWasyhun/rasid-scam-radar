@@ -1,9 +1,7 @@
-"""Third-party enrichment for suspect sites: Google Safe Browsing, VirusTotal, urlscan.io screenshots.
+"""Third-party reputation for suspect sites: Google Safe Browsing and VirusTotal. (Screenshots are RASID's own: browser.py.)
 
 Each function returns {} when its key is missing or the service fails, so the pipeline never depends on them.
 """
-import time
-
 import httpx
 
 from . import config
@@ -69,45 +67,6 @@ def virustotal(domain: str) -> dict:
                 "categories": sorted(set((a.get("categories") or {}).values()))[:5]}
     except (httpx.HTTPError, ValueError):
         return {}
-
-
-def urlscan_submit(url: str) -> dict:
-    """Submit to urlscan.io (unlisted, so the scammer doesn't see it in public feeds). Returns uuid + result link."""
-    if not config.URLSCAN_API_KEY:
-        return {}
-    try:
-        r = httpx.post("https://urlscan.io/api/v1/scan/", timeout=15,
-                       headers={"API-Key": config.URLSCAN_API_KEY, "Content-Type": "application/json"},
-                       json={"url": url, "visibility": "unlisted", "tags": ["rasid"]})
-        if r.status_code not in (200, 201):
-            return {"error": f"HTTP {r.status_code}: {r.text[:120]}"}
-        j = r.json()
-        return {"uuid": j.get("uuid"), "result": j.get("result"),
-                "screenshot": f"https://urlscan.io/screenshots/{j.get('uuid')}.png" if j.get("uuid") else None}
-    except (httpx.HTTPError, ValueError):
-        return {}
-
-
-def urlscan_result(uuid: str, wait_s: int = 60) -> dict:
-    """Poll until the scan finishes (usually 10–30 s). Returns verdict, final URL, page title, screenshot."""
-    deadline = time.time() + wait_s
-    while time.time() < deadline:
-        try:
-            r = httpx.get(f"https://urlscan.io/api/v1/result/{uuid}/", timeout=15)
-            if r.status_code == 200:
-                j = r.json()
-                v = (j.get("verdicts") or {}).get("overall", {})
-                page = j.get("page") or {}
-                return {"uuid": uuid, "done": True, "malicious": bool(v.get("malicious")), "score": v.get("score"),
-                        "brands": [b.get("name") for b in v.get("brands", []) if isinstance(b, dict)] or v.get("brands", []),
-                        "final_url": page.get("url"), "title": page.get("title"), "country": page.get("country"),
-                        "screenshot": f"https://urlscan.io/screenshots/{uuid}.png",
-                        "report": f"https://urlscan.io/result/{uuid}/"}
-        except (httpx.HTTPError, ValueError):
-            pass
-        time.sleep(5)
-    return {"uuid": uuid, "done": False, "screenshot": f"https://urlscan.io/screenshots/{uuid}.png",
-            "report": f"https://urlscan.io/result/{uuid}/"}
 
 
 def reputation_signals(host: str, url: str | None = None) -> tuple[dict, list[dict]]:

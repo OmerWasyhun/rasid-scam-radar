@@ -1,0 +1,50 @@
+{
+  "_note": "SYNTHETIC example calls for testing the Call Guardian. Not real calls. Each line is one transcribed utterance; speakers are mixed, as on a real merged call.",
+  "bank_otp_ar": {
+    "lang": "ar-AE",
+    "expect": "likely scam",
+    "lines": [
+      "السلام عليكم معك أحمد من قسم الحماية في البنك",
+      "وعليكم السلام تفضل",
+      "حسابك موقوف بسبب عملية مشبوهة ولازم نفعّله فوراً",
+      "راح يوصلك الحين رمز التحقق على جوالك، اقرأ لي الرمز",
+      "ولا تخبر أحد لأن هذا إجراء سري"
+    ]
+  },
+  "police_fine_en": {
+    "lang": "en-US",
+    "expect": "likely scam",
+    "lines": [
+      "Hello, this is officer Khalid from Abu Dhabi police",
+      "There is an arrest warrant in your name for an unpaid fine",
+      "You must pay the fine immediately to avoid a travel ban",
+      "Install AnyDesk so I can help you pay, and do not hang up"
+    ]
+  },
+  "delivery_link_en": {
+    "lang": "en-US",
+    "expect": "suspicious",
+    "lines": [
+      "Hi, I'm calling from Emirates Post about your parcel",
+      "Your parcel is held at customs, please open the link we sent by SMS"
+    ]
+  },
+  "friend_dinner_ar": {
+    "lang": "ar-AE",
+    "expect": "no scam signs",
+    "lines": [
+      "هلا والله كيف حالك",
+      "تمام الحمد لله، بتجي العشا الليلة؟",
+      "إن شاء الله الساعة تسع"
+    ]
+  },
+  "real_bank_reminder_en": {
+    "lang": "en-US",
+    "expect": "no scam signs",
+    "lines": [
+      "Good afternoon, this is a reminder from your bank that your credit card payment is due on the fifth",
+      "You can pay in the app as usual. We will never ask you for a code or your PIN on a call",
+      "Thank you, have a good day"
+    ]
+  }
+}

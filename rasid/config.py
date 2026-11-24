@@ -16,7 +16,6 @@ ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "").strip()
 MODEL = os.getenv("RASID_MODEL", "claude-opus-5-5").strip() or "claude-opus-5-5"
 GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "").strip()
 SERPAPI_KEY = os.getenv("SERPAPI_KEY", "").strip()
-URLSCAN_API_KEY = os.getenv("URLSCAN_API_KEY", "").strip()
 GOOGLE_SAFE_BROWSING_KEY = os.getenv("GOOGLE_SAFE_BROWSING_KEY", "").strip()
 VIRUSTOTAL_API_KEY = os.getenv("VIRUSTOTAL_API_KEY", "").strip()
 META_ACCESS_TOKEN = os.getenv("META_ACCESS_TOKEN", "").strip()
@@ -25,6 +24,16 @@ META_GRAPH_VERSION = os.getenv("META_GRAPH_VERSION", "v27.0").strip() or "v27.0"
 # Console login: when set, officers must sign in with this password to use the console and API.
 RASID_PASSWORD = os.getenv("RASID_PASSWORD", "").strip()
 SESSION_SECRET = os.getenv("RASID_SESSION_SECRET", "").strip()
+
+# Call Guardian: the voice agent people merge into a suspicious call (Twilio Voice + ConversationRelay).
+TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID", "").strip()
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN", "").strip()
+GUARDIAN_NUMBER = os.getenv("RASID_GUARDIAN_NUMBER", "").strip()          # the number people add to their call
+GUARDIAN_SMS_FROM = os.getenv("RASID_GUARDIAN_SMS_FROM", "").strip() or GUARDIAN_NUMBER
+PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "").strip().rstrip("/")     # https address Twilio can reach
+GUARDIAN_MODEL = os.getenv("RASID_GUARDIAN_MODEL", "").strip() or MODEL
+GUARDIAN_LANG = os.getenv("RASID_GUARDIAN_LANG", "ar-AE").strip() or "ar-AE"  # language heard first: ar-AE or en-US
+GUARDIAN_ALLOWED = {x.strip().lstrip("+") for x in os.getenv("RASID_GUARDIAN_ALLOWED", "").split(",") if x.strip()}
 
 CT_POLL = os.getenv("RASID_CT_POLL", "0") == "1"
 CT_POLL_MINUTES = int(os.getenv("RASID_CT_POLL_MINUTES", "20") or 20)
@@ -49,7 +58,6 @@ def key_status() -> dict:
         "claude": bool(ANTHROPIC_API_KEY),
         "google_maps": bool(GOOGLE_MAPS_API_KEY),
         "serpapi": bool(SERPAPI_KEY),
-        "urlscan": bool(URLSCAN_API_KEY),
         "safe_browsing": bool(GOOGLE_SAFE_BROWSING_KEY),
         "virustotal": bool(VIRUSTOTAL_API_KEY),
         "meta_ads": bool(META_ACCESS_TOKEN),

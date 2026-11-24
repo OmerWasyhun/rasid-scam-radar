@@ -1,4 +1,5 @@
 """FastAPI server: the JSON API plus the map console (web/)."""
+import re
 import threading
 import time
 from collections import Counter
@@ -8,7 +9,7 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from . import auth, cluster, config, db, enrich, generator, llm, pipeline, seeds, strike
+from . import auth, cluster, config, db, enrich, generator, llm, pipeline, seeds, strike, voice
 from .sensors import ads, jobs, maps, social_ads
 
 app = FastAPI(title="RASID", version="1.0")
@@ -16,6 +17,7 @@ app.middleware("http")(auth.middleware)
 app.add_api_route("/login", auth.login_page, methods=["GET"], include_in_schema=False)
 app.add_api_route("/login", auth.login_submit, methods=["POST"], include_in_schema=False)
 app.add_api_route("/logout", auth.logout, methods=["GET"], include_in_schema=False)
+app.include_router(voice.router)
 WEB = config.ROOT / "web"
 
 
@@ -209,29 +211,34 @@ def explain(cid: int):
     return note
 
 
-@app.post("/api/cases/{cid}/screenshot")
-def screenshot(cid: int):
-    """Full-page screenshot and verdict from urlscan.io, stored as evidence on the case."""
+@app.post("/api/cases/{cid}/rescan")
+def rescan(cid: int):
+    """Open the site again in RASID's own browser: fresh screenshot, visual comparison and full inspection."""
     c = db.get_case(cid)
     if not c:
         raise HTTPException(404, "No such case")
-    if not config.URLSCAN_API_KEY:
-        raise HTTPException(400, "Screenshots need URLSCAN_API_KEY in .env")
-    ev = c["evidence"] or {}
-    url = (ev.get("page") or {}).get("final_url") or ev.get("url") or (f"http://{c['key']}/" if "." in c["key"] and ":" not in c["key"] else None)
-    if not url:
-        raise HTTPException(400, "This case has no web page to capture")
-    sub = enrich.urlscan_submit(url)
-    if not sub.get("uuid"):
-        raise HTTPException(502, f"urlscan.io refused the scan: {sub.get('error', 'unknown error')}")
-    res = enrich.urlscan_result(sub["uuid"], wait_s=70)
-    ev["urlscan"] = res
-    signals = c["signals"]
-    if res.get("malicious") and not any("urlscan" in s["text"] for s in signals):
-        signals = signals + [{"text": "urlscan.io verdict: malicious" + (f" (imitates {', '.join(map(str, res['brands']))})" if res.get("brands") else ""), "points": 15}]
-        c["score"] = min(100, c["score"] + 15)
-    db.set_case_fields(cid, evidence=ev, signals=signals, score=c["score"])
-    return res
+    host = c["key"]
+    if c["sensor"] in ("maps", "jobs") or ":" in host or "." not in host:
+        raise HTTPException(400, "This case has no website to scan")
+    w = db.get_watch(c["watch_id"]) if c.get("watch_id") else None
+    if not w:
+        raise HTTPException(400, "This case isn't linked to a watchlist")
+    pipeline.refresh_official_cache()
+    p, why = generator.similarity(host, pipeline.watch_bases(w))
+    prev = [s for s in c["signals"] if not s.get("kind") and s.get("points", 0) > 0 and not s["text"].startswith(("Name imitation", "Domain registered", "Page asks", "Page presents", "Lure language", "Contact through"))]
+    pipeline.investigate({host: (max(p, 10), why or "lookalike")}, w, lambda m: None, {host: c["sensor"]}, {host: {"signals": prev}})
+    cluster.recluster()
+    return db.get_case(cid)
+
+
+@app.get("/api/shots/{name}")
+def shot(name: str):
+    if not re.fullmatch(r"[a-f0-9]{16}(-full\.jpg|\.png)", name):
+        raise HTTPException(404, "No such screenshot")
+    path = browser.SHOTS / name
+    if not path.exists():
+        raise HTTPException(404, "Screenshot not found")
+    return FileResponse(path)
 
 
 @app.get("/api/actors")
@@ -271,6 +278,12 @@ def recluster():
 
 
 # ---------- console ----------
+@app.get("/guardian")
+def guardian_page():
+    """Local test page for the Call Guardian voice agent (laptop mic and speaker instead of a phone line)."""
+    return FileResponse(WEB / "guardian.html")
+
+
 @app.get("/")
 def index():
     return FileResponse(WEB / "index.html")

@@ -129,3 +129,22 @@ def read_ad_image(b64: str, media_type: str) -> dict | None:
         return _json(_ask(content, max_tokens=3000))
     except (anthropic.APIError, ValueError, RuntimeError):
         return None
+
+
+def scan_screenshot(path, brand: str) -> dict | None:
+    """Claude looks at RASID's own screenshot: does the page pass itself off as the brand, and what does it ask for?"""
+    if not available() or not path or not path.exists():
+        return None
+    import base64
+    data = base64.b64encode(path.read_bytes()).decode()
+    content = [
+        {"type": "image", "source": {"type": "base64", "media_type": "image/png", "data": data}},
+        {"type": "text", "text": f"This is a screenshot of a website found while hunting for fake copies of {brand}. Return JSON only with keys: "
+                                 f"imitates_brand (true if the page presents itself as {brand} or uses its logo/name as if official), "
+                                 "brand_seen (name or null), asks_for (list from: card number, CVV, OTP, password, Emirates ID, bank details, personal details), "
+                                 "payment (true if it asks the visitor to pay), page_type (short), summary (one sentence)."},
+    ]
+    try:
+        return _json(_ask(content, max_tokens=1500))
+    except (anthropic.APIError, ValueError, RuntimeError):
+        return None

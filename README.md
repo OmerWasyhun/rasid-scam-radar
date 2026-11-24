@@ -15,14 +15,19 @@ Most tools wait for a victim to paste a suspicious link. RASID hunts first. An i
 | **Maps Verifier** | Google Places listings for a brand in each emirate, checked against official domains and phones; flags mobile numbers on bank/telco listings and numbers reused across brands. | `GOOGLE_MAPS_API_KEY` |
 | **Social & Search Ads** | Meta Ad Library (Facebook, Instagram, WhatsApp, Messenger, Threads) and Google Ads Transparency Center (UAE) for ads using a watched name from someone else; Google results from the UAE in several languages; paste-an-ad inspector with screenshot reading. | `META_ACCESS_TOKEN`, `SERPAPI_KEY`, `ANTHROPIC_API_KEY` (screenshots) |
 | **Job & Visa Linguist** | Scores posts in Arabic, English, Hindi, Urdu, Roman Urdu, Malayalam, Tamil, Sinhala, Tagalog, Bengali, Nepali; reads public Telegram channels. Claude extracts employer, fee, salary and translation. | Claude optional |
-| **Evidence & reputation** | Full-page screenshots and verdicts from urlscan.io; Google Safe Browsing and VirusTotal checks on every live site. | `URLSCAN_API_KEY`, `GOOGLE_SAFE_BROWSING_KEY`, `VIRUSTOTAL_API_KEY` |
+| **Site inspection** | Every live lookalike is opened in RASID's own headless browser: screenshot, visual comparison with the official site, rendered-page checks for copied design, malicious links and code, network calls (e.g. to Telegram bots) and payment/data capture. A similar name alone never flags a site. Optional Claude screenshot scan; Google Safe Browsing and VirusTotal reputation. | none (`ANTHROPIC_API_KEY`, `GOOGLE_SAFE_BROWSING_KEY`, `VIRUSTOTAL_API_KEY` optional) |
 | **Case notes & strike packs** | Claude writes the case note in Arabic and English; strike pack bundles evidence and pre-filled abuse letters. Nothing is sent automatically. | Claude optional (template fallback) |
+
+## Call Guardian (voice agent)
+
+A phone number you add to a call you're unsure about: tap **Add call**, dial the Guardian, tap **Merge**. It listens, warns aloud in Arabic and English when the call matches a scam (OTP, card, AnyDesk, transfers, fake police or bank), texts you a summary, and lets you reply **REPORT** to open a case in this console. It works on Android and iPhone with no app. Setup, the keys to fill in and the demo script are in [docs/call-guardian.md](docs/call-guardian.md). **Test it for free:** run the server and open http://localhost:8042/guardian in Edge. Put a real call on speakerphone next to the laptop, or play a sample call. No Twilio and no keys are needed.
 
 ## Run it
 
 ```powershell
 python -m venv .venv
 .venv\Scripts\python -m pip install -r requirements.txt
+.venv\Scripts\python -m playwright install chromium   # RASID's own browser for screenshots
 copy .env.example .env      # then fill in the keys you have
 .venv\Scripts\python -m uvicorn rasid.api:app --port 8042
 ```
@@ -39,7 +44,6 @@ All keys go in `.env` (see `.env.example`). Every sensor without a key says so i
 | `GOOGLE_MAPS_API_KEY` | Maps Verifier (enable **Places API (New)** in Google Cloud) |
 | `SERPAPI_KEY` | Search & ads sweep |
 | `META_ACCESS_TOKEN` | Meta Ad Library sweep (Facebook / Instagram ads) |
-| `URLSCAN_API_KEY` | Page screenshots and verdicts |
 | `GOOGLE_SAFE_BROWSING_KEY` | Google's phishing/malware list check |
 | `VIRUSTOTAL_API_KEY` | Security-vendor reputation of each domain |
 | `RASID_PASSWORD` | Officer login for the console (off when empty) |

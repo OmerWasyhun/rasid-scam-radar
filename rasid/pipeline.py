@@ -5,7 +5,7 @@ import threading
 import time
 import uuid
 
-from . import analyzer, cluster, db, enrich, generator, hunters, nrd, verify
+from . import analyzer, browser, cluster, db, enrich, generator, hunters, llm, nrd, verify
 from .sensors.maps import norm_phone
 
 ANALYZE_CAP = 25
@@ -70,14 +70,20 @@ def investigate(hosts: dict, w: dict, log, sensor_of=None, extra_of=None):
         insp = None
         if page.get("reachable"):
             try:
-                insp = verify.inspect(h, page, w)
+                rendered = browser.render(page.get("final_url") or f"http://{h}/")
+                insp = verify.inspect(h, page, w, rendered)
+                scan = llm.scan_screenshot(browser.SHOTS / insp["screenshot"], w["name"]) if insp.get("screenshot") else None
+                if scan:
+                    insp["vision"] = scan
+                    if scan.get("imitates_brand") and (scan.get("asks_for") or scan.get("payment")):
+                        insp["signals"].append({"text": f"Screenshot scan: imitates {w['name']} and asks for " + ", ".join(scan.get("asks_for") or ["payment"]), "points": 25, "kind": "content"})
             except Exception as e:  # never let one odd page break a hunt
                 insp = {"verdict": "inspection failed", "error": str(e)[:200], "signals": []}
         page.pop("_html", None)
         return h, rd, page, rep, rep_sig, insp
 
     log(f"Analysing {len(order)} live sites (RDAP, page, fingerprints)")
-    with cf.ThreadPoolExecutor(16) as ex:
+    with cf.ThreadPoolExecutor(8) as ex:
         for h, rd, page, rep, rep_sig, insp in ex.map(work, order):
             info[h]["inspection"] = insp
             info[h]["rdap"] = rd

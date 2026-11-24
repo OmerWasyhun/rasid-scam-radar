@@ -111,3 +111,36 @@ def test_tracker_iframes_are_not_malicious():
     html = ('<html><body><noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-1" height="0" width="0" style="display:none"></iframe></noscript>'
             '<iframe src="https://www.googletagmanager.com/x" width="0" height="0"></iframe></body></html>')
     assert not verify.inspect("shop.com", _page(html), W_FAKE)["code"]
+
+
+# ---------- RASID's own screenshot comparison (offline, synthetic images) ----------
+def _img(path, header, body, box=None):
+    from PIL import Image, ImageDraw
+    im = Image.new("RGB", (1366, 900), body)
+    d = ImageDraw.Draw(im)
+    d.rectangle([0, 0, 1366, 90], fill=header)
+    d.rectangle([90, 200, 700, 600], fill=(30, 60, 140))
+    if box:
+        d.rectangle(box, fill=(255, 255, 255))
+    im.save(path)
+    return path
+
+
+def test_visual_compare_separates_clone_from_other_site(tmp_path=None):
+    import pathlib, tempfile
+    from rasid import visual
+    d = pathlib.Path(tmp_path or tempfile.mkdtemp())
+    off = _img(d / "off.png", (255, 255, 255), (240, 240, 245))
+    clone = _img(d / "clone.png", (255, 255, 255), (240, 240, 245), box=(800, 150, 1100, 400))  # same page + injected form
+    other = _img(d / "other.png", (200, 30, 30), (20, 20, 20))
+    assert visual.compare(clone, off)["score"] >= 0.6
+    assert visual.compare(other, off)["score"] < 0.3
+
+
+def test_blank_screenshot_detected():
+    import pathlib, tempfile
+    from PIL import Image
+    from rasid import visual
+    p = pathlib.Path(tempfile.mkdtemp()) / "blank.png"
+    Image.new("RGB", (1366, 900), (255, 255, 255)).save(p)
+    assert visual.blank(p)

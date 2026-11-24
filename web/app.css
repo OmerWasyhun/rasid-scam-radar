@@ -167,3 +167,5 @@ form.stack textarea{min-height:90px;resize:vertical}
 .loginbox input{font:inherit;color:var(--text);background:var(--panel-2);border:1px solid var(--line-2);border-radius:8px;padding:9px 10px}
 .insp{border:1px solid var(--line-2);border-left-width:3px;border-radius:8px;padding:8px 10px;margin:0 0 10px;background:var(--panel-2)}
 .insp .small{margin-left:4px}
+.shots{display:grid;grid-template-columns:1fr 1fr;gap:6px}.shots figure{margin:0}.shots figcaption{font-family:var(--f-mono);font-size:.62rem;color:var(--muted);margin-top:2px}
+.shots:has(figure:only-child){grid-template-columns:1fr}

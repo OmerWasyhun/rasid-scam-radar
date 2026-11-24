@@ -16,7 +16,7 @@ from urllib.parse import urljoin, urlparse
 
 from bs4 import BeautifulSoup
 
-from . import db, enrich, generator
+from . import browser, db, enrich, generator, visual
 from .config import DATA_DIR
 
 _cache: dict[str, tuple[float, dict]] = {}
@@ -45,6 +45,9 @@ OBFUSCATION = [
 ]
 ANTI_INSPECT = re.compile(r"addEventListener\(\s*['\"]contextmenu['\"].{0,80}preventDefault|devtools(?:-detect|Open|isOpen)|debugger;\s*}\s*,\s*\d+", re.I | re.S)
 DRAINER = re.compile(r"walletconnect|web3modal|ethers\.(?:js|min)|setApprovalForAll|seaport|permit2", re.I)
+PARKING_HOSTS = ("parklogic.com", "parkingcrew.net", "bodis.com", "sedoparking.com", "sedo.com", "above.com", "skenzo.com",
+                 "dan.com", "afternic.com", "hugedomains.com", "domainsponsor.com", "parked.com", "trafficparking", "porkbun.com/parked",
+                 "smartname.com", "uniregistry", "namecheap.com/domains/marketplace", "domainmarket.com", "undeveloped.com")
 TRACKERS = ("googletagmanager.com", "google.com", "doubleclick.net", "google-analytics.com", "facebook.com", "facebook.net",
             "youtube.com", "hotjar.com", "clarity.ms", "linkedin.com", "twitter.com", "tiktok.com", "snapchat.com", "bing.com",
             "googlesyndication.com", "recaptcha.net", "gstatic.com", "cloudflare.com", "hubspot.com", "zendesk.com", "intercom.io")
@@ -107,6 +110,12 @@ def official_profile(w: dict) -> dict | None:
         if page and len(page["body"]) > 500 and not is_challenge(page["body"]):
             break
         page = None
+    shot = None
+    r = browser.render(f"https://{dom}/", tag="official")
+    if r.get("ok") and not is_challenge(r.get("html", "")):
+        shot = r.get("screenshot")
+        if not page:  # the live browser got through where the plain fetch was blocked
+            page = {"body": r["html"], "url": r["final_url"]}
     if page:
         prof = _profile(page["body"], page["url"])
         prof["favicon_hash"] = _favicon_hash(page["url"], BeautifulSoup(page["body"], "html.parser"))
@@ -116,9 +125,16 @@ def official_profile(w: dict) -> dict | None:
         prof = _profile(html, f"https://{dom}/")
         prof["favicon_hash"] = None
         prof["source"] = "saved snapshot"
+    if prof is not None:
+        prof["screenshot"] = shot
     with _lock:
         _cache[dom] = (time.time(), prof)
     return prof
+
+
+def _flagged_regs() -> set:
+    with db.conn() as c:
+        return {r[0] for r in c.execute("SELECT key FROM cases WHERE score>=60 AND key NOT LIKE '%:%'")}
 
 
 def _jac(a: set, b: set) -> float:
@@ -143,19 +159,25 @@ def ui_similarity(sus: dict, off: dict) -> dict:
 
 
 # ---------- inspection ----------
-def inspect(host: str, page: dict, w: dict | None) -> dict:
-    """page is analyzer.analyze() output including the private _html field. Returns findings + signals."""
-    html = page.get("_html") or ""
-    url = page.get("final_url") or f"http://{host}/"
+def inspect(host: str, page: dict, w: dict | None, rendered: dict | None = None) -> dict:
+    """page is analyzer.analyze() output including the private _html field; rendered is browser.render() output
+    (JavaScript executed, screenshot taken). Checks run on the rendered page when we have it."""
+    rendered = rendered if rendered and rendered.get("ok") else None
+    html = (rendered or {}).get("html") or page.get("_html") or ""
+    url = (rendered or {}).get("final_url") or page.get("final_url") or f"http://{host}/"
     final_host = (urlparse(url).hostname or host).lower()
     soup = BeautifulSoup(html, "html.parser")
     text = soup.get_text(" ", strip=True)
     raw = html
-    sig, out = [], {"links": [], "code": [], "payment": [], "ui": None}
+    flagged_regs = _flagged_regs()
+    sig, out = [], {"links": [], "code": [], "payment": [], "ui": None, "visual": None,
+                    "screenshot": (rendered or {}).get("screenshot"), "screenshot_full": (rendered or {}).get("screenshot_full"),
+                    "rendered": bool(rendered)}
     official_regs = generator.OFFICIAL_CACHE
 
     # 0. parked / for sale
-    out["parked"] = bool(PARKED.search(text[:5000])) and not soup.find("form")
+    parking_hit = any(any((urlparse(rq["url"]).hostname or "").endswith(p) for p in PARKING_HOSTS) for rq in (rendered or {}).get("requests", []))
+    out["parked"] = (bool(PARKED.search(text[:5000])) or parking_hit or any(p in raw for p in PARKING_HOSTS)) and not soup.find("form")
 
     # 1. UI similarity
     off = official_profile(w) if w else None
@@ -176,6 +198,16 @@ def inspect(host: str, page: dict, w: dict | None) -> dict:
             sig.append({"text": f"Looks like the official {w['name']} site ({int(ui['score'] * 100)}% UI match)", "points": 30, "kind": "content"})
         elif ui["score"] >= 0.35:
             sig.append({"text": f"Partly copies the official {w['name']} site ({int(ui['score'] * 100)}% UI match)", "points": 18, "kind": "content"})
+        if rendered and off.get("screenshot"):
+            sp_path, off_path = browser.SHOTS / rendered["screenshot"], browser.SHOTS / off["screenshot"]
+            if sp_path.exists() and off_path.exists() and not visual.blank(sp_path):
+                vis = visual.compare(sp_path, off_path)
+                vis["official_screenshot"] = off["screenshot"]
+                out["visual"] = vis
+                if vis["score"] >= 0.7:
+                    sig.append({"text": f"Screenshot looks like the official {w['name']} site ({int(vis['score'] * 100)}% visual match)", "points": 30, "kind": "content"})
+                elif vis["score"] >= 0.5:
+                    sig.append({"text": f"Screenshot partly resembles the official {w['name']} site ({int(vis['score'] * 100)}% visual match)", "points": 15, "kind": "content"})
         if ui["parts"]["favicon"] == 1.0:
             sig.append({"text": f"Uses the exact same favicon as {w['name']}", "points": 15, "kind": "content"})
         if hot:
@@ -194,6 +226,17 @@ def inspect(host: str, page: dict, w: dict | None) -> dict:
             findings.append(("Form posts sensitive fields to a PHP script", 5))
     if re.search(r"api\.telegram\.org/bot", raw):
         findings.append(("Page code calls the Telegram bot API (typical for stealing form data)", 25))
+    for rq in (rendered or {}).get("requests", []):
+        rh = (urlparse(rq["url"]).hostname or "").lower()
+        if not rh:
+            continue
+        if "api.telegram.org" in rh:
+            findings.append(("While loading, the page contacted a Telegram bot", 25))
+        elif rq["type"] == "script" and re.match(r"^\d{1,3}(\.\d{1,3}){3}$", rh):
+            findings.append((f"Loads a script from a bare IP address ({rh})", 15))
+        elif generator.registrable(rh) in flagged_regs and generator.registrable(rh) != generator.registrable(final_host):
+            findings.append((f"While loading, the page talks to {generator.registrable(rh)}, already flagged by RASID", 20))
+        # Ordinary background calls (analytics, ads, chat widgets, CDNs) are not evidence: big legitimate sites make dozens.
     for a in soup.find_all(["a", "iframe", "script"], href=True) + soup.find_all(["iframe", "script"], src=True):
         h = urljoin(url, a.get("href") or a.get("src") or "")
         hn = (urlparse(h).hostname or "").lower()
@@ -233,12 +276,14 @@ def inspect(host: str, page: dict, w: dict | None) -> dict:
     for fr in soup.find_all("iframe"):
         if fr.find_parent("noscript"):
             continue  # tag-manager / pixel fallbacks live here on ordinary sites
-        src_host = (urlparse(urljoin(url, fr.get("src") or "")).hostname or "").lower()
-        if not src_host or any(src_host.endswith(t) for t in TRACKERS) or generator.registrable(src_host) == generator.registrable(final_host):
-            continue
+        src = (fr.get("src") or "").strip()
+        src_host = (urlparse(urljoin(url, src)).hostname or "").lower()
         st = (fr.get("style") or "").replace(" ", "").lower()
-        if fr.get("width") in ("0", "1") or fr.get("height") in ("0", "1") or "display:none" in st or "visibility:hidden" in st:
-            out["code"].append(f"Hidden iframe loading {src_host}")
+        hidden = fr.get("width") in ("0", "1") or fr.get("height") in ("0", "1") or "display:none" in st or "visibility:hidden" in st
+        # hidden tracker iframes are everywhere; only hidden frames to raw IPs, flagged sites or script URLs count
+        if hidden and (src.lower().startswith(("javascript:", "data:text/html")) or re.match(r"^\d{1,3}(\.\d{1,3}){3}$", src_host)
+                       or (src_host and generator.registrable(src_host) in flagged_regs)):
+            out["code"].append(f"Hidden iframe loading {src_host or src[:30]}")
             break
     if ANTI_INSPECT.search(raw):
         out["code"].append("Blocks right-click or detects developer tools (hides from inspection)")
@@ -269,11 +314,14 @@ def inspect(host: str, page: dict, w: dict | None) -> dict:
     # brand claims only count together with capture or copied UI
     brand = bool(page.get("brands_mentioned"))
     capture = bool(page.get("asks_for")) or any(p >= 15 for _, p in pay)  # card/OTP fields, IBAN, wallet, pay-an-amount
-    copied = bool(out["ui"] and out["ui"]["score"] >= 0.35) or bool(out.get("hotlinks"))
+    copied = bool(out["ui"] and out["ui"]["score"] >= 0.35) or bool(out.get("hotlinks")) or bool(out["visual"] and out["visual"]["score"] >= 0.5)
     malicious = bool(out["links"] or out["code"])
 
     if out["parked"]:
         verdict = "parked"
+        # parking networks run their own ad scripts; keep only signals that point at real abuse
+        sig = [x for x in sig if x["points"] >= 25 or "Telegram" in x["text"]]
+        out["code"] = []
     elif copied and (capture or malicious):
         verdict = "impersonation"
     elif copied:
@@ -282,7 +330,7 @@ def inspect(host: str, page: dict, w: dict | None) -> dict:
         verdict = "malicious"
     elif capture and brand:
         verdict = "payment capture"
-    elif not brand and not capture and not malicious and (not out["ui"] or out["ui"]["score"] < 0.2) and len(text) > 400:
+    elif not brand and not capture and not malicious and (not out["ui"] or out["ui"]["score"] < 0.2)             and (not out["visual"] or out["visual"]["score"] < 0.35) and len(text) > 400:
         verdict = "unrelated business"
     else:
         verdict = "name only"

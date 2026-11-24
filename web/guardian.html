@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RASID Call Guardian</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="/web/app.css">
+<style>
+  .g-wrap{max-width:1100px;margin:0 auto;border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
+  .g-body{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:0}
+  .g-main{padding:16px;border-inline-end:1px solid var(--line);min-width:0}
+  .g-side{padding:16px;display:flex;flex-direction:column;gap:16px;min-width:0}
+  .g-steps{margin:0;padding-inline-start:20px;color:var(--muted)} .g-steps li{margin:2px 0} .g-steps b{color:var(--text)}
+  .g-ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:14px}
+  .g-ctl select{font:inherit;font-family:var(--f-mono);font-size:.8rem;background:var(--ink);color:var(--text);border:1px solid var(--line-2);border-radius:7px;padding:6px 8px}
+  .btn.big{padding:10px 18px;font-size:.85rem}
+  .btn.stop{background:var(--crit);color:#fff}
+  .mic{display:inline-flex;align-items:center;gap:6px;font-family:var(--f-mono);font-size:.75rem;color:var(--muted)}
+  .mic i{width:9px;height:9px;border-radius:50%;background:var(--faint)}
+  .mic.on i{background:var(--ok);box-shadow:0 0 0 4px color-mix(in srgb,var(--ok) 25%,transparent)}
+  .mic.speak i{background:var(--accent)}
+  .g-log{margin-top:16px;border:1px solid var(--line);border-radius:10px;background:var(--ink);height:380px;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:6px}
+  .ln{padding:6px 9px;border-radius:8px;background:var(--panel-2);max-width:92%;overflow-wrap:anywhere}
+  .ln small{display:block;font-family:var(--f-mono);font-size:.66rem;color:var(--faint);letter-spacing:.06em}
+  .ln.rasid{align-self:flex-end;background:color-mix(in srgb,var(--accent) 14%,var(--panel-2));border:1px solid color-mix(in srgb,var(--accent) 35%,transparent)}
+  .ln.warn{background:color-mix(in srgb,var(--crit) 16%,var(--panel-2));border-color:color-mix(in srgb,var(--crit) 45%,transparent)}
+  .ln.interim{opacity:.55;font-style:italic}
+  .ln[dir=rtl]{font-family:var(--f-ar)}
+  .g-type{display:flex;gap:8px;margin-top:10px}
+  .g-type input{all:unset;flex:1;min-width:0;border:1px solid var(--line-2);border-radius:8px;padding:8px 10px;background:var(--ink);font-size:.9rem}
+  .g-meter{border:1px solid var(--line);border-radius:12px;padding:14px;background:var(--panel-2)}
+  .g-meter .num{font-family:var(--f-display);font-size:3rem;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+  .g-meter .bar{height:8px;border-radius:4px;background:var(--line);margin:10px 0 8px;overflow:hidden}
+  .g-meter .bar span{display:block;height:100%;width:0;background:var(--ok);transition:width .4s,background .4s}
+  .g-verdict{font-family:var(--f-mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase}
+  .g-flags{margin:8px 0 0;padding-inline-start:18px} .g-flags li{margin:2px 0}
+  .g-card{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--panel-2)}
+  .g-card h3{margin:0 0 8px;font-family:var(--f-display);font-size:.95rem}
+  .g-samples{display:flex;flex-wrap:wrap;gap:6px}
+  .g-sms{white-space:pre-wrap;font-size:.82rem;background:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px;margin:8px 0;overflow-wrap:anywhere}
+  .g-report{display:flex;gap:6px} .g-report input{all:unset;flex:1;min-width:0;border:1px solid var(--line-2);border-radius:7px;padding:6px 8px;background:var(--ink);font-family:var(--f-mono);font-size:.8rem}
+  .g-note{font-size:.78rem;color:var(--muted)} .g-note.bad{color:var(--high)}
+  @media (max-width:860px){.g-body{grid-template-columns:1fr}.g-main{border-inline-end:0;border-bottom:1px solid var(--line)}.g-log{height:300px}}
+  @media (prefers-reduced-motion:reduce){.g-meter .bar span{transition:none}}
+</style>
+</head>
+<body>
+<div class="g-wrap">
+  <header class="c-head">
+    <div class="brand">
+      <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="#4cc9f0" stroke-width="1.5"/><circle cx="15" cy="15" r="7.5" fill="none" stroke="#4cc9f0" stroke-opacity=".5"/><path d="M15 15 L26 8" stroke="#4cc9f0" stroke-width="1.6"/><circle cx="21" cy="11.5" r="2" fill="#ff5470"/></svg>
+      <div>RASID Call Guardian <span class="ar">حارس المكالمات</span><small>Local test · free · this computer is the Guardian's ear</small></div>
+    </div>
+    <a class="btn ghost" href="/" style="margin-inline-start:auto">Police console</a>
+  </header>
+
+  <div class="g-body">
+    <main class="g-main">
+      <ol class="g-steps">
+        <li>Start a phone call and put it on <b>speakerphone</b>, next to this computer.</li>
+        <li>Choose the language the call is in and press <b>Start listening</b>. Allow the microphone.</li>
+        <li>The Guardian speaks its warnings <b>out loud</b>, so the phone carries them to the caller as well.</li>
+        <li>Say <b>"RASID"</b> / <b>"راصد"</b> to ask its opinion, or <b>"RASID leave"</b> / <b>"راصد اطلع"</b> to end.</li>
+      </ol>
+
+      <div class="g-ctl">
+        <label class="small" for="lang">Call language</label>
+        <select id="lang"><option value="ar-AE">العربية (ar-AE)</option><option value="en-US">English (en-US)</option></select>
+        <button class="btn big" id="start" type="button">Start listening</button>
+        <button class="btn ghost" id="ask" type="button" disabled>Ask RASID</button>
+        <span class="mic" id="mic" role="status"><i></i><span id="micTxt">Not listening</span></span>
+      </div>
+      <p class="g-note" id="envNote"></p>
+
+      <div class="g-log" id="log" aria-live="polite" aria-label="Call transcript"></div>
+      <form class="g-type" id="typeForm" autocomplete="off">
+        <input id="typeIn" placeholder="No microphone? Type what the caller says and press Enter…" aria-label="Type a line from the call">
+        <button class="btn ghost" type="submit">Send</button>
+      </form>
+    </main>
+
+    <aside class="g-side">
+      <section class="g-meter" aria-label="Scam risk">
+        <div class="eyebrow">Scam risk</div>
+        <div class="num" id="risk">0</div>
+        <div class="bar"><span id="bar"></span></div>
+        <div class="g-verdict" id="verdict">no scam signs</div>
+        <ul class="g-flags small" id="flags"></ul>
+        <div class="small" id="by"></div>
+      </section>
+
+      <section class="g-card">
+        <h3>Try a sample call</h3>
+        <p class="g-note">Plays a synthetic call through the Guardian as text, no microphone needed.</p>
+        <div class="g-samples" id="samples"></div>
+      </section>
+
+      <section class="g-card" id="sumCard" hidden>
+        <h3>After the call</h3>
+        <p class="g-note">This is the text message the person would receive.</p>
+        <div class="g-sms" id="sms"></div>
+        <form class="g-report" id="reportForm" autocomplete="off">
+          <input id="repNum" placeholder="Caller's number (optional)" aria-label="Caller's number">
+          <button class="btn" type="submit">Report</button>
+        </form>
+        <p class="g-note" id="repMsg"></p>
+      </section>
+    </aside>
+  </div>
+</div>
+<script src="/web/guardian.js"></script>
+</body>
+</html>

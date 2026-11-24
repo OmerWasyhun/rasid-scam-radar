@@ -9,6 +9,7 @@ const SENS = {
   ads:     {name: 'Social & Search Ads', ar: 'إعلانات التواصل والبحث', c: '#ff7eb6'},
   kits:    {name: 'Kit Fingerprint', ar: 'بصمة الأدوات',          c: '#ff5470'},
   jobs:    {name: 'Job & Visa',      ar: 'الوظائف والتأشيرات',    c: '#5ee0a0'},
+  calls:   {name: 'Call Guardian',   ar: 'حارس المكالمات',        c: '#f4a261'},
 };
 const LANGS = ['ALL', 'AR', 'EN', 'HI', 'UR', 'UR-L', 'ML', 'TA', 'SI', 'TL', 'BN', 'NE', 'RU', 'ZH'];
 const LANGFONT = {UR: 'ur', HI: 'indic', ML: 'indic', TA: 'indic', SI: 'indic', BN: 'indic', NE: 'indic', AR: 'ar', FA: 'ar', PS: 'ar'};
@@ -156,7 +157,7 @@ async function openCase(id) {
   const meta = ev.meta_ad, gad = ev.google_ad;
   if (meta) { kv.push(['Meta Page', meta.page_name || '']); kv.push(['Platforms', (meta.publisher_platforms || []).join(', ')]); if (meta.ad_snapshot_url) kv.push(['Ad snapshot', meta.ad_snapshot_url]); }
   if (gad) { kv.push(['Advertiser', gad.advertiser || '']); if (gad.details_link) kv.push(['Ad details', gad.details_link]); }
-  const shot = ev.urlscan;
+  const shot = ev.inspection;
   const text = ev.text || '';
   const sigs = (c.signals || []).map(s => `<li class="${s.ok ? 'okk' : s.points ? '' : 'neu'}"><span>${esc(s.text)}</span><em>${s.points > 0 ? '+' : ''}${s.points || ''}</em></li>`).join('');
   const ex = c.explanation;
@@ -172,11 +173,11 @@ async function openCase(id) {
     ${text ? `<div class="quote">${langText(text.slice(0, 700), (c.langs || [])[0])}</div>` : ''}
     ${ev.extracted && ev.extracted.translation_en ? `<div class="note"><p class="eyebrow">Translation</p><p>${esc(ev.extracted.translation_en)}</p></div>` : ''}
     <dl class="kv">${kv.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>
-    <div id="shot">${shot ? shotHTML(shot) : ''}</div>
+    <div id="shot">${shotHTML(shot)}</div>
     <div id="explain">${ex ? noteHTML(ex) : ''}</div>
     <div class="actions">
       <button class="btn" id="b-explain">${ex ? 'Re-explain' : 'Explain (AR + EN)'}</button>
-      ${(page.final_url || ev.url || /\./.test(c.title)) && c.sensor !== 'jobs' && c.sensor !== 'maps' ? `<button class="btn ghost" id="b-shot">${shot ? 'New screenshot' : 'Screenshot'}</button>` : ''}
+      ${c.sensor !== 'jobs' && c.sensor !== 'maps' && /\./.test(c.title) && !/^(Ad|Meta ad|Google ad):/.test(c.title) ? `<button class="btn ghost" id="b-shot">Re-scan site</button>` : ''}
       <a class="btn ghost" href="/api/pack/${encodeURIComponent(key)}/html" target="_blank" rel="noopener">Strike pack${c.actor ? ' (' + (c.siblings.length + 1) + ' sites)' : ''}</a>
     </div>
     ${c.siblings && c.siblings.length ? `<p class="eyebrow mt">Same actor · shared fingerprints</p><ul class="gen">${c.siblings.map(s => `<li class="link" data-id="${s.id}"><span>${esc(s.title)}</span><em>${esc(s.sensor)} · ${s.score}</em></li>`).join('')}</ul>` : ''}
@@ -184,9 +185,9 @@ async function openCase(id) {
   p.querySelectorAll('.gen li.link').forEach(li => li.onclick = () => openCase(+li.dataset.id));
   const bs = $('b-shot');
   if (bs) bs.onclick = async () => {
-    bs.disabled = true; bs.textContent = 'Capturing (up to a minute)…';
-    try { const r = await api(`/api/cases/${id}/screenshot`, {method: 'POST'}); $('shot').innerHTML = shotHTML(r); bs.textContent = 'New screenshot'; refresh(); }
-    catch (e) { $('shot').innerHTML = `<p class="err">${esc(e.message)}</p>`; bs.textContent = 'Screenshot'; }
+    bs.disabled = true; bs.textContent = 'Opening the site and scanning…';
+    try { await api(`/api/cases/${id}/rescan`, {method: 'POST'}); await refresh(); openCase(id); return; }
+    catch (e) { $('shot').innerHTML = `<p class="err">${esc(e.message)}</p>`; bs.textContent = 'Re-scan site'; }
     bs.disabled = false;
   };
   $('b-explain').onclick = async () => {
@@ -217,11 +218,14 @@ function inspHTML(i) {
     ${list('Malicious links', i.links)}${list('Suspicious code', i.code)}${list('Payment / data capture', i.payment)}
     ${(i.hotlinks || []).length ? list('Loads files from the official site', i.hotlinks) : ''}</div>`;
 }
-function shotHTML(r) {
-  if (!r || !r.screenshot) return '';
-  return `<div class="shot"><p class="eyebrow">Screenshot · urlscan.io${r.malicious ? ' · <span style="color:var(--crit)">malicious</span>' : ''}</p>
-    <a href="${esc(r.report || r.screenshot)}" target="_blank" rel="noopener"><img src="${esc(r.screenshot)}" alt="Screenshot of the suspect page" loading="lazy"></a>
-    ${r.done === false ? '<p class="small">Scan still running on urlscan.io; the image appears when it finishes.</p>' : ''}</div>`;
+function shotHTML(i) {
+  if (!i || !i.screenshot) return i && i.rendered === false ? '<p class="small">RASID&rsquo;s browser could not render this page.</p>' : '';
+  const v = i.visual, vs = i.vision;
+  const off = v && v.official_screenshot ? `<figure><img src="/api/shots/${esc(v.official_screenshot)}" alt="Official site" loading="lazy"><figcaption>Official site</figcaption></figure>` : '';
+  return `<div class="shot"><p class="eyebrow">Screenshot · taken by RASID${v ? ` · <b style="color:${v.score >= 0.5 ? 'var(--crit)' : 'var(--text)'}">${Math.round(v.score * 100)}% visual match</b>` : ''}</p>
+    <div class="shots"><figure><a href="/api/shots/${esc(i.screenshot_full || i.screenshot)}" target="_blank" rel="noopener"><img src="/api/shots/${esc(i.screenshot)}" alt="Suspect page" loading="lazy"></a><figcaption>Suspect page</figcaption></figure>${off}</div>
+    ${v ? `<p class="small">structure ${Math.round(v.parts.structure * 100)}% · shape ${Math.round(v.parts.shape * 100)}% · colours ${Math.round(v.parts.colours * 100)}% · pixels ${Math.round(v.parts.pixels * 100)}%</p>` : ''}
+    ${vs ? `<p class="small"><b>Screenshot scan:</b> ${esc(vs.summary || '')}${vs.asks_for && vs.asks_for.length ? ' · asks for ' + esc(vs.asks_for.join(', ')) : ''}</p>` : ''}</div>`;
 }
 function noteHTML(n) {
   return `<div class="note"><p class="eyebrow">Case note · ${esc(n.recommendation || '')}</p><p>${esc(n.en)}</p><p class="ar" dir="rtl">${esc(n.ar)}</p>${n.note ? `<p class="small">${esc(n.note)}</p>` : ''}</div>`;
@@ -382,7 +386,7 @@ function renderKeys() {
   const k = (st.status || {}).keys || {};
   const row = (on, label) => `<span class="${on ? 'on' : 'off'}">${on ? '●' : '○'} ${label}</span>`;
   $('keys').innerHTML = row(true, 'DNS · RDAP · NRD · CT') + row(k.claude, 'Claude') + row(k.google_maps, 'Google Maps') + row(k.serpapi, 'SerpApi') +
-    row(k.meta_ads, 'Meta Ad Library') + row(k.urlscan, 'urlscan.io') + row(k.safe_browsing, 'Safe Browsing') + row(k.virustotal, 'VirusTotal') +
+    row(k.meta_ads, 'Meta Ad Library') + row(k.safe_browsing, 'Safe Browsing') + row(k.virustotal, 'VirusTotal') +
     (k.login ? '<a class="small" href="/logout">Sign out</a>' : '');
 }
 
