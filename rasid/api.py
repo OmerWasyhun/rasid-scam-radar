@@ -4,6 +4,7 @@ import time
 from collections import Counter
 
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -12,6 +13,8 @@ from . import citizen, cluster, config, db, generator, llm, phones, pipeline, se
 from .sensors import ads, jobs, maps
 
 app = FastAPI(title="RASID", version="0.2")
+# The app's web preview runs on another port; phones don't need CORS.
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
 app.include_router(citizen.router)
 app.include_router(voice.router)
 WEB = config.ROOT / "web"
