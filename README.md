@@ -2,7 +2,7 @@
 
 Built for the **ScamShield AI Hackathon** (42 Abu Dhabi × Abu Dhabi Police), challenge: *Detecting Fraudulent Links and Websites Used in Cybercrimes and Financial Fraud.*
 
-**Team:** Ibrahim Abulaban · Ahmed Ismail Bulbul
+**Live demo:** https://rasid-scam-radar.onrender.com (open, no login) · **Team:** Ibrahim Abulaban · Ahmed Ismail Bulbul
 
 Pitch deck: [RASID-ScamShield-pitch.pptx](RASID-ScamShield-pitch.pptx) ([PDF](RASID-ScamShield-pitch.pdf)) · Project description: [RASID-project-description.pdf](RASID-project-description.pdf)
 
