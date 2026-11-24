@@ -98,3 +98,11 @@ def test_guardian_link_opens_console_tab():
     from rasid.api import app
     r = TestClient(app).get("/guardian", follow_redirects=False)
     assert r.status_code in (302, 307) and r.headers["location"] == "/#guardian"
+
+
+def test_listener_is_local_unless_the_hosted_demo_opens_it(monkeypatch):
+    from rasid import config, voice
+    monkeypatch.setattr(config, "GUARDIAN_REMOTE", False)
+    assert voice._allowed("127.0.0.1") and not voice._allowed("203.0.113.9")
+    monkeypatch.setattr(config, "GUARDIAN_REMOTE", True)
+    assert voice._allowed("203.0.113.9")

@@ -21,7 +21,7 @@ import time
 from fastapi import APIRouter, HTTPException, Request, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel, Field
 
-from . import db, guardian
+from . import config, db, guardian
 from .config import GUARDIAN_LANG, ROOT
 from .guardian import LEAVE, LINES, WAKE, CallState
 
@@ -47,8 +47,13 @@ def _prune() -> None:
         PENDING.pop(k, None)
 
 
+def _allowed(host: str) -> bool:
+    """Local by default; a hosted demo opens it to signed-in officers (the session token comes from the login-gated API)."""
+    return config.GUARDIAN_REMOTE or host in LOOPBACK
+
+
 def _local_only(request: Request) -> None:
-    if (request.client.host if request.client else "") not in LOOPBACK:
+    if not _allowed(request.client.host if request.client else ""):
         raise HTTPException(403, "The Call Guardian listener only runs on this computer (open it via http://localhost)")
 
 
@@ -139,7 +144,7 @@ class Session:
 
 @router.websocket("/voice/listen")
 async def listen(ws: WebSocket):
-    if (ws.client.host if ws.client else "") not in LOOPBACK:
+    if not _allowed(ws.client.host if ws.client else ""):
         await ws.close(code=1008)
         return
     await ws.accept()
