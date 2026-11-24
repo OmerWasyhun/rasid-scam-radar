@@ -9,7 +9,7 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from . import auth, cluster, config, db, enrich, generator, llm, pipeline, seeds, strike, voice
+from . import auth, browser, cluster, config, db, enrich, generator, llm, pipeline, seeds, strike, voice
 from .sensors import ads, jobs, maps, social_ads
 
 app = FastAPI(title="RASID", version="1.0")
