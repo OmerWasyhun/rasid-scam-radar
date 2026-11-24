@@ -1,4 +1,4 @@
-package ae.rasid.rootguard
+package ae.rasid.rootguard.core
 
 import android.content.Context
 import org.json.JSONArray

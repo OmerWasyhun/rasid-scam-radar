@@ -13,7 +13,7 @@
 
   <application>
     <service
-      android:name="ae.rasid.rootguard.RootGuardService"
+      android:name="ae.rasid.rootguard.core.RootGuardService"
       android:exported="false"
       android:foregroundServiceType="microphone" />
   </application>

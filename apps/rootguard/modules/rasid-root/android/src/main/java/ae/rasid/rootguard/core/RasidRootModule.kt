@@ -1,4 +1,4 @@
-package ae.rasid.rootguard
+package ae.rasid.rootguard.core
 
 import android.content.Context
 import android.content.Intent
@@ -21,7 +21,7 @@ class RasidRootModule : Module() {
     }
 
     Function("arm") {
-      ctx.startForegroundService(Intent(ctx, RootGuardService::class.java))
+      androidx.core.content.ContextCompat.startForegroundService(ctx, Intent(ctx, RootGuardService::class.java))
       true
     }
 

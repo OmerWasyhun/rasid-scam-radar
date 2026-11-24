@@ -163,6 +163,13 @@ def score(sim_points: int, sim_reason: str, age: float | None, page: dict | None
     sig = []
     if official:
         return 0, [{"text": "On the official allowlist", "points": -100, "ok": True}]
+    if page and page.get("reachable") and page.get("final_url"):
+        from urllib.parse import urlparse
+        from .generator import OFFICIAL_CACHE, registrable
+        landed = registrable(urlparse(page["final_url"]).hostname or "")
+        if landed in OFFICIAL_CACHE:
+            # brands register misspellings of their own name and forward them home (e.g. appl-e.com -> apple.com)
+            return 0, [{"text": f"Redirects to the official site {landed}: a brand-owned defensive domain", "points": -100, "ok": True}]
     if sim_points:
         sig.append({"text": f"Name imitation: {sim_reason}", "points": sim_points})
     if age is not None:

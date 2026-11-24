@@ -1,4 +1,4 @@
-package ae.rasid.rootguard
+package ae.rasid.rootguard.core
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -70,7 +70,7 @@ class RootGuardService : Service() {
     super.onCreate()
     channels()
     val n = status("Armed: waiting for a call")
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
       startForeground(NOTIF_ID, n, ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE)
     } else {
       startForeground(NOTIF_ID, n)
@@ -150,10 +150,7 @@ class RootGuardService : Service() {
     for (src in sources) for (rate in intArrayOf(16000, 8000)) {
       val min = AudioRecord.getMinBufferSize(rate, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT)
       if (min <= 0) continue
-      val rec = try {
-        @Suppress("MissingPermission")
-        AudioRecord(src, rate, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, maxOf(min, rate)).takeIf { it.state == AudioRecord.STATE_INITIALIZED }
-      } catch (e: Exception) { null } ?: continue
+      val rec = newRecorder(src, rate, min) ?: continue
       try { rec.startRecording() } catch (e: Exception) { rec.release(); continue }
       recorder = rec
       Log.i(TAG, "capturing source=$src rate=$rate")
@@ -169,6 +166,12 @@ class RootGuardService : Service() {
     return 0
   }
 
+  @Suppress("MissingPermission")
+  private fun newRecorder(src: Int, rate: Int, min: Int): AudioRecord? = try {
+    val r = AudioRecord(src, rate, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, maxOf(min, rate))
+    if (r.state == AudioRecord.STATE_INITIALIZED) r else { r.release(); null }
+  } catch (e: Exception) { null }
+
   private fun stopAudio() {
     val r = recorder
     recorder = null
@@ -178,17 +181,20 @@ class RootGuardService : Service() {
   }
 
   // ---------- hang up ----------
+  @Suppress("DEPRECATION", "MissingPermission")
   private fun hangUp(): Boolean {
-    try {
-      val tm = getSystemService(TelecomManager::class.java)
-      @Suppress("DEPRECATION", "MissingPermission")
-      if (tm.endCall()) return true
-    } catch (e: Exception) { Log.w(TAG, "endCall failed", e) }
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+      try {
+        val tm = getSystemService(TelecomManager::class.java)
+        if (tm.endCall()) return true
+      } catch (e: Exception) { Log.w(TAG, "endCall failed", e) }
+    }
     return Root.run("input keyevent KEYCODE_ENDCALL")  // root fallback
   }
 
   // ---------- notifications ----------
   private fun channels() {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
     val nm = getSystemService(NotificationManager::class.java)
     nm.createNotificationChannel(NotificationChannel(CH_STATUS, "Guardian status", NotificationManager.IMPORTANCE_LOW))
     nm.createNotificationChannel(NotificationChannel(CH_ALERT, "Scam calls ended", NotificationManager.IMPORTANCE_HIGH).apply {

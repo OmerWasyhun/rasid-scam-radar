@@ -7,7 +7,7 @@ group = 'ae.rasid.rootguard'
 version = '0.1.0'
 
 android {
-  namespace "ae.rasid.rootguard"
+  namespace "ae.rasid.rootguard.core"
   defaultConfig { versionCode 1; versionName '0.1.0' }
 }
 
