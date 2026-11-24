@@ -19,6 +19,14 @@ SERPAPI_KEY = os.getenv("SERPAPI_KEY", "").strip()
 URLSCAN_API_KEY = os.getenv("URLSCAN_API_KEY", "").strip()
 GOOGLE_SAFE_BROWSING_KEY = os.getenv("GOOGLE_SAFE_BROWSING_KEY", "").strip()
 
+# Cloud call screener (Twilio Voice + ConversationRelay)
+TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID", "").strip()
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN", "").strip()
+TWILIO_SCREENER_NUMBER = os.getenv("TWILIO_SCREENER_NUMBER", "").strip()
+PUBLIC_BASE_URL = os.getenv("PUBLIC_BASE_URL", "").strip().rstrip("/")   # https://... reachable by Twilio
+SCREENER_DEFAULT_DEVICE = os.getenv("SCREENER_DEFAULT_DEVICE", "").strip()  # demo: device that receives screened calls
+VOICE_MODEL = os.getenv("RASID_VOICE_MODEL", "").strip() or os.getenv("RASID_MODEL", "claude-opus-5-5").strip() or "claude-opus-5-5"
+
 CT_POLL = os.getenv("RASID_CT_POLL", "0") == "1"
 CT_POLL_MINUTES = int(os.getenv("RASID_CT_POLL_MINUTES", "20") or 20)
 
@@ -44,5 +52,6 @@ def key_status() -> dict:
         "serpapi": bool(SERPAPI_KEY),
         "urlscan": bool(URLSCAN_API_KEY),
         "safe_browsing": bool(GOOGLE_SAFE_BROWSING_KEY),
+        "twilio": bool(TWILIO_ACCOUNT_SID and TWILIO_AUTH_TOKEN and TWILIO_SCREENER_NUMBER and PUBLIC_BASE_URL),
         "model": MODEL,
     }

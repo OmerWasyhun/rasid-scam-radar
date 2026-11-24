@@ -8,10 +8,12 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from . import cluster, config, db, generator, llm, pipeline, seeds, strike
+from . import citizen, cluster, config, db, generator, llm, phones, pipeline, seeds, strike, voice
 from .sensors import ads, jobs, maps
 
-app = FastAPI(title="RASID", version="0.1")
+app = FastAPI(title="RASID", version="0.2")
+app.include_router(citizen.router)
+app.include_router(voice.router)
 WEB = config.ROOT / "web"
 
 
@@ -19,6 +21,7 @@ WEB = config.ROOT / "web"
 def _startup():
     seeds.ensure_defaults()
     pipeline.refresh_official_cache()
+    phones.sync_registry()
     if config.CT_POLL:
         threading.Thread(target=pipeline.poll_loop, args=(config.CT_POLL_MINUTES,), daemon=True).start()
 
