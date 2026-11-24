@@ -13,7 +13,7 @@ import threading
 import time
 from urllib.parse import urlparse
 
-from .config import DATA_DIR, DESKTOP_UA
+from .config import DATA_DIR, DESKTOP_UA, LOW_MEMORY
 
 SHOTS = DATA_DIR / "shots"
 VIEWPORT = {"width": 1366, "height": 900}
@@ -67,7 +67,10 @@ class _Pool:
     async def _launch(self):
         from playwright.async_api import async_playwright
         self._pw = await async_playwright().start()
-        self.browser = await self._pw.chromium.launch(headless=True, args=["--disable-dev-shm-usage", "--no-first-run"])
+        args = ["--disable-dev-shm-usage", "--no-first-run"]
+        if LOW_MEMORY:  # small hosting plans (512 MB): one renderer, capped JS heap
+            args += ["--disable-gpu", "--no-zygote", "--renderer-process-limit=1", "--js-flags=--max-old-space-size=160"]
+        self.browser = await self._pw.chromium.launch(headless=True, args=args)
         self.sem = asyncio.Semaphore(CONCURRENCY)
 
     async def _render(self, url: str, shot_name: str) -> dict:

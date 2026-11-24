@@ -11,6 +11,8 @@ DATA_DIR = ROOT / "data"
 DATA_DIR.mkdir(exist_ok=True)
 DB_PATH = Path(os.getenv("RASID_DB", DATA_DIR / "rasid.db"))
 PACK_DIR = DATA_DIR / "packs"
+DEMO_SEED = os.getenv("RASID_DEMO_SEED", "0") == "1"  # hosted demo: start from demo/ when the disk is empty
+LOW_MEMORY = os.getenv("RASID_LOW_MEMORY", "0") == "1"  # 512 MB hosting plans: leaner Chromium
 
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "").strip()
 MODEL = os.getenv("RASID_MODEL", "claude-opus-5-5").strip() or "claude-opus-5-5"

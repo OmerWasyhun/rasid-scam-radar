@@ -1,11 +1,12 @@
 """SQLite storage: watchlists, cases (anything suspicious a sensor found), actors and jobs."""
 import json
+import shutil
 import sqlite3
 import threading
 import time
 from contextlib import contextmanager
 
-from .config import DB_PATH
+from .config import DATA_DIR, DB_PATH, DEMO_SEED, ROOT
 
 _lock = threading.RLock()
 
@@ -53,8 +54,20 @@ CREATE TABLE IF NOT EXISTS jobs (
 JSON_FIELDS = {"explanation", "official_domains", "official_phones", "langs", "signals", "evidence", "features", "progress", "result"}
 
 
+def _seed_demo():
+    """Hosted demo: a fresh disk starts from the bundled snapshot in demo/ (cases + their screenshots)."""
+    src = ROOT / "demo"
+    if DB_PATH.exists() or not (src / "rasid.db").exists():
+        return
+    shutil.copy(src / "rasid.db", DB_PATH)
+    if (src / "shots").exists():
+        shutil.copytree(src / "shots", DATA_DIR / "shots", dirs_exist_ok=True)
+
+
 def _connect():
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+    if DEMO_SEED:
+        _seed_demo()
     con = sqlite3.connect(DB_PATH, check_same_thread=False, timeout=30)
     con.row_factory = sqlite3.Row
     con.execute("PRAGMA journal_mode=WAL")

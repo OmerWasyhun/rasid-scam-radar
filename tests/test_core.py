@@ -154,3 +154,19 @@ def test_link_check_flags_fake_signin_but_not_the_real_brand():
     real = linkcheck.check("https://www.instagram.com/", "https://www.instagram.com/accounts/login/", "Instagram", form)
     assert real == []
     assert linkcheck.no_age_credit("kit.blogspot.com") and not linkcheck.no_age_credit("www.adcb.com")
+
+
+def test_hosted_demo_starts_from_the_bundled_snapshot(tmp_path, monkeypatch):
+    import sqlite3
+    from rasid import db
+    bundle = tmp_path / "demo"
+    (bundle / "shots").mkdir(parents=True)
+    sqlite3.connect(bundle / "rasid.db").execute("CREATE TABLE marker (x)").connection.commit()
+    (bundle / "shots" / "a.png").write_bytes(b"png")
+    monkeypatch.setattr(db, "ROOT", tmp_path)
+    monkeypatch.setattr(db, "DATA_DIR", tmp_path / "data")
+    monkeypatch.setattr(db, "DB_PATH", tmp_path / "data" / "rasid.db")
+    (tmp_path / "data").mkdir()
+    db._seed_demo()
+    assert (tmp_path / "data" / "shots" / "a.png").exists()
+    assert sqlite3.connect(tmp_path / "data" / "rasid.db").execute("SELECT name FROM sqlite_master").fetchone() == ("marker",)

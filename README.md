@@ -94,7 +94,8 @@ Open **http://localhost:8042**. Every key in `.env` is optional; a sensor withou
 ### Hosted demo
 
 - **From a laptop:** install `cloudflared`, then run `deploy\live.ps1`. It serves an open demo of RASID on port 8045 behind a public HTTPS link, and visitors can use the Call Guardian from their own browser.
-- **On a server:** the `Dockerfile` builds the app with Chromium; set the keys, `RASID_PASSWORD` and `RASID_GUARDIAN_REMOTE=1` as environment variables.
+- **On Render (free plan):** `render.yaml` is a Blueprint for the `Dockerfile`. It starts from the demo cases and screenshots in `demo/`, runs Chromium in low-memory mode, and asks for the API keys in the Render dashboard.
+- **On any other server:** build the `Dockerfile` and set the keys and `RASID_GUARDIAN_REMOTE=1` as environment variables.
 
 ### Tests
 
