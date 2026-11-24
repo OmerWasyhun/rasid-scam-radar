@@ -48,39 +48,9 @@ CREATE TABLE IF NOT EXISTS jobs (
   result TEXT,
   created REAL NOT NULL
 );
-CREATE TABLE IF NOT EXISTS numbers (
-  number TEXT PRIMARY KEY,       -- E.164 digits, no plus: 971501234567
-  hash TEXT NOT NULL,            -- sha256 of the digits, for k-anonymity lookups
-  status TEXT NOT NULL,          -- official | reported | scam | cleared
-  org TEXT,                      -- owner when official
-  reporters TEXT NOT NULL DEFAULT '[]',   -- device ids that reported it
-  claims TEXT NOT NULL DEFAULT '{}',      -- {"ADCB": 3}: who callers pretended to be
-  source TEXT,
-  first REAL NOT NULL,
-  last REAL NOT NULL
-);
-CREATE INDEX IF NOT EXISTS numbers_hash ON numbers(hash);
-CREATE TABLE IF NOT EXISTS devices (
-  id TEXT PRIMARY KEY,
-  token TEXT NOT NULL,
-  platform TEXT, lang TEXT, push TEXT, phone TEXT,
-  contacts TEXT NOT NULL DEFAULT '[]',    -- sha256 hashes of the user's contacts (screener fast path)
-  created REAL NOT NULL
-);
-CREATE TABLE IF NOT EXISTS calls (
-  id INTEGER PRIMARY KEY AUTOINCREMENT,
-  sid TEXT UNIQUE,
-  device_id TEXT,
-  caller TEXT,
-  claimed_org TEXT, caller_name TEXT, purpose TEXT,
-  decision TEXT, reason TEXT,
-  transcript TEXT NOT NULL DEFAULT '[]',
-  created REAL NOT NULL
-);
 """
 
-JSON_FIELDS = {"explanation", "official_domains", "official_phones", "langs", "signals", "evidence", "features", "progress", "result",
-               "reporters", "claims", "contacts", "transcript"}
+JSON_FIELDS = {"explanation", "official_domains", "official_phones", "langs", "signals", "evidence", "features", "progress", "result"}
 
 
 def _connect():

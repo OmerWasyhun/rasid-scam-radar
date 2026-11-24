@@ -1,6 +1,0 @@
-{
-  "platforms": ["android"],
-  "android": {
-    "modules": ["ae.rasid.shield.guard.RasidNativeModule"]
-  }
-}

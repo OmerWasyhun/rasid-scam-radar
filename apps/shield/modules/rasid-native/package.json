@@ -1,7 +1,0 @@
-{
-  "name": "rasid-native",
-  "version": "0.1.0",
-  "private": true,
-  "description": "RASID Shield Android module: notification listener and call screening",
-  "main": "index.ts"
-}

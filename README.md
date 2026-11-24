@@ -55,27 +55,3 @@ Suspect sites are fetched with plain GET requests only: no JavaScript, no form s
 .venv\Scripts\python -m pytest -q tests
 ```
 
-## Mobile app: RASID Shield (`apps/shield`, Expo SDK 58)
-
-The citizen app: check links, messages and numbers; "Who is calling?" claim check with emergency alert; screened-call history; a tester for the cloud call-screening agent. Warnings are in 12 languages (AR, EN, HI, UR, ML, TA, SI, TL, BN, NE, RU, ZH).
-
-```powershell
-# 1. RASID server, reachable from the phone (same Wi-Fi)
-.venv\Scripts\python -m uvicorn rasid.api:app --host 0.0.0.0 --port 8042
-# 2. App for Expo Go (replace with your laptop's Wi-Fi IP)
-cd apps\shield
-$env:REACT_NATIVE_PACKAGER_HOSTNAME="10.42.16.116"; npx expo start --go --lan
-```
-
-Scan the QR with Expo Go (Android) or the Camera (iPhone). In the app, set the server to `http://<laptop IP>:8042`.
-
-**Automatic protection** (reading notifications, screening calls before they ring, ending calls) is native Android code in `apps/shield/modules/rasid-native`. It doesn't run in Expo Go; it needs a development build:
-
-```powershell
-cd apps\shield
-npx eas-cli@latest build --profile development --platform android
-```
-
-**Cloud call screener:** set the Twilio keys and `PUBLIC_BASE_URL` in `.env`, point the Twilio number's voice webhook to `POST {PUBLIC_BASE_URL}/voice/incoming`, then forward calls to it (when busy: `**67*<number>#`). Without Twilio, test the same agent from the app's **Call screener** screen or `POST /api/v1/screener/simulate`.
-
-Official numbers for the "Who is calling?" check go in `data/official_numbers.csv` or each watchlist's official phones.

@@ -6,4 +6,3 @@ data/*.db*
 data/packs/
 .pytest_cache/
 data/nrd/
-docs/expo-go-qr.png

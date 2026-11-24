@@ -1,5 +1,0 @@
-# org,number   — official phone numbers per organisation, copied from each organisation's OWN website.
-# The org name must match a watchlist / ORG_ALIASES name (e.g. ADCB, Emirates NBD, Abu Dhabi Police, Aramex).
-# Example (replace with verified numbers before the demo):
-# ADCB,+971 600 00 0000
-org,number

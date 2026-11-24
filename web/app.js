@@ -9,7 +9,6 @@ const SENS = {
   ads:     {name: 'Ads & Search',    ar: 'الإعلانات والبحث',      c: '#ff7eb6'},
   kits:    {name: 'Kit Fingerprint', ar: 'بصمة الأدوات',          c: '#ff5470'},
   jobs:    {name: 'Job & Visa',      ar: 'الوظائف والتأشيرات',    c: '#5ee0a0'},
-  calls:   {name: 'Call Screener',   ar: 'فحص المكالمات',         c: '#ff9f43'},
 };
 const LANGS = ['ALL', 'AR', 'EN', 'HI', 'UR', 'UR-L', 'ML', 'TA', 'SI', 'TL', 'BN', 'NE', 'RU', 'ZH'];
 const LANGFONT = {UR: 'ur', HI: 'indic', ML: 'indic', TA: 'indic', SI: 'indic', BN: 'indic', NE: 'indic', AR: 'ar', FA: 'ar', PS: 'ar'};
