@@ -93,7 +93,7 @@
     <main class="g-main">
       <ol class="g-steps">
         <li>Start a phone call and put it on <b>speakerphone</b>, next to this computer.</li>
-        <li>Choose the language the call is in and press <b>Start listening</b>. Allow the microphone.</li>
+        <li>Choose the language the call is in and press <b>Listen</b>. Allow the microphone.</li>
         <li>The Guardian speaks its warnings <b>out loud</b>, so the phone carries them to the caller as well.</li>
         <li>Say <b>"RASID"</b> / <b>"راصد"</b> to ask its opinion, or <b>"RASID leave"</b> / <b>"راصد اطلع"</b> to end.</li>
       </ol>
@@ -101,7 +101,7 @@
       <div class="g-ctl">
         <label class="small" for="lang">Call language</label>
         <select id="lang"><option value="ar-AE">العربية (ar-AE)</option><option value="en-US">English (en-US)</option></select>
-        <button class="btn big" id="start" type="button">Start listening</button>
+        <button class="btn big" id="start" type="button">Listen</button>
         <button class="btn ghost" id="ask" type="button" disabled>Ask RASID</button>
         <span class="mic" id="mic" role="status"><i></i><span id="micTxt">Not listening</span></span>
       </div>
@@ -132,8 +132,8 @@
 
       <section class="g-card" id="sumCard" hidden>
         <h3>After the call</h3>
-        <p class="g-note">This is the text message the person would receive.</p>
-        <div class="g-sms" id="sms"></div>
+        <p class="g-note">Only this summary is kept. No audio, no transcript.</p>
+        <div class="g-sms" id="sumText"></div>
         <form class="g-report" id="reportForm" autocomplete="off">
           <input id="repNum" placeholder="Caller's number (optional)" aria-label="Caller's number">
           <button class="btn" type="submit">Report</button>

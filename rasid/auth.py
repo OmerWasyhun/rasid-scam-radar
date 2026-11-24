@@ -18,7 +18,7 @@ from . import config
 COOKIE = "rasid_session"
 TTL = 12 * 3600
 _SECRET = (config.SESSION_SECRET or secrets.token_hex(32)).encode()
-OPEN_PATHS = ("/login", "/voice/", "/phone/", "/web/app.css", "/web/world.json", "/favicon.ico")
+OPEN_PATHS = ("/login", "/web/app.css", "/web/world.json", "/favicon.ico")
 
 
 def _sign(payload: str) -> str:

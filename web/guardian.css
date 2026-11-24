@@ -1,4 +1,4 @@
-/* Call Guardian view (used by the console tab and the standalone /guardian page). */
+/* Call Guardian tab of the console. */
   .g-wrap{max-width:1100px;margin:0 auto;border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
   .g-body{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:0}
   .g-main{padding:16px;border-inline-end:1px solid var(--line);min-width:0}

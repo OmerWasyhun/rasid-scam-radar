@@ -1,7 +1,7 @@
 """Call Guardian brain: listens to a live call transcript and decides when to warn.
 
-The voice agent (rasid/voice.py) feeds it what Twilio hears on the merged call. Both people are on one mixed audio
-stream, so the transcript has no speaker labels; the scoring looks at what is asked for, not at who said it.
+The listener (rasid/voice.py) feeds it what the laptop hears from a speakerphone call. Both people are on one mixed
+audio stream, so the transcript has no speaker labels; the scoring looks at what is asked for, not at who said it.
 
 Two layers:
   1. Rules (instant, offline): multilingual phrases for codes, cards, transfers, remote-access apps, secrecy, threats,
@@ -24,7 +24,7 @@ from .config import ANTHROPIC_API_KEY, GUARDIAN_MODEL
 from .lexicon import normalize
 
 CAUTION = 50   # speak a short caution
-DANGER = 80    # speak a full warning and text the person
+DANGER = 80    # speak a full warning
 
 
 def _rx(*alts: str) -> re.Pattern:
@@ -115,8 +115,8 @@ class CallAssessment(BaseModel):
     warning_ar: str
 
 
-SYSTEM = """You protect a UAE resident during a live phone call. They added you, the RASID Call Guardian of Abu Dhabi \
-Police, to a call they are unsure about. You receive a live speech-to-text transcript of the whole call. Both people \
+SYSTEM = """You protect a UAE resident during a live phone call. They put a call they are unsure about on speakerphone \
+next to you, the RASID Call Guardian of Abu Dhabi Police. You receive a live speech-to-text transcript of the whole call. Both people \
 share one audio stream, so lines are not labelled by speaker and the transcription can be imperfect.
 
 Judge whether the other party is running a scam. Strong signs: asking for an OTP or verification code, card number, \
@@ -198,8 +198,8 @@ LINES = {
         "en": "RASID: no scam signs so far. Still, never share codes or card details on a call.",
     },
     "leaving": {
-        "ar": "راصد يغادر المكالمة. ستصلك رسالة بالملخص.",
-        "en": "RASID is leaving the call. A summary is on its way by text message.",
+        "ar": "راصد توقف عن الاستماع. الملخص على الشاشة.",
+        "en": "RASID has stopped listening. The summary is on the screen.",
     },
     "lang_en": {"en": "RASID is now listening in English."},
     "lang_ar": {"ar": "راصد يستمع الآن باللغة العربية."},
@@ -284,8 +284,8 @@ class CallState:
         }
 
 
-def sms_text(s: dict) -> str:
-    """The text message sent to the person after (or during) the call."""
+def summary_text(s: dict) -> str:
+    """The short bilingual summary shown after the call."""
     head = {"likely scam": "🚨 RASID: likely scam call / مكالمة احتيال على الأرجح",
             "suspicious": "⚠️ RASID: suspicious call / مكالمة مشبوهة",
             "no scam signs": "✅ RASID: no scam signs found / لا توجد علامات احتيال"}[s["verdict"]]
@@ -297,6 +297,6 @@ def sms_text(s: dict) -> str:
     if s.get("red_flags"):
         parts.append("Signs: " + "; ".join(s["red_flags"][:3]))
     if s["verdict"] != "no scam signs":
-        parts.append("Never share codes or card details. Reply REPORT (or بلاغ) to send this to Abu Dhabi Police, "
-                     "optionally with the caller's number, e.g. REPORT 0501234567.")
+        parts.append("Never share codes or card details. Press Report to send this to Abu Dhabi Police / "
+                     "اضغط إبلاغ لإرسال البلاغ إلى شرطة أبوظبي.")
     return "\n".join(parts)

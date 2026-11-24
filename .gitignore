@@ -7,5 +7,4 @@ data/packs/
 .pytest_cache/
 data/nrd/
 data/shots/
-data/models/
-apps/rootguard/build/
+.claude/

@@ -1,7 +1,7 @@
-/* RASID Call Guardian, local test page.
-   The browser plays the part Twilio plays on a real call: it turns speech into text (Web Speech API), sends it to
-   /voice/listen with the same ConversationRelay messages, and speaks the Guardian's replies (speechSynthesis).
-   All text is inserted with textContent. */
+/* RASID Call Guardian listener.
+   The phone call is on speakerphone next to the laptop. The browser turns what it hears into text (Web Speech API),
+   sends each line to /voice/listen, and speaks the Guardian's warnings aloud (speechSynthesis), so the phone carries
+   them to the caller too. All text is inserted with textContent. */
 (function () {
 'use strict';
 const $ = id => document.getElementById(id);
@@ -85,13 +85,13 @@ function makeRecog() {
     let partial = '';
     for (let i = e.resultIndex; i < e.results.length; i++) {
       const res = e.results[i];
-      if (res.isFinal) { interim(''); const t = res[0].transcript.trim(); if (t) { line(t, 'call'); send({type: 'prompt', voicePrompt: t, lang: r.lang, last: true}); } }
+      if (res.isFinal) { interim(''); const t = res[0].transcript.trim(); if (t) { line(t, 'call'); send({type: 'prompt', voicePrompt: t}); } }
       else partial += res[0].transcript;
     }
     if (partial) interim(partial);
   };
   r.onerror = e => {
-    if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { note('Microphone blocked. Allow it in the address bar, then press Start again.'); st.mic = false; }
+    if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { note('Microphone blocked. Allow it in the address bar, then press Listen again.'); st.mic = false; }
     else if (e.error === 'network') note('Speech recognition needs an internet connection (the browser\'s free speech service). You can still type lines.');
   };
   r.onend = () => { st.recogOn = false; if (st.mic && st.open && !st.speaking) resumeMic(); micUi(); };
@@ -111,7 +111,7 @@ function micUi() {
 }
 function note(t) { $('envNote').textContent = t; $('envNote').className = 'g-note bad'; }
 
-// ---------- connection (same messages as Twilio ConversationRelay) ----------
+// ---------- connection to the RASID server ----------
 function send(m) { if (st.ws && st.ws.readyState === 1) st.ws.send(JSON.stringify(m)); }
 
 async function connect(useMic) {
@@ -139,7 +139,6 @@ async function connect(useMic) {
 
 function onMsg(m) {
   if (m.type === 'text') speak(m.token, m.lang);
-  else if (m.type === 'language') { $('lang').value = m.transcriptionLanguage; if (st.recog) { st.recog.lang = m.transcriptionLanguage; pauseMic(); setTimeout(resumeMic, 300); } }
   else if (m.type === 'x-state') state(m);
   else if (m.type === 'x-summary') summary(m);
 }
@@ -157,14 +156,14 @@ function state(m) {
 
 function summary(m) {
   $('sumCard').hidden = false;
-  $('sms').textContent = m.sms;
-  $('sms').dir = 'auto';
+  $('sumText').textContent = m.text;
+  $('sumText').dir = 'auto';
   $('reportForm').hidden = m.summary.verdict === 'no scam signs';
 }
 
 function ui() {
   const b = $('start');
-  b.textContent = st.open ? 'Stop' : 'Start listening';
+  b.textContent = st.open ? 'Stop' : 'Listen';
   b.classList.toggle('stop', st.open);
   $('ask').disabled = !st.open;
   $('lang').disabled = st.open;
@@ -178,14 +177,14 @@ $('start').onclick = async () => {
   if (synth) synth.cancel();
   await connect(true);
 };
-$('ask').onclick = () => send({type: 'dtmf', digit: '1'});
+$('ask').onclick = () => send({type: 'ask'});
 $('typeForm').onsubmit = async e => {
   e.preventDefault();
   const t = $('typeIn').value.trim();
   if (!t) return;
   if (!st.open && !(await connect(false))) return;
   line(t, 'call (typed)');
-  send({type: 'prompt', voicePrompt: t, lang: $('lang').value, last: true});
+  send({type: 'prompt', voicePrompt: t});
   $('typeIn').value = '';
 };
 $('reportForm').onsubmit = async e => {
@@ -205,7 +204,7 @@ async function playSample(name, s) {
   for (const t of s.lines) {
     if (!st.open) return;
     line(t, 'call (sample)');
-    send({type: 'prompt', voicePrompt: t, lang: s.lang, last: true});
+    send({type: 'prompt', voicePrompt: t});
     await wait(2200);
   }
   for (let i = 0; st.speaking && i < 100; i++) await wait(300);

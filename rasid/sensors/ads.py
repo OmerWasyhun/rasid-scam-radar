@@ -10,7 +10,7 @@ from urllib.parse import urlparse
 
 import httpx
 
-from .. import analyzer, cluster, db, enrich, generator, hunters, llm, verify
+from .. import analyzer, browser, cluster, db, enrich, generator, hunters, linkcheck, llm, verify
 from ..config import SERPAPI_KEY
 from ..lexicon import detect_langs, lure_hits
 from ..pipeline import investigate, refresh_official_cache, watch_bases
@@ -83,6 +83,15 @@ def inspect(text: str = "", url: str = "", image_b64: str = "", media_type: str 
     if url and not url.startswith("http"):
         url = "https://" + url
     host = (urlparse(url).hostname or "").lower() if url else ""
+    hops_sig = []
+    if host:
+        # Follow redirects and link shorteners first: judge the page the victim actually lands on.
+        first = analyzer._get(url, analyzer.DESKTOP_UA)
+        landed = (urlparse(first["url"]).hostname or "").lower() if first else ""
+        if landed and generator.registrable(landed) != generator.registrable(host):
+            via = "link shortener" if host in verify.SHORTENERS else "redirect"
+            hops_sig.append({"text": f"{host} sends visitors to {landed} ({via})", "points": 0})
+            url, host = first["url"], landed
     watches = db.list_watch()
     target, best, why, wid = None, 0, "", None
     for w in watches:
@@ -94,7 +103,7 @@ def inspect(text: str = "", url: str = "", image_b64: str = "", media_type: str 
             p, r = generator.similarity(host, watch_bases(w))
             if p > best:
                 best, why, target, wid = p, r, w["name"], w["id"]
-    sig = []
+    sig = hops_sig
     lures = lure_hits(full_text)
     if lures:
         sig.append({"text": "Ad text uses lures: " + ", ".join(sorted({l["theme"] for l in lures})), "points": 10, "kind": "content"})
@@ -106,12 +115,24 @@ def inspect(text: str = "", url: str = "", image_b64: str = "", media_type: str 
         dns_info = hunters.resolve(host)
         if dns_info:
             rd = hunters.rdap(generator.registrable(host))
-            age = hunters.age_days(rd.get("created"))
-            page = analyzer.analyze(host, [target] if target else [])
+            age = None if linkcheck.no_age_credit(host) else hunters.age_days(rd.get("created"))
+            page = analyzer.analyze(host, [target] if target else [], start_url=url)
             geo = hunters.geolocate([dns_info["a"][0]]).get(dns_info["a"][0])
             wrow = db.get_watch(wid) if wid else None
             if page.get("reachable"):
-                insp = verify.inspect(host, page, wrow)
+                try:
+                    rendered = browser.render(page.get("final_url") or url, "check")
+                except Exception:  # a page that won't render is still judged on its fetched HTML
+                    rendered = None
+                insp = verify.inspect(host, page, wrow, rendered)
+                ok = rendered if rendered and rendered.get("ok") else {}
+                lc = linkcheck.check(url, ok.get("final_url") or page.get("final_url") or url,
+                                     ok.get("title") or page.get("title") or "", ok.get("html") or page.get("_html") or "")
+                if any(x.get("kind") == "content" for x in lc):   # a fake sign-in page is not an "unrelated business"
+                    insp["signals"] = [x for x in insp.get("signals", []) if x.get("kind") != "verdict"]
+                    insp["verdict"] = "impersonation"
+                target = target or next((x["brand"] for x in lc if x.get("brand")), None)
+                sig += lc
                 sig += insp.pop("signals", [])
                 inspection = insp
             page.pop("_html", None)
@@ -129,9 +150,9 @@ def inspect(text: str = "", url: str = "", image_b64: str = "", media_type: str 
                  "telegram": page.get("telegram_tokens"), "analytics": page.get("analytics_ids")}
     if dns_info:
         feats["ip"] = dns_info["a"][0]
-    cid = db.upsert_case("ads", key, f"Ad: {title}", sc, target=target, watch_id=wid, langs=langs,
+    cid = db.upsert_case("ads", key, f"{'Link' if not (text or image_b64) else 'Ad'}: {title}", sc, target=target, watch_id=wid, langs=langs,
                          lat=geo["lat"] if geo else None, lon=geo["lon"] if geo else None,
-                         where_txt=(f"Ad landing · {geo.get('city')}, {geo.get('country')}" if geo else "Ad (no live landing page)"),
+                         where_txt=(f"{'Ad' if text or image_b64 else 'Link'} landing · {geo.get('city')}, {geo.get('country')}" if geo else "No live landing page"),
                          signals=signals, evidence={"text": full_text, "url": url, "screenshot_read": read, "page": page, "inspection": inspection,
                                                      "rdap": rd, "dns": dns_info, "geo": geo}, features=feats)
     cluster.recluster()

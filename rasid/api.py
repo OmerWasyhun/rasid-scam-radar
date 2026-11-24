@@ -5,11 +5,11 @@ import time
 from collections import Counter
 
 from fastapi import FastAPI, HTTPException
-from fastapi.responses import FileResponse, HTMLResponse
+from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from . import auth, browser, cluster, config, db, enrich, generator, llm, pipeline, rootguard, seeds, strike, voice
+from . import auth, browser, cluster, config, db, enrich, generator, llm, pipeline, seeds, strike, voice
 from .sensors import ads, jobs, maps, social_ads
 
 app = FastAPI(title="RASID", version="1.0")
@@ -28,7 +28,6 @@ app.add_api_route("/login", auth.login_page, methods=["GET"], include_in_schema=
 app.add_api_route("/login", auth.login_submit, methods=["POST"], include_in_schema=False)
 app.add_api_route("/logout", auth.logout, methods=["GET"], include_in_schema=False)
 app.include_router(voice.router)
-app.include_router(rootguard.router)
 WEB = config.ROOT / "web"
 
 
@@ -174,6 +173,31 @@ def inspect_ad(a: AdIn):
     return db.get_case(ads.inspect(a.text, a.url, a.image_b64, a.media_type))
 
 
+class CheckIn(BaseModel):
+    urls: list[str] = Field(min_length=1, max_length=50)
+
+
+@app.post("/api/check")
+def check_urls(body: CheckIn):
+    """Check a list of links (e.g. a test set): score 0-100, verdict and reasons for each, plus the case id."""
+    out = []
+    for u in body.urls:
+        u = u.strip()
+        if not u:
+            continue
+        if not re.match(r"^(https?://)?[^\s/<>\"']+\.[^\s/<>\"']+(/\S*)?$", u, re.I):
+            out.append({"url": u, "error": "Not a link"})
+            continue
+        try:
+            c = db.get_case(ads.inspect(url=u))
+            out.append({"url": u, "score": c["score"], "verdict": "fraud" if c["score"] >= 50 else "suspicious" if c["score"] > 35 else "clean",
+                        "target": c.get("target"), "reasons": [s["text"] for s in c.get("signals", []) if s.get("points", 0) > 0][:6],
+                        "case": c["id"]})
+        except Exception as e:  # one bad link must not stop the batch
+            out.append({"url": u, "error": str(e)[:200]})
+    return {"results": out}
+
+
 class JobsIn(BaseModel):
     texts: list[str] = []
     telegram: list[str] = []
@@ -291,8 +315,8 @@ def recluster():
 # ---------- console ----------
 @app.get("/guardian")
 def guardian_page():
-    """Local test page for the Call Guardian voice agent (laptop mic and speaker instead of a phone line)."""
-    return FileResponse(WEB / "guardian.html")
+    """Short link to the Call Guardian tab of the console."""
+    return RedirectResponse("/#guardian")
 
 
 @app.get("/")

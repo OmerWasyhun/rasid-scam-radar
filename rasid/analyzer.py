@@ -96,9 +96,10 @@ def _dom_hash(soup) -> str:
     return hashlib.md5(" ".join(tags).encode()).hexdigest()[:16]
 
 
-def analyze(host: str, brand_names: list[str] | None = None) -> dict:
-    """Fetch https:// (then http://) as a desktop browser; also as Googlebot and as a mobile phone to detect cloaking."""
-    page = _get(f"https://{host}/", DESKTOP_UA) or _get(f"http://{host}/", DESKTOP_UA)
+def analyze(host: str, brand_names: list[str] | None = None, start_url: str | None = None) -> dict:
+    """Fetch https:// (then http://) as a desktop browser; also as Googlebot and as a mobile phone to detect cloaking.
+    start_url: a full link to fetch instead of the homepage (a pasted URL with its path)."""
+    page = (_get(start_url, DESKTOP_UA) if start_url else None) or _get(f"https://{host}/", DESKTOP_UA) or _get(f"http://{host}/", DESKTOP_UA)
     if not page:
         return {"reachable": False}
     soup = BeautifulSoup(page["body"], "html.parser")
@@ -121,7 +122,7 @@ def analyze(host: str, brand_names: list[str] | None = None) -> dict:
     cloak = None
     suspicious = bool(asks or brands or lure_hits(text) or soup.find("form"))
     mobile = _get(page["url"], MOBILE_UA) if suspicious else None
-    bot = (_get(f"https://{host}/", BOT_UA) or _get(f"http://{host}/", BOT_UA)) if suspicious else None
+    bot = ((_get(start_url, BOT_UA) if start_url else None) or _get(f"https://{host}/", BOT_UA) or _get(f"http://{host}/", BOT_UA)) if suspicious else None
     if mobile and bot:
         def sig(p):
             s = BeautifulSoup(p["body"], "html.parser")

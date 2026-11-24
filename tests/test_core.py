@@ -144,3 +144,13 @@ def test_blank_screenshot_detected():
     p = pathlib.Path(tempfile.mkdtemp()) / "blank.png"
     Image.new("RGB", (1366, 900), (255, 255, 255)).save(p)
     assert visual.blank(p)
+
+
+def test_link_check_flags_fake_signin_but_not_the_real_brand():
+    from rasid import linkcheck
+    form = '<form><input type="email"><input type="password"></form>'
+    fake = linkcheck.check("https://instagram-verify.vercel.app/", "https://instagram-verify.vercel.app/", "Instagram", form)
+    assert any(s.get("kind") == "content" for s in fake) and sum(s["points"] for s in fake) >= 50
+    real = linkcheck.check("https://www.instagram.com/", "https://www.instagram.com/accounts/login/", "Instagram", form)
+    assert real == []
+    assert linkcheck.no_age_credit("kit.blogspot.com") and not linkcheck.no_age_credit("www.adcb.com")

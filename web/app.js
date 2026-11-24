@@ -294,6 +294,9 @@ function alertPane(msg) { tab('case'); $('p-case').innerHTML = `<p class="err">$
 /* ---------- tools ---------- */
 function renderTools() {
   $('p-tools').innerHTML = `
+  <div class="grp"><div class="eyebrow">Check a link</div><p class="hint">Any link someone received: RASID follows redirects and shorteners, opens the page in its own browser, takes a screenshot and gives a score with reasons.</p>
+    <form class="stack" id="f-link"><label>Link<input id="link-url" name="url" placeholder="https://… or bit.ly/…" required></label>
+    <button class="btn" type="submit">Check link</button></form></div>
   <div class="grp"><div class="eyebrow">Newborn sweep</div><p class="hint">Match every watchlist against the last 3 days of newly registered domains (about 70k a day), then analyse the hits.</p>
     <button class="btn" id="b-newborn">Run newborn sweep</button></div>
   <div class="grp"><div class="eyebrow">Inspect an ad</div>
@@ -307,6 +310,13 @@ function renderTools() {
     <label style="flex-direction:row;align-items:center;gap:6px"><input type="checkbox" id="jobs-samples" name="samples"> Include the 11 synthetic sample posts</label>
     <button class="btn" type="submit">Score posts</button></form></div>`;
   $('b-newborn').onclick = () => runJob('/api/newborn', null, 'Newborn sweep');
+  $('f-link').onsubmit = async e => {
+    e.preventDefault();
+    showBusy('Opening the link in RASID’s browser…');
+    try { const c = await api('/api/ads/inspect', {method: 'POST', body: {url: $('link-url').value.trim()}}); await refresh(); openCase(c.id); }
+    catch (err) { alertPane(err.message); }
+    hideBusy();
+  };
   $('f-ad').onsubmit = async e => {
     e.preventDefault();
     const file = $('ad-img').files[0]; let image_b64 = '', media_type = 'image/png';
