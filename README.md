@@ -2,6 +2,8 @@
 
 Built for the **ScamShield AI Hackathon** (42 Abu Dhabi × Abu Dhabi Police), challenge: *Detecting Fraudulent Links and Websites Used in Cybercrimes and Financial Fraud.*
 
+Pitch deck: [RASID-ScamShield-pitch.pptx](RASID-ScamShield-pitch.pptx) ([PDF](RASID-ScamShield-pitch.pdf)) · Project description: [RASID-project-description.pdf](RASID-project-description.pdf)
+
 ## The problem
 
 Scam sites in the UAE copy banks, TAMM, UAE PASS, traffic-fine payment, couriers, events (F1, National Day, Hajj and Umrah) and job agencies. They reach victims through new lookalike domains, paid ads, Google search results, fake Google Maps listings with fake helpline numbers, and posts written in the languages migrant workers read. Most tools only react after a victim pastes a link or files a report. By then the site has done its damage and often moved to a new domain.
