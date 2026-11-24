@@ -1,9 +1,9 @@
-FROM python:3.11-slim
+FROM python:3.11-slim-bookworm
 
 ENV PYTHONUNBUFFERED=1 PLAYWRIGHT_BROWSERS_PATH=/ms-playwright PORT=7860
 
-# Noto fonts so screenshots of Arabic, Urdu, Malayalam... pages render real glyphs
-RUN apt-get update && apt-get install -y --no-install-recommends fonts-noto-core && rm -rf /var/lib/apt/lists/*
+# libatomic1 for Playwright's driver; Noto fonts so screenshots of Arabic, Urdu, Malayalam... pages render real glyphs
+RUN apt-get update && apt-get install -y --no-install-recommends libatomic1 fonts-noto-core && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 COPY requirements.txt .
