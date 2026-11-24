@@ -5,7 +5,7 @@ import threading
 import time
 import uuid
 
-from . import analyzer, cluster, db, generator, hunters, nrd
+from . import analyzer, cluster, db, enrich, generator, hunters, nrd
 from .sensors.maps import norm_phone
 
 ANALYZE_CAP = 25
@@ -66,13 +66,16 @@ def investigate(hosts: dict, w: dict, log, sensor_of=None, extra_of=None):
         reg = generator.registrable(h)
         rd = hunters.rdap(reg)
         page = analyzer.analyze(h, brand_names)
-        return h, rd, page
+        rep, rep_sig = enrich.reputation_signals(h, (page or {}).get("final_url"))
+        return h, rd, page, rep, rep_sig
 
     log(f"Analysing {len(order)} live sites (RDAP, page, fingerprints)")
     with cf.ThreadPoolExecutor(16) as ex:
-        for h, rd, page in ex.map(work, order):
+        for h, rd, page, rep, rep_sig in ex.map(work, order):
             info[h]["rdap"] = rd
             info[h]["page"] = page
+            info[h]["reputation"] = rep
+            info[h]["rep_sig"] = rep_sig
     ages = {h: hunters.age_days((info[h].get("rdap") or {}).get("created")) for h in order}
     for h in order:
         if ages[h] is None and extra_of and extra_of.get(h, {}).get("age"):
@@ -81,8 +84,9 @@ def investigate(hosts: dict, w: dict, log, sensor_of=None, extra_of=None):
     ids = []
     for h in order:
         ex = (extra_of or {}).get(h, {})
+        ev = {**(ex.get("evidence") or {}), **({"reputation": info[h]["reputation"]} if any(info[h]["reputation"].values()) else {})}
         ids.append(_store(h, w, (sensor_of or {}).get(h, "domains"), hosts[h][0], hosts[h][1], info[h], ages, geo,
-                          ex.get("signals"), ex.get("evidence")))
+                          (ex.get("signals") or []) + info[h]["rep_sig"], ev))
     return ids
 
 

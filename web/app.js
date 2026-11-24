@@ -6,7 +6,7 @@ const SENS = {
   maps:    {name: 'Maps Verifier',   ar: 'مدقق الخرائط',        c: '#4cc9f0'},
   domains: {name: 'Lookalike Radar', ar: 'النطاقات المشابهة',    c: '#b48cff'},
   ct:      {name: 'Newborn Domains', ar: 'نطاقات حديثة',          c: '#ffc857'},
-  ads:     {name: 'Ads & Search',    ar: 'الإعلانات والبحث',      c: '#ff7eb6'},
+  ads:     {name: 'Social & Search Ads', ar: 'إعلانات التواصل والبحث', c: '#ff7eb6'},
   kits:    {name: 'Kit Fingerprint', ar: 'بصمة الأدوات',          c: '#ff5470'},
   jobs:    {name: 'Job & Visa',      ar: 'الوظائف والتأشيرات',    c: '#5ee0a0'},
 };
@@ -150,6 +150,13 @@ async function openCase(id) {
   if (place) { kv.push(['Listing', place.formattedAddress || '']); if (place.internationalPhoneNumber) kv.push(['Phone', place.internationalPhoneNumber]); if (place.websiteUri) kv.push(['Website', place.websiteUri]); if (place.googleMapsUri) kv.push(['Maps', place.googleMapsUri]); }
   if (ev.search) kv.push(['Found by', `${ev.search.kind} · “${ev.search.query}” (${ev.search.lang})`]);
   if (ev.newborn) kv.push(['Newborn', `${ev.newborn.source} · ${ev.newborn.day}`]);
+  const rep = ev.reputation || {};
+  if (rep.safe_browsing && rep.safe_browsing.listed !== undefined) kv.push(['Safe Browsing', rep.safe_browsing.listed ? 'LISTED: ' + rep.safe_browsing.threats.join(', ') : 'not listed']);
+  if (rep.virustotal && rep.virustotal.known !== undefined) kv.push(['VirusTotal', rep.virustotal.known ? `${rep.virustotal.malicious} malicious · ${rep.virustotal.suspicious} suspicious` : 'not seen before']);
+  const meta = ev.meta_ad, gad = ev.google_ad;
+  if (meta) { kv.push(['Meta Page', meta.page_name || '']); kv.push(['Platforms', (meta.publisher_platforms || []).join(', ')]); if (meta.ad_snapshot_url) kv.push(['Ad snapshot', meta.ad_snapshot_url]); }
+  if (gad) { kv.push(['Advertiser', gad.advertiser || '']); if (gad.details_link) kv.push(['Ad details', gad.details_link]); }
+  const shot = ev.urlscan;
   const text = ev.text || '';
   const sigs = (c.signals || []).map(s => `<li class="${s.ok ? 'okk' : s.points ? '' : 'neu'}"><span>${esc(s.text)}</span><em>${s.points > 0 ? '+' : ''}${s.points || ''}</em></li>`).join('');
   const ex = c.explanation;
@@ -164,20 +171,35 @@ async function openCase(id) {
     ${text ? `<div class="quote">${langText(text.slice(0, 700), (c.langs || [])[0])}</div>` : ''}
     ${ev.extracted && ev.extracted.translation_en ? `<div class="note"><p class="eyebrow">Translation</p><p>${esc(ev.extracted.translation_en)}</p></div>` : ''}
     <dl class="kv">${kv.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join('')}</dl>
+    <div id="shot">${shot ? shotHTML(shot) : ''}</div>
     <div id="explain">${ex ? noteHTML(ex) : ''}</div>
     <div class="actions">
       <button class="btn" id="b-explain">${ex ? 'Re-explain' : 'Explain (AR + EN)'}</button>
+      ${(page.final_url || ev.url || /\./.test(c.title)) && c.sensor !== 'jobs' && c.sensor !== 'maps' ? `<button class="btn ghost" id="b-shot">${shot ? 'New screenshot' : 'Screenshot'}</button>` : ''}
       <a class="btn ghost" href="/api/pack/${encodeURIComponent(key)}/html" target="_blank" rel="noopener">Strike pack${c.actor ? ' (' + (c.siblings.length + 1) + ' sites)' : ''}</a>
     </div>
     ${c.siblings && c.siblings.length ? `<p class="eyebrow mt">Same actor · shared fingerprints</p><ul class="gen">${c.siblings.map(s => `<li class="link" data-id="${s.id}"><span>${esc(s.title)}</span><em>${esc(s.sensor)} · ${s.score}</em></li>`).join('')}</ul>` : ''}
   </div>`;
   p.querySelectorAll('.gen li.link').forEach(li => li.onclick = () => openCase(+li.dataset.id));
+  const bs = $('b-shot');
+  if (bs) bs.onclick = async () => {
+    bs.disabled = true; bs.textContent = 'Capturing (up to a minute)…';
+    try { const r = await api(`/api/cases/${id}/screenshot`, {method: 'POST'}); $('shot').innerHTML = shotHTML(r); bs.textContent = 'New screenshot'; refresh(); }
+    catch (e) { $('shot').innerHTML = `<p class="err">${esc(e.message)}</p>`; bs.textContent = 'Screenshot'; }
+    bs.disabled = false;
+  };
   $('b-explain').onclick = async () => {
     const b = $('b-explain'); b.disabled = true; b.textContent = 'Writing…';
     try { const n = await api(`/api/cases/${id}/explain`, {method: 'POST'}); $('explain').innerHTML = noteHTML(n); b.textContent = 'Re-explain'; }
     catch (e) { $('explain').innerHTML = `<p class="err">${esc(e.message)}</p>`; b.textContent = 'Explain (AR + EN)'; }
     b.disabled = false;
   };
+}
+function shotHTML(r) {
+  if (!r || !r.screenshot) return '';
+  return `<div class="shot"><p class="eyebrow">Screenshot · urlscan.io${r.malicious ? ' · <span style="color:var(--crit)">malicious</span>' : ''}</p>
+    <a href="${esc(r.report || r.screenshot)}" target="_blank" rel="noopener"><img src="${esc(r.screenshot)}" alt="Screenshot of the suspect page" loading="lazy"></a>
+    ${r.done === false ? '<p class="small">Scan still running on urlscan.io; the image appears when it finishes.</p>' : ''}</div>`;
 }
 function noteHTML(n) {
   return `<div class="note"><p class="eyebrow">Case note · ${esc(n.recommendation || '')}</p><p>${esc(n.en)}</p><p class="ar" dir="rtl">${esc(n.ar)}</p>${n.note ? `<p class="small">${esc(n.note)}</p>` : ''}</div>`;
@@ -202,7 +224,7 @@ function renderWatch() {
       <div class="row"><button class="btn" type="submit">Add watchlist</button><button class="btn ghost" type="button" data-cancel="${k}">Cancel</button></div>
     </form>
     <ul class="wl">${st.watch.filter(w => w.kind === k).map(w => `<li><span>${esc(w.name)}<small>${esc(w.official_domains.join(', ') || 'no official domain')}${w.date ? ' · ' + esc(w.date) : ''}</small></span>
-      <span class="acts"><button class="mini" data-hunt="${w.id}" title="Lookalikes + newborn + CT">Hunt</button><button class="mini" data-maps="${w.id}" title="Google Maps listings">Maps</button><button class="mini" data-search="${w.id}" title="Google results &amp; ads">Search</button><button class="mini" data-seeds="${w.id}" title="Show generated lookalikes">Seeds</button></span></li>`).join('')}</ul></div>`).join('');
+      <span class="acts"><button class="mini" data-hunt="${w.id}" title="Lookalikes + newborn + CT">Hunt</button><button class="mini" data-maps="${w.id}" title="Google Maps listings">Maps</button><button class="mini" data-search="${w.id}" title="Google results &amp; sponsored results">Search</button><button class="mini" data-social="${w.id}" title="Facebook, Instagram &amp; Google ads">Social</button><button class="mini" data-seeds="${w.id}" title="Show generated lookalikes">Seeds</button></span></li>`).join('')}</ul></div>`).join('');
   p.querySelectorAll('[data-add]').forEach(b => b.onclick = () => { const f = $('f-' + b.dataset.add); f.hidden = !f.hidden; if (!f.hidden) f.querySelector('input').focus(); });
   p.querySelectorAll('[data-cancel]').forEach(b => b.onclick = () => $('f-' + b.dataset.cancel).hidden = true);
   p.querySelectorAll('form.stack').forEach(f => f.onsubmit = async e => {
@@ -217,6 +239,7 @@ function renderWatch() {
   p.querySelectorAll('[data-hunt]').forEach(b => b.onclick = () => runJob(`/api/hunt`, {watch_id: +b.dataset.hunt}, 'Hunt'));
   p.querySelectorAll('[data-maps]').forEach(b => b.onclick = () => runJob(`/api/maps/${b.dataset.maps}`, null, 'Maps check'));
   p.querySelectorAll('[data-search]').forEach(b => b.onclick = () => runJob(`/api/search/${b.dataset.search}`, null, 'Search sweep'));
+  p.querySelectorAll('[data-social]').forEach(b => b.onclick = () => runJob(`/api/social/${b.dataset.social}`, null, 'Social ads sweep'));
   p.querySelectorAll('[data-seeds]').forEach(b => b.onclick = () => showSeeds(+b.dataset.seeds));
 }
 async function showSeeds(wid) {
@@ -336,7 +359,9 @@ function renderEvents() {
 function renderKeys() {
   const k = (st.status || {}).keys || {};
   const row = (on, label) => `<span class="${on ? 'on' : 'off'}">${on ? '●' : '○'} ${label}</span>`;
-  $('keys').innerHTML = row(k.claude, 'Claude') + row(k.google_maps, 'Google Maps') + row(k.serpapi, 'SerpAPI') + row(true, 'DNS · RDAP · NRD · CT');
+  $('keys').innerHTML = row(true, 'DNS · RDAP · NRD · CT') + row(k.claude, 'Claude') + row(k.google_maps, 'Google Maps') + row(k.serpapi, 'SerpApi') +
+    row(k.meta_ads, 'Meta Ad Library') + row(k.urlscan, 'urlscan.io') + row(k.safe_browsing, 'Safe Browsing') + row(k.virustotal, 'VirusTotal') +
+    (k.login ? '<a class="small" href="/logout">Sign out</a>' : '');
 }
 
 /* ---------- data ---------- */

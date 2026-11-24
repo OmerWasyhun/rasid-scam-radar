@@ -8,10 +8,14 @@ from fastapi.responses import FileResponse, HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from . import cluster, config, db, generator, llm, pipeline, seeds, strike
-from .sensors import ads, jobs, maps
+from . import auth, cluster, config, db, enrich, generator, llm, pipeline, seeds, strike
+from .sensors import ads, jobs, maps, social_ads
 
-app = FastAPI(title="RASID", version="0.2")
+app = FastAPI(title="RASID", version="1.0")
+app.middleware("http")(auth.middleware)
+app.add_api_route("/login", auth.login_page, methods=["GET"], include_in_schema=False)
+app.add_api_route("/login", auth.login_submit, methods=["POST"], include_in_schema=False)
+app.add_api_route("/logout", auth.logout, methods=["GET"], include_in_schema=False)
 WEB = config.ROOT / "web"
 
 
@@ -127,6 +131,13 @@ def maps_scan(wid: int):
     return {"job": pipeline.start("maps", maps.scan, wid)}
 
 
+@app.post("/api/social/{wid}")
+def social_sweep(wid: int):
+    if not (config.META_ACCESS_TOKEN or config.SERPAPI_KEY):
+        raise HTTPException(400, "Social media ads sweep needs META_ACCESS_TOKEN and/or SERPAPI_KEY in .env")
+    return {"job": pipeline.start("social", social_ads.sweep, wid)}
+
+
 @app.post("/api/search/{wid}")
 def search_sweep(wid: int):
     if not config.SERPAPI_KEY:
@@ -196,6 +207,31 @@ def explain(cid: int):
     note = llm.explain(c)
     db.set_case_fields(cid, explanation=note)
     return note
+
+
+@app.post("/api/cases/{cid}/screenshot")
+def screenshot(cid: int):
+    """Full-page screenshot and verdict from urlscan.io, stored as evidence on the case."""
+    c = db.get_case(cid)
+    if not c:
+        raise HTTPException(404, "No such case")
+    if not config.URLSCAN_API_KEY:
+        raise HTTPException(400, "Screenshots need URLSCAN_API_KEY in .env")
+    ev = c["evidence"] or {}
+    url = (ev.get("page") or {}).get("final_url") or ev.get("url") or (f"http://{c['key']}/" if "." in c["key"] and ":" not in c["key"] else None)
+    if not url:
+        raise HTTPException(400, "This case has no web page to capture")
+    sub = enrich.urlscan_submit(url)
+    if not sub.get("uuid"):
+        raise HTTPException(502, f"urlscan.io refused the scan: {sub.get('error', 'unknown error')}")
+    res = enrich.urlscan_result(sub["uuid"], wait_s=70)
+    ev["urlscan"] = res
+    signals = c["signals"]
+    if res.get("malicious") and not any("urlscan" in s["text"] for s in signals):
+        signals = signals + [{"text": "urlscan.io verdict: malicious" + (f" (imitates {', '.join(map(str, res['brands']))})" if res.get("brands") else ""), "points": 15}]
+        c["score"] = min(100, c["score"] + 15)
+    db.set_case_fields(cid, evidence=ev, signals=signals, score=c["score"])
+    return res
 
 
 @app.get("/api/actors")

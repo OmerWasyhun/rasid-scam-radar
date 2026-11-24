@@ -18,6 +18,13 @@ GOOGLE_MAPS_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY", "").strip()
 SERPAPI_KEY = os.getenv("SERPAPI_KEY", "").strip()
 URLSCAN_API_KEY = os.getenv("URLSCAN_API_KEY", "").strip()
 GOOGLE_SAFE_BROWSING_KEY = os.getenv("GOOGLE_SAFE_BROWSING_KEY", "").strip()
+VIRUSTOTAL_API_KEY = os.getenv("VIRUSTOTAL_API_KEY", "").strip()
+META_ACCESS_TOKEN = os.getenv("META_ACCESS_TOKEN", "").strip()
+META_GRAPH_VERSION = os.getenv("META_GRAPH_VERSION", "v27.0").strip() or "v27.0"
+
+# Console login: when set, officers must sign in with this password to use the console and API.
+RASID_PASSWORD = os.getenv("RASID_PASSWORD", "").strip()
+SESSION_SECRET = os.getenv("RASID_SESSION_SECRET", "").strip()
 
 CT_POLL = os.getenv("RASID_CT_POLL", "0") == "1"
 CT_POLL_MINUTES = int(os.getenv("RASID_CT_POLL_MINUTES", "20") or 20)
@@ -44,5 +51,8 @@ def key_status() -> dict:
         "serpapi": bool(SERPAPI_KEY),
         "urlscan": bool(URLSCAN_API_KEY),
         "safe_browsing": bool(GOOGLE_SAFE_BROWSING_KEY),
+        "virustotal": bool(VIRUSTOTAL_API_KEY),
+        "meta_ads": bool(META_ACCESS_TOKEN),
+        "login": bool(RASID_PASSWORD),
         "model": MODEL,
     }
