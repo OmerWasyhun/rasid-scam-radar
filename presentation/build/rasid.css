@@ -1,0 +1,41 @@
+/* Shared look of the RASID deck and project description. It follows the walkthrough (presentation/index.html):
+   Al Sadu tent cloth, tent black and wool white grounds, camel motifs, and red for fraud only. */
+@import url("https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400..700&family=Alexandria:wght@400..800&family=Readex+Pro:wght@300..700&family=JetBrains+Mono:wght@400;600&family=Noto+Sans+Malayalam&family=Noto+Sans+Devanagari&family=Noto+Nastaliq+Urdu&display=swap");
+:root{
+  --black:#15100e; --black-2:#221a15; --white:#f4efe6; --white-2:#e9e1d2; --camel:#b88a5a; --red:#c1272d; --green:#2f8f6b;
+  --f-display:"Reem Kufi","Readex Pro",sans-serif;
+  --f-head:"Alexandria","Readex Pro",sans-serif;
+  --f-body:"Readex Pro","Segoe UI",Tahoma,sans-serif;
+  --f-mono:"JetBrains Mono",Consolas,monospace;
+  --teeth:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12'%3E%3Cpath d='M0 12L12 0l12 12z' fill='%23f4efe6'/%3E%3C/svg%3E");
+  --teeth-d:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12'%3E%3Cpath d='M0 0l12 12L24 0z' fill='%23f4efe6'/%3E%3C/svg%3E");
+  --dia:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='24'%3E%3Cpath d='M20 1l15 11-15 11L5 12z' fill='%23b88a5a'/%3E%3Cpath d='M20 8l5 4-5 4-5-4z' fill='%2315100e'/%3E%3C/svg%3E");
+  --check:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='8'%3E%3Cpath d='M0 0h8v8H0z' fill='%23f4efe6'/%3E%3C/svg%3E");
+}
+.dark{--bg:var(--black);--fg:var(--white);--mut:#cbbfae;--line:rgba(244,239,230,.22);--raise:var(--black-2);--accent:var(--camel);--alarm:#f0695d;--safe:#63c9a0}
+.light{--bg:var(--white);--fg:var(--black);--mut:#54463a;--line:rgba(21,16,14,.22);--raise:var(--white-2);--accent:#7a5527;--alarm:#a81e24;--safe:#1f6e50}
+.camel{--bg:var(--camel);--fg:var(--black);--mut:#2e2218;--line:rgba(21,16,14,.35);--raise:#c89b6b;--accent:var(--black);--alarm:#7d1216;--safe:#11452f}
+.dark,.light,.camel{background:var(--bg);color:var(--fg)}
+*{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+html,body{margin:0;padding:0;font-family:var(--f-body);background:#3a302a}
+h1,h2,h3,p,ul,ol,figure{margin:0;padding:0}
+h1,h2,h3{font-family:var(--f-head);font-weight:700;text-wrap:balance}
+b{font-weight:600}
+img{display:block;max-width:100%}
+.mono{font-family:var(--f-mono);direction:ltr;unicode-bidi:isolate}
+.ltr{direction:ltr;unicode-bidi:isolate}
+/* woven band: U = one unit of scale, set per document */
+.seam{--u:1px;height:calc(72 * var(--u));background-color:var(--black);background-repeat:repeat-x;
+  background-image:linear-gradient(var(--white),var(--white)),var(--teeth),var(--dia),var(--teeth-d),linear-gradient(var(--white),var(--white));
+  background-position:0 0,center calc(9 * var(--u)),center calc(24 * var(--u)),center calc(51 * var(--u)),0 calc(69 * var(--u));
+  background-size:100% calc(3 * var(--u)),calc(24 * var(--u)) calc(12 * var(--u)),calc(40 * var(--u)) calc(24 * var(--u)),calc(24 * var(--u)) calc(12 * var(--u)),100% calc(3 * var(--u))}
+.mark{display:inline-block;vertical-align:middle}
+.logo{display:flex;align-items:center;gap:.5em;font-family:var(--f-display);font-weight:700;line-height:1}
+.logo small{font-family:var(--f-body);font-weight:500;font-size:.5em;letter-spacing:.14em;color:var(--mut)}
+.dlist{list-style:none;display:flex;flex-direction:column;gap:.55em}
+.dlist li{display:grid;grid-template-columns:1.1em 1fr;gap:.4em}
+.dlist li::before{content:"";width:.45em;height:.45em;background:var(--accent);transform:rotate(45deg);margin-top:.72em}
+.chip{display:inline-block;border:1px solid var(--c,var(--line));color:var(--c,var(--mut));border-radius:3px;padding:.15em .7em;font-size:.8em}
+.shot{border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--raise)}
+.shot img{width:100%;height:100%;object-fit:cover;object-position:top}
+.shot figcaption{font-size:.72em;color:var(--mut);padding:.55em .9em;border-top:1px solid var(--line)}

@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>راصد RASID: عرض المشروع</title>
+<link rel="stylesheet" href="rasid.css">
+<style>
+@page{size:1920px 1080px;margin:0}
+body{font-size:30px;line-height:1.75}
+.slide{width:1920px;height:1080px;position:relative;overflow:hidden;page-break-after:always;break-after:page;display:flex;flex-direction:column;padding:64px 110px 70px}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:22px;color:var(--mut);height:44px;flex:none}
+.top .logo{font-size:36px;color:var(--fg)}
+.body{flex:1;display:flex;flex-direction:column;justify-content:center;min-height:0;gap:36px}
+.n{position:absolute;left:110px;bottom:30px;font-size:20px;color:var(--mut);font-family:var(--f-body)}
+h2{font-size:62px;line-height:1.35;max-width:26ch}
+.cols h2{font-size:54px}
+.lede{font-size:32px;color:var(--mut);max-width:62ch}
+.lede b,.cell p b{color:var(--fg)}
+.cols{display:grid;gap:70px;align-items:center;min-height:0}
+.c57{grid-template-columns:5fr 7fr}.c75{grid-template-columns:7fr 5fr}.c66{grid-template-columns:1fr 1fr}
+.stack{display:flex;flex-direction:column;gap:28px;min-width:0}
+.seam{--u:1px;position:absolute;left:0;right:0;bottom:0}
+.seam.big{--u:2px}
+.shot{max-height:100%}
+.steps{display:grid;gap:0 48px}
+.cell{border-top:2px solid var(--line);padding-top:18px}
+.cell .num{font-family:var(--f-display);font-weight:700;font-size:76px;line-height:1;color:var(--accent)}
+.cell h3{font-size:32px;margin-top:6px}
+.cell p{font-size:25px;color:var(--mut);line-height:1.65;margin-top:6px}
+.dlist{font-size:27px}
+.small{font-size:24px;color:var(--mut)}
+
+/* cover and closing */
+.cover h1{font-family:var(--f-display);font-size:176px;line-height:1.2}
+.cover h1 span{color:var(--alarm)}
+.cover .lede{font-size:36px;max-width:44ch}
+.foot{display:flex;justify-content:space-between;align-items:flex-end;font-size:24px;color:var(--mut);margin-bottom:150px}
+.closing h1{font-family:var(--f-display);font-size:132px;line-height:1.25}
+.closing h1 em{font-style:normal;color:var(--camel)}
+
+/* the call */
+.call{display:flex;flex-direction:column;gap:10px}
+.row{display:grid;grid-template-columns:110px 1fr;gap:26px;align-items:center}
+.row .sc{font-family:var(--f-display);font-weight:700;font-size:64px;line-height:1;text-align:center}
+.row .say{position:relative;background:var(--raise);border-radius:6px;padding:8px 24px 16px;font-size:26px;line-height:1.6}
+.row .say small{display:block;font-size:18px;color:var(--mut)}
+.row .say i{position:absolute;inset-inline-start:0;bottom:0;height:8px;background:var(--red)}
+.row.me .say{background:none;border:1px solid var(--line)}
+.row.rasid .say{background:var(--red);color:#fff;font-weight:500}
+.row.rasid .say small{color:#ffe1dc}
+.row.rasid .sc svg{width:64px;height:64px}
+
+/* table of calls and criteria */
+table{border-collapse:collapse;width:100%;font-size:27px}
+td,th{padding:13px 0;border-bottom:1px solid var(--line);text-align:start;vertical-align:top}
+th{font-weight:500;color:var(--mut);font-size:22px}
+td.sc{font-family:var(--f-display);font-weight:700;font-size:40px;line-height:1.1;width:120px;text-align:end}
+td.w{font-family:var(--f-display);font-weight:700;font-size:46px;line-height:1.1;width:150px;color:var(--accent)}
+td.k{font-weight:600;width:300px;padding-inline-end:30px}
+.chips{display:flex;flex-wrap:wrap;gap:10px;font-size:26px}
+.chips .chip{color:var(--fg)}
+
+.bignum{font-family:var(--f-head);font-weight:700;font-size:52px;line-height:1.45}
+.bignum span{display:block;font-family:var(--f-display);font-size:190px;line-height:1.05}
+
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.tile{border:2px solid var(--line);border-radius:4px;background:var(--raise);padding:18px 22px}
+.tile .d{font-family:var(--f-mono);font-size:30px;direction:ltr;text-align:right}
+.tile .p{font-size:22px;font-weight:600}
+.tile .v{font-size:21px;color:var(--mut);line-height:1.55}
+.tile.good{border-color:var(--safe)}.tile.good .p{color:var(--safe)}
+.tile.bad{border-color:var(--alarm)}.tile.bad .p{color:var(--alarm)}
+.tile.meh .p{color:var(--accent)}
+
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.pair figure{position:relative}
+.pair .tagl{position:absolute;top:14px;right:14px;font-size:22px;padding:2px 14px;border-radius:3px;background:var(--black);color:var(--white)}
+.pair .tagl.bad{background:var(--red);color:#fff}
+
+.lang{background:var(--raise);border-radius:4px;padding:16px 24px;font-size:28px}
+.lang small{display:block;font-size:20px;color:var(--mut)}
+.lang span{display:block;font-size:22px;color:var(--mut)}
+
+.result{display:grid;grid-template-columns:260px 1fr;gap:40px;align-items:baseline;border-top:2px solid var(--line);padding-top:20px}
+.result .f{font-family:var(--f-display);font-weight:700;font-size:110px;line-height:1;direction:ltr;text-align:right}
+.result h3{font-size:34px}
+.result p{font-size:26px;color:var(--mut);line-height:1.6}
+</style>
+</head>
+<body>
+
+<!-- 1 -->
+<section class="slide dark cover">
+  <div class="top"><div class="logo"><svg class="mark" width="40" height="40" viewBox="0 0 46 46"><path d="M23 2l21 21-21 21L2 23z" fill="none" stroke="#f4efe6" stroke-width="3"/><path d="M23 14l9 9-9 9-9-9z" fill="#f4efe6"/></svg>راصد <small>RASID</small></div><span><span class="ltr">ScamShield AI · Abu Dhabi Police × 42 Abu Dhabi</span></span></div>
+  <div class="body">
+    <h1><span>المحتال على الخط.</span><br>وراصد أيضاً.</h1>
+    <p class="lede">حارس للمكالمات ورادار استباقي للروابط والمواقع والإعلانات وقوائم خرائط Google المزيفة التي تستهدف سكان الإمارات.</p>
+  </div>
+  <div class="foot"><span>الفريق: عمر وسيهون · إبراهيم أبو لبن · أحمد إسماعيل بلبل</span><span class="ltr">rasid-scam-radar.onrender.com</span></div>
+  <div class="seam big"></div>
+</section>
+
+<!-- 2 -->
+<section class="slide dark">
+  <div class="top"><div class="logo">راصد</div><span>حارس المكالمات</span></div>
+  <div class="body">
+    <div class="cols c57">
+      <div class="stack">
+        <h2>في هذه المكالمة تضيع الأموال.</h2>
+        <p class="lede">كل رابط مزيف وكل إعلان مزيف وكل رقم خدمة عملاء مزيف ينتهي بالطريقة نفسها: مكالمة تطلب رمز التحقق أو بيانات البطاقة أو تحويلاً مالياً. <b>حارس المكالمات يجلس على هذه المكالمة.</b></p>
+        <p class="small">مكالمة تجريبية من إعدادنا. الرقم على اليمين هو درجة الخطر التي يحسبها راصد بعد كل جملة.</p>
+      </div>
+      <div class="call">
+        <div class="row"><div class="sc" style="color:var(--safe)">25</div><div class="say"><small>المتصل</small>السلام عليكم، معك أحمد من قسم الحماية في البنك.<i style="width:25%"></i></div></div>
+        <div class="row"><div class="sc" style="color:var(--camel)">45</div><div class="say"><small>المتصل</small>حسابك موقوف بسبب عملية مشبوهة.<i style="width:45%"></i></div></div>
+        <div class="row me"><div class="sc"></div><div class="say"><small>فاطمة</small>موقوف؟ شو المطلوب مني؟</div></div>
+        <div class="row"><div class="sc" style="color:var(--camel)">70</div><div class="say"><small>المتصل</small>لا تخبر أحداً وابقَ على الخط، الأمر عاجل.<i style="width:70%"></i></div></div>
+        <div class="row"><div class="sc" style="color:var(--alarm)">100</div><div class="say"><small>المتصل</small>أرسلنا لك رمز تحقق برسالة، اقرأ لي الرمز الآن.<i style="width:100%"></i></div></div>
+        <div class="row rasid"><div class="sc"><svg viewBox="0 0 46 46"><path d="M23 2l21 21-21 21L2 23z" fill="none" stroke="#f4efe6" stroke-width="3"/><path d="M23 13l10 10-10 10-10-10z" fill="#f4efe6"/></svg></div><div class="say"><small>راصد يحذّر بصوت عالٍ، فيسمعه المحتال أيضاً</small>تحذير من راصد: هذه المكالمة تطابق أسلوب احتيال معروف. البنوك والشرطة لا تطلب الرمز أبداً. أنهِ المكالمة الآن.</div></div>
+      </div>
+    </div>
+  </div>
+  <span class="n">2</span>
+</section>
+
+<!-- 3 -->
+<section class="slide light">
+  <div class="top"><div class="logo">راصد</div><span>حارس المكالمات</span></div>
+  <div class="body">
+    <div class="cols c57">
+      <div class="stack">
+        <h2>اضغط «استمع». والباقي على راصد.</h2>
+        <div class="steps" style="grid-template-columns:1fr">
+          <div class="cell" style="display:grid;grid-template-columns:90px 1fr;gap:10px"><span class="num">١</span><div><h3>يستمع</h3><p>ضع الهاتف على مكبّر الصوت بجانب الحاسوب، واختر العربية أو الإنجليزية. لا تطبيق، ولا رقم هاتف، ولا خدمة صوتية مدفوعة.</p></div></div>
+          <div class="cell" style="display:grid;grid-template-columns:90px 1fr;gap:10px;margin-top:18px"><span class="num">٢</span><div><h3>يحذّر بصوت عالٍ، بلغتين</h3><p>يبقى صامتاً ما دامت المكالمة عادية. عند 50 ينبّه، وعند 80 يعلن التحذير بالعربية والإنجليزية.</p></div></div>
+          <div class="cell" style="display:grid;grid-template-columns:90px 1fr;gap:10px;margin-top:18px"><span class="num">٣</span><div><h3>يبلّغ بضغطة واحدة</h3><p>تُفتح قضية في منصة الشرطة مع كل مؤشرات الخطر. لا يُسجَّل أي صوت ولا يُحفظ نص المكالمة.</p></div></div>
+        </div>
+      </div>
+      <figure class="shot"><img src="../shots/09-call-guardian.jpg" alt=""><figcaption>تبويب حارس المكالمات كما هو في المنصة: مكالمة بنك مزيف بالعربية، تحذير باللغتين، الخطر 100</figcaption></figure>
+    </div>
+  </div>
+  <span class="n">3</span>
+</section>
+
+<!-- 4 -->
+<section class="slide light">
+  <div class="top"><div class="logo">راصد</div><span>حارس المكالمات</span></div>
+  <div class="body">
+    <h2>يسمع سيناريو الاحتيال، لا الكلمات فقط.</h2>
+    <div class="cols c66" style="align-items:start">
+      <div class="stack">
+        <p class="lede" style="font-size:28px"><b>10 عائلات قواعد</b> تقيّم كل جملة فوراً وبدون إنترنت، و Claude (اختياري) يقرأ المكالمة كاملة ويكتب التحذير المنطوق.</p>
+        <div class="chips"><span class="chip">رموز OTP والتحقق</span><span class="chip">رقم البطاقة و CVV و PIN</span><span class="chip">الهوية الإماراتية والجواز</span><span class="chip">التحويلات وبطاقات الهدايا</span><span class="chip">AnyDesk والتحكم عن بُعد</span><span class="chip">السرّية والضغط</span><span class="chip">التهديد بالسجن أو المخالفات</span><span class="chip">جوائز مقابل رسوم</span><span class="chip">روابط عبر SMS</span><span class="chip">انتحال صفة بنك أو شرطة</span></div>
+        <p class="small">عبارات الطمأنة مثل «لن نطلب منك الرقم السري أبداً» لا تُحتسب.</p>
+      </div>
+      <div>
+        <table>
+          <tr><th>اختُبر على 5 مكالمات تجريبية · 5 من 5 صحيحة</th><th style="text-align:end">الخطر</th></tr>
+          <tr><td>بنك مزيف يطلب رمز OTP (عربي)</td><td class="sc" style="color:var(--alarm)">100</td></tr>
+          <tr><td>مخالفة شرطة مزيفة + AnyDesk (إنجليزي)</td><td class="sc" style="color:var(--alarm)">100</td></tr>
+          <tr><td>رابط طرد عبر SMS (إنجليزي)</td><td class="sc" style="color:var(--accent)">50</td></tr>
+          <tr><td>تذكير حقيقي من البنك (إنجليزي)</td><td class="sc" style="color:var(--safe)">10</td></tr>
+          <tr><td>صديق، مكالمة عادية (عربي)</td><td class="sc" style="color:var(--safe)">0</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+  <span class="n">4</span>
+</section>
+
+<!-- 5 -->
+<section class="slide camel">
+  <div class="top"><div class="logo">راصد</div><span>لماذا</span></div>
+  <div class="body">
+    <div class="cols c66">
+      <div class="stack">
+        <h2>معظم عمليات الاحتيال تبدأ بموقع مزيف أو موقع وهمي على الخريطة أو إعلان مزيف.</h2>
+        <p class="lede"><b>قبل أن يتصلوا أصلاً.</b> معظم الأدوات لا تتحرك إلا بعد أن يلصق الضحية الرابط أو يقدّم بلاغاً، وحينها يكون المال قد ذهب. لذلك يبحث راصد بنفسه كل ليلة، قبل أن ينقر أي شخص.</p>
+      </div>
+      <p class="bignum"><span class="ltr">≈70,000</span>نطاق جديد يُسجَّل كل يوم. وراصد يقرأها كلها قبل الفطور.</p>
+    </div>
+  </div>
+  <span class="n">5</span>
+</section>
+
+<!-- 6 -->
+<section class="slide light">
+  <div class="top"><div class="logo">راصد</div><span>رادار الروابط</span></div>
+  <div class="body">
+    <h2>خلف كل مكالمة رابط. وراصد يصطاده.</h2>
+    <p class="lede">يكتب الضابط اسم علامة تجارية أو خدمة حكومية أو فعالية، فيعيد راصد قائمة مرتبة بالمواقع المزيفة الحية، لكل منها أدلته.</p>
+    <div class="steps" style="grid-template-columns:repeat(6,1fr);gap:0 30px">
+      <div class="cell"><span class="num">١</span><h3>يتنبأ</h3><p>أخطاء إملائية، حروف متشابهة، تبديل الامتداد</p></div>
+      <div class="cell"><span class="num">٢</span><h3>يراقب</h3><p>النطاقات الجديدة، الشهادات، الإعلانات، البحث، الخرائط، Telegram</p></div>
+      <div class="cell"><span class="num">٣</span><h3>يزور</h3><p>يفتح كل موقع مشبوه في متصفحه ويلتقط صورة</p></div>
+      <div class="cell"><span class="num">٤</span><h3>يقيّم</h3><p>من 0 إلى 100 مع كل سبب. تشابه الاسم وحده لا يكفي</p></div>
+      <div class="cell"><span class="num">٥</span><h3>يربط</h3><p>نفس الأيقونة أو البوت أو الرقم يعني جهة واحدة</p></div>
+      <div class="cell"><span class="num">٦</span><h3>يضرب</h3><p>ملف أدلة ورسائل بلاغ جاهزة يراجعها الضابط</p></div>
+    </div>
+  </div>
+  <span class="n">6</span>
+</section>
+
+<!-- 7 -->
+<section class="slide light">
+  <div class="top"><div class="logo">راصد</div><span>الصيد</span></div>
+  <div class="body">
+    <div class="cols c75">
+      <div class="stack">
+        <h2>اكتب اسماً، وراصد يتخيّل كل طريقة لتزويره.</h2>
+        <p class="lede" style="font-size:28px">أيّها موقع ADCB الحقيقي؟</p>
+        <div class="tiles">
+          <div class="tile good"><span class="p">رسمي</span><div class="d">adcb.com</div><p class="v">مُدرج في قائمة راصد الرسمية، فلا يمكن أن يُصنَّف مشبوهاً.</p></div>
+          <div class="tile bad"><span class="p">حرف مشابه (Homoglyph)</span><div class="d">аdcb.com</div><p class="v">حرف «а» هنا سيريلي: <span class="mono">xn--dcb-5cd.com</span></p></div>
+          <div class="tile bad"><span class="p">دمج كلمات (Combosquat)</span><div class="d">adcb-secure-verify.top</div><p class="v">اسم العلامة مع «secure» و«verify» على امتداد رخيص.</p></div>
+          <div class="tile meh"><span class="p">غير مرتبط · 3/100</span><div class="d">adcbilliardcare.com</div><p class="v">شركة لتنظيف طاولات البلياردو في يوتا. فتحه راصد وتركه.</p></div>
+        </div>
+      </div>
+      <figure class="shot" style="height:760px"><img src="../shots/04-seeds.jpg" alt="" style="height:700px"><figcaption>82 اسماً مشابهاً لـ ADCB، والسيريلية أولاً</figcaption></figure>
+    </div>
+  </div>
+  <span class="n">7</span>
+</section>
+
+<!-- 8 -->
+<section class="slide light">
+  <div class="top"><div class="logo">راصد</div><span>الفحص</span></div>
+  <div class="body">
+    <div class="cols c57">
+      <div class="stack">
+        <h2>راصد يفتح كل اسم مشابه وينظر بنفسه.</h2>
+        <ul class="dlist">
+          <li><span><b>مطابقة بصرية</b> مع الموقع الرسمي من لقطات راصد نفسه.</span></li>
+          <li><span><b>سرقة بيانات الدفع</b>: حقول البطاقة و CVV ورمز OTP والهوية الإماراتية.</span></li>
+          <li><span><b>روابط وشيفرة خبيثة</b>: بوتات Telegram، ملفات APK، إطارات مخفية.</span></li>
+          <li><span><b>الإخفاء</b>: هل يرى Googlebot صفحة ويرى هاتف إماراتي صفحة أخرى؟</span></li>
+        </ul>
+        <p class="small"><b style="color:var(--fg)">بوابة المحتوى:</b> تشابه الاسم وحده محدود عند 35، تحت خط التصنيف 50. والنطاقات التي تحوّل إلى الموقع الرسمي تأخذ 0.</p>
+      </div>
+      <div class="stack" style="gap:18px">
+        <div class="pair">
+          <figure class="shot"><img src="../shots/13-official.jpg" alt=""><span class="tagl">الموقع الرسمي</span></figure>
+          <figure class="shot"><img src="../shots/12-clone.jpg" alt=""><span class="tagl bad">نسخة تصيّد (اختبار من إعدادنا)</span></figure>
+        </div>
+        <div class="chips"><span class="chip" style="--c:var(--alarm);color:var(--alarm)">انتحال · 100/100</span><span class="chip">تطابق بصري 81%</span><span class="chip">نفس الأيقونة</span><span class="chip">يطلب دفع 450 درهماً</span></div>
+      </div>
+    </div>
+  </div>
+  <span class="n">8</span>
+</section>
+
+<!-- 9 -->
+<section class="slide dark">
+  <div class="top"><div class="logo">راصد</div><span>الخرائط</span></div>
+  <div class="body">
+    <div class="cols c66">
+      <figure class="shot"><img src="../shots/02-uae-ground.jpg" alt=""><figcaption>الميدان الإماراتي: كل نتيجة مفحوصة؛ الأخضر موثّق والأحمر مشبوه</figcaption></figure>
+      <div class="stack">
+        <h2>«خدمة عملاء ADCB على مدار الساعة»، برقم موبايل؟</h2>
+        <p class="lede" style="font-size:28px">يبحث الناس في الخرائط عن «خدمة عملاء البنك» ويتصلون بأول نتيجة. يفحص راصد كل نتيجة تحمل اسم علامة مراقَبة، إمارة بعد إمارة.</p>
+        <ul class="dlist">
+          <li><span><b>مقارنة الهاتف والموقع</b> بالسجل الرسمي.</span></li>
+          <li><span><b>أرقام موبايل أو واتساب</b> على صفحات البنوك وشركات الاتصالات.</span></li>
+          <li><span><b>رقم واحد، أقنعة كثيرة</b>: نفس الرقم على أكثر من علامة يعني جهة واحدة.</span></li>
+        </ul>
+        <p class="small">فعلياً: فحصنا 130 نتيجة لـ Aramex و ADCB عبر Google Places API. لم تكن أيّ منها مزيفة.</p>
+      </div>
+    </div>
+  </div>
+  <span class="n">9</span>
+</section>
+
+<!-- 10 -->
+<section class="slide dark">
+  <div class="top"><div class="logo">راصد</div><span>الإعلانات</span></div>
+  <div class="body">
+    <div class="cols c75">
+      <div class="stack">
+        <h2>إعلانات ونتائج بحث تنتحل اسم غيرها.</h2>
+        <p class="lede" style="font-size:28px">يبحث راصد كما يبحث أي شخص في الإمارات، وبعدة لغات، ويتتبّع كل إعلان حتى صفحته النهائية.</p>
+        <ul class="dlist">
+          <li><span><b>Meta Ad Library</b>: إعلانات فيسبوك وإنستغرام وواتساب التي تستخدم اسم علامة تجارية.</span></li>
+          <li><span><b>Google Ads Transparency Center</b> للإمارات، ومسح نتائج البحث.</span></li>
+          <li><span><b>الصق إعلاناً</b> (نصاً أو رابطاً أو لقطة شاشة)، و Claude يقرأ اللقطة.</span></li>
+          <li><span><b>افحص رابطاً</b>: يتتبّع التحويلات والروابط المختصرة ويفتح الصفحة ويقيّمها.</span></li>
+        </ul>
+        <p class="small">مسح إعلانات Meta و Google يحتاج إلى مفاتيح ليعمل بالكامل.</p>
+      </div>
+      <figure class="shot" style="height:800px"><img src="../shots/08-tools.jpg" alt="" style="height:740px"><figcaption>الأدوات: مسح النطاقات الجديدة، فاحص الإعلانات، تقييم إعلانات الوظائف</figcaption></figure>
+    </div>
+  </div>
+  <span class="n">10</span>
+</section>
+
+<!-- 11 -->
+<section class="slide light">
+  <div class="top"><div class="logo">راصد</div><span>اللغات</span></div>
+  <div class="body">
+    <div class="cols c75">
+      <div class="stack">
+        <h2>«التأشيرة مجانية. ادفع الرسوم فقط». بإحدى عشرة لغة.</h2>
+        <p class="lede" style="font-size:27px">احتيال الوظائف والتأشيرات يستهدف العمال بلغتهم. يقرأ راصد المنشورات العامة وقنوات Telegram بالعربية والإنجليزية والهندية والأردية والأردية اللاتينية والمالايالامية والتاميلية والسنهالية والتاغالوغية والبنغالية والنيبالية.</p>
+        <div class="lang"><small>التاغالوغية</small><div class="ltr" style="text-align:right">Hiring sa Abu Dhabi! Walang experience, bayad lang sa visa processing.</div><span>«توظيف في أبوظبي! بدون خبرة، فقط ادفع رسوم معاملة التأشيرة.»</span></div>
+        <div class="lang"><small>الأردية بحروف لاتينية</small><div class="ltr" style="text-align:right">Abu Dhabi mein job, visa free, sirf WhatsApp karein</div><span>«وظيفة في أبوظبي، التأشيرة مجانية، تواصل عبر واتساب فقط.»</span></div>
+      </div>
+      <figure class="shot" style="height:800px"><img src="../shots/06-job-scam.jpg" alt="" style="height:740px"><figcaption>منشور بالتاغالوغية (عيّنة من إعدادنا): الدرجة 100</figcaption></figure>
+    </div>
+  </div>
+  <span class="n">11</span>
+</section>
+
+<!-- 12 -->
+<section class="slide light">
+  <div class="top"><div class="logo">راصد</div><span>الجهات والأدلة</span></div>
+  <div class="body">
+    <div class="cols c57">
+      <div class="stack">
+        <h2>أسقِط الشبكة كلها، لا موقعاً واحداً.</h2>
+        <p class="lede" style="font-size:28px">يربط راصد المواقع التي تشترك في الأيقونة أو بوت Telegram أو معرّف التحليلات أو رقم الهاتف أو الاستضافة، ويبني ملف أدلة واحداً لكل جهة احتيال.</p>
+        <ul class="dlist">
+          <li><span><b>كل تصنيف مع أسبابه</b>: درجة من 0 إلى 100، وكل نقطة مشروحة للضابط.</span></li>
+          <li><span><b>حزمة الإزالة</b>: اللقطات و WHOIS و DNS والاستضافة ورسائل بلاغ جاهزة.</span></li>
+          <li><span><b>ملاحظات القضية بالعربية والإنجليزية</b>، يكتبها Claude من الأدلة.</span></li>
+          <li><span><b>الضابط يوافق على كل عملية إزالة.</b> لا شيء يُرسل تلقائياً.</span></li>
+        </ul>
+      </div>
+      <figure class="shot"><img src="../shots/10-strike-pack.jpg" alt=""><figcaption>حزمة الإزالة A-026: ثلاثة منشورات، ثلاث لغات، رقم واتساب واحد</figcaption></figure>
+    </div>
+  </div>
+  <span class="n">12</span>
+</section>
+
+<!-- 13 -->
+<section class="slide dark">
+  <div class="top"><div class="logo">راصد</div><span>المنصة</span></div>
+  <div class="body" style="gap:26px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;gap:60px"><h2>شاشة واحدة لمناوبة الليل كلها.</h2><p class="small" style="max-width:36ch">حارس المكالمات وسبعة مستشعرات للصيد: افحص رابطاً، رادار التشابه، النطاقات الوليدة، مدقق الخرائط، الإعلانات، بصمة العُدّة، محلل الوظائف.</p></div>
+    <figure class="shot" style="height:640px"><img src="../shots/01-console.jpg" alt=""></figure>
+  </div>
+  <span class="n">13</span>
+</section>
+
+<!-- 14 -->
+<section class="slide dark">
+  <div class="top"><div class="logo">راصد</div><span>اختبار ميداني · 24 نوفمبر 2026</span></div>
+  <div class="body" style="gap:30px">
+    <h2>قِسناه على مكالمات وروابط حية، بما فيها ما فات.</h2>
+    <div class="result"><div class="f" style="color:var(--safe)">5 / 5</div><div><h3>مكالمات حكم عليها حارس المكالمات بدقة</h3><p>مكالمتا الاحتيال وصلتا إلى 100، رابط الطرد 50، والمكالمتان العاديتان بين 0 و 10. المكالمات عيّنات من إعدادنا.</p></div></div>
+    <div class="result"><div class="f" style="color:var(--safe)">9 / 9</div><div><h3>مواقع حقيقية بقيت نظيفة</h3><p>ADCB و TAMM وشرطة أبوظبي والإمارات دبي الوطني و u.ae و Instagram و Netflix و PayPal ودخول Microsoft.</p></div></div>
+    <div class="result"><div class="f" style="color:var(--camel)">5 / 14</div><div><h3>روابط احتيال حية كُشفت من قائمة عامة</h3><p>منها صفحة دخول Telekom مزيفة مع إخفاء، الدرجة 60. معظم البقية كانت مغلقة أصلاً.</p></div></div>
+  </div>
+  <span class="n">14</span>
+</section>
+
+<!-- 15 -->
+<section class="slide light">
+  <div class="top"><div class="logo">راصد</div><span>معايير التحكيم</span></div>
+  <div class="body" style="gap:24px">
+    <h2>كيف يجيب راصد على كل معيار.</h2>
+    <table>
+      <tr><td class="w">30%</td><td class="k">دقة الكشف</td><td>حارس المكالمات: 5 من 5 مكالمات صحيحة، والطمأنة لا تُحتسب. الروابط: بوابة المحتوى وتتبّع الإخفاء، و <span class="mono">POST /api/check</span> يقيّم قائمة روابط كاملة في طلب واحد.</td></tr>
+      <tr><td class="w">25%</td><td class="k">الكشف المبكر والتغطية</td><td>يحذّر أثناء المكالمة قبل تحويل المال؛ نطاقات جديدة، سجلات الشهادات، إعلانات، بحث، خرائط، Telegram.</td></tr>
+      <tr><td class="w">20%</td><td class="k">قابلية التفسير والتنفيذ</td><td>التحذير المنطوق يشرح السبب؛ أسباب لكل نقطة، لقطات، WHOIS، استضافة، حزمة إزالة، ملاحظات بالعربية والإنجليزية.</td></tr>
+      <tr><td class="w">15%</td><td class="k">الملاءمة للإمارات والابتكار</td><td>مستمع مكالمات عربي وإنجليزي بلا تطبيق أو رقم؛ بنوك الإمارات، TAMM، UAE PASS، المخالفات والفعاليات؛ 11 لغة.</td></tr>
+      <tr><td class="w">10%</td><td class="k">الجدوى والعرض</td><td>يعمل مباشرة على <span class="ltr">rasid-scam-radar.onrender.com</span> وعلى حاسوب واحد بلا مفاتيح؛ الحدود معلنة بصدق.</td></tr>
+    </table>
+  </div>
+  <span class="n">15</span>
+</section>
+
+<!-- 16 -->
+<section class="slide camel">
+  <div class="top"><div class="logo">راصد</div><span>الطريق والحدود</span></div>
+  <div class="body">
+    <h2>من عرض على حاسوب إلى تجربة مع الشرطة.</h2>
+    <div class="steps" style="grid-template-columns:repeat(3,1fr)">
+      <div class="cell"><h3>الشهر 1 · تجربة الحارس</h3><p>حارس المكالمات على حواسيب الشرطة ومراكز اتصال البنوك ولكبار السن؛ ورادار الروابط يراقب أكثر العلامات المنتحَلة في الإمارات.</p></div>
+      <div class="cell"><h3>الشهر 2 · الهاتف والمصادر الرسمية</h3><p>الحارس كتطبيق هاتف؛ بلاغات أمان ونطاقات <span class="ltr">.ae</span> من TDRA كمصادر؛ قنوات إغلاق المواقع.</p></div>
+      <div class="cell"><h3>الشهر 3 وما بعده · التوسّع</h3><p>PostgreSQL ومستشعرات مجدولة على عدة خوادم، دون تغيير طريقة التقييم.</p></div>
+    </div>
+    <p class="lede" style="font-size:26px;max-width:none"><b>حدود بصراحة:</b> صفحات الاحتيال التي تختبئ خلف ملف تعريف ارتباط أو فحص دولة قد تبدو نظيفة؛ الباقات المجانية للخدمات الخارجية محدودة؛ لا توجد قائمة عامة بنطاقات الإمارات الجديدة؛ التعرف على الكلام يحتاج إلى إنترنت ويتعثّر مع الضوضاء.</p>
+  </div>
+  <span class="n">16</span>
+</section>
+
+<!-- 17 -->
+<section class="slide dark closing">
+  <div class="top"><div class="logo"><svg class="mark" width="40" height="40" viewBox="0 0 46 46"><path d="M23 2l21 21-21 21L2 23z" fill="none" stroke="#f4efe6" stroke-width="3"/><path d="M23 14l9 9-9 9-9-9z" fill="#f4efe6"/></svg>راصد <small>RASID</small></div><span>العرض الحي</span></div>
+  <div class="body">
+    <h1>اصطد أولاً. <em>احرس المكالمة.</em><br>وحذّر بلغتهم.</h1>
+    <p class="lede" style="max-width:none">ترتيب العرض الحي: مكالمة احتيال في حارس المكالمات، ثم افحص رابطاً، ثم اصطد علامة تجارية، ثم افتح حزمة الإزالة.</p>
+  </div>
+  <div class="foot"><span>عمر وسيهون · إبراهيم أبو لبن · أحمد إسماعيل بلبل</span><span class="ltr">github.com/OmerWasyhun/rasid-scam-radar · rasid-scam-radar.onrender.com</span></div>
+  <div class="seam big"></div>
+</section>
+
+</body>
+</html>

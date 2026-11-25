@@ -3,271 +3,342 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="راصد (RASID): رادار استباقي لكشف الاحتيال في الإمارات. جولة تفاعلية لهاكاثون ScamShield AI.">
+<meta name="description" content="راصد (RASID): حارس المكالمات ورادار استباقي لكشف الاحتيال في الإمارات. جولة تفاعلية لهاكاثون ScamShield AI.">
 <title>جولة راصد</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Noto+Nastaliq+Urdu&family=Noto+Sans+Devanagari&family=Noto+Sans+Malayalam&family=Noto+Sans+Tamil&family=Noto+Sans+Sinhala&family=Noto+Sans+Bengali&display=swap">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400..700&family=Alexandria:wght@400..800&family=Readex+Pro:wght@300..700&family=JetBrains+Mono:wght@400;600&family=Noto+Nastaliq+Urdu&family=Noto+Sans+Devanagari&family=Noto+Sans+Malayalam&family=Noto+Sans+Tamil&family=Noto+Sans+Sinhala&family=Noto+Sans+Bengali&display=swap">
 <style>
-/* Layout: the Call Guardian opens the show as a two-phone scene; the rest of the night shift (the fraud hunt)
-   follows as short chapters, each pairing one line of story with a sharp screen from RASID and one thing to touch.
-   Single deliberate dark look: a police ops room at 3 a.m. Arabic, right-to-left. */
+/* One length of Al Sadu tent cloth. Grounds are tent black and wool white; motifs are undyed white and camel.
+   Red is the fraud thread and is used for nothing else. The Call Guardian opens the page; the hunt follows in chapters,
+   each separated by a woven seam. Arabic, right-to-left. */
 :root{
   color-scheme: dark;
-  --night:#05080f; --deck:#0b1220; --deck-2:#111b2e; --rule:#1d2b44; --rule-2:#2a3d60;
-  --ink:#e6edf7; --dim:#8ea0bb; --faint:#56698a;
-  --radar:#4cc9f0; --sand:#f2c14e; --alarm:#ff4d6d; --safe:#4fe0a2; --violet:#b48cff;
-  --f-display:"IBM Plex Sans Arabic","Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
-  --f-body:"IBM Plex Sans Arabic","IBM Plex Sans","Segoe UI",system-ui,sans-serif;
-  --f-mono:"JetBrains Mono","IBM Plex Sans Arabic",ui-monospace,Consolas,monospace;
-  --f-ar:"IBM Plex Sans Arabic",Tahoma,sans-serif;
-  --f-ur:"Noto Nastaliq Urdu","IBM Plex Sans Arabic",serif;
+  --black:#15100e; --black-2:#221a15; --white:#f4efe6; --white-2:#e9e1d2; --camel:#b88a5a;
+  --red:#c1272d; --green:#2f8f6b;
+  --f-display:"Reem Kufi","Readex Pro","Segoe UI",system-ui,sans-serif;
+  --f-head:"Alexandria","Readex Pro","Segoe UI",system-ui,sans-serif;
+  --f-body:"Readex Pro","Segoe UI",Tahoma,system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --f-ur:"Noto Nastaliq Urdu","Readex Pro",serif;
   --f-indic:"Noto Sans Devanagari","Noto Sans Malayalam","Noto Sans Tamil","Noto Sans Sinhala","Noto Sans Bengali","Nirmala UI",sans-serif;
+  --ease:cubic-bezier(.16,1,.3,1);
+  --teeth:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12'%3E%3Cpath d='M0 12L12 0l12 12z' fill='%23f4efe6'/%3E%3C/svg%3E");
+  --teeth-d:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='12'%3E%3Cpath d='M0 0l12 12L24 0z' fill='%23f4efe6'/%3E%3C/svg%3E");
+  --dia:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='24'%3E%3Cpath d='M20 1l15 11-15 11L5 12z' fill='%23b88a5a'/%3E%3Cpath d='M20 8l5 4-5 4-5-4z' fill='%2315100e'/%3E%3C/svg%3E");
+  --check:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='8'%3E%3Cpath d='M0 0h8v8H0z' fill='%23f4efe6'/%3E%3C/svg%3E");
+  --check-c:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='8'%3E%3Cpath d='M0 0h8v8H0z' fill='%23b88a5a'/%3E%3C/svg%3E");
 }
+/* grounds: every component reads these, so a section only has to name its cloth */
+.dark{--bg:var(--black);--fg:var(--white);--mut:#cbbfae;--line:rgba(244,239,230,.2);--raise:var(--black-2);--accent:var(--camel);--alarm:#f0695d;--safe:#63c9a0;--shadow:rgba(0,0,0,.7)}
+.light{--bg:var(--white);--fg:var(--black);--mut:#54463a;--line:rgba(21,16,14,.22);--raise:var(--white-2);--accent:#7a5527;--alarm:#a81e24;--safe:#1f6e50;--shadow:rgba(21,16,14,.4)}
+.camel{--bg:var(--camel);--fg:var(--black);--mut:#2e2218;--line:rgba(21,16,14,.35);--raise:#c89b6b;--accent:var(--black);--alarm:#7d1216;--safe:#11452f;--shadow:rgba(21,16,14,.4)}
+.dark,.light,.camel{--sand:var(--accent);--radar:var(--fg);--faint:var(--mut);background:var(--bg);color:var(--fg)}
+
 *{box-sizing:border-box}
 [hidden]{display:none!important}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--night);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.75}
-.wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-h1,h2,h3{font-family:var(--f-display);font-weight:700;margin:0;line-height:1.3;letter-spacing:0;text-wrap:balance}
+html{scroll-behavior:smooth;scrollbar-color:var(--camel) var(--black)}
+body{margin:0;background:var(--black);color:var(--white);font-family:var(--f-body);font-size:17px;line-height:1.85;font-weight:400;-webkit-font-smoothing:antialiased}
+::selection{background:var(--camel);color:var(--black)}
+.wrap{max-width:1200px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-head);font-weight:700;margin:0;line-height:1.4;letter-spacing:0;text-wrap:balance}
 p{margin:0}
-.mono{font-family:var(--f-mono)} .ar{font-family:var(--f-ar)} .ur{font-family:var(--f-ur);line-height:2.1} .indic{font-family:var(--f-indic)}
-.en{font-family:"Bricolage Grotesque",var(--f-body)}
-.kicker{font-family:var(--f-ar);font-size:.9rem;font-weight:600;letter-spacing:0;color:var(--radar)}
-:focus-visible{outline:2px solid var(--radar);outline-offset:3px}
+.mono{font-family:var(--f-mono)} .ar{font-family:var(--f-body)} .ur{font-family:var(--f-ur);line-height:2.1} .indic{font-family:var(--f-indic)}
+:focus-visible{outline:2px solid var(--accent,var(--camel));outline-offset:3px}
 button{font:inherit;color:inherit;cursor:pointer}
 img{max-width:100%;display:block}
+svg.i{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--night)}
-.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--night) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
-.bar .wrap{display:flex;align-items:center;gap:14px;padding-block:10px}
-.logo{display:flex;align-items:center;gap:8px;font-family:"Bricolage Grotesque",var(--f-display);font-weight:800;letter-spacing:.04em}
-.logo .ar{color:var(--radar);font-weight:700;letter-spacing:0}
-.dots{display:flex;gap:6px;flex:1;justify-content:center;flex-wrap:wrap}
-.dots a{width:9px;height:9px;border-radius:50%;background:var(--rule-2);display:block}
-.dots a.on{background:var(--radar);box-shadow:0 0 0 4px color-mix(in srgb,var(--radar) 25%,transparent)}
-.present{font-family:var(--f-ar);font-size:.8rem;border:1px solid var(--rule-2);background:none;border-radius:999px;padding:5px 12px;color:var(--dim)}
-.present:hover{color:var(--ink);border-color:var(--radar)}
-.progress{position:absolute;inset-inline-start:0;bottom:-1px;height:2px;background:var(--radar);width:0}
+/* ===== top bar ===== */
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--black)}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;border-bottom:1px solid var(--line)}
+.bar .wrap{display:flex;align-items:center;gap:20px;padding-block:10px}
+.logo{display:flex;align-items:center;gap:10px;font-family:var(--f-display);font-weight:700;font-size:1.35rem;line-height:1}
+.logo small{font-family:var(--f-body);font-size:.72rem;font-weight:500;letter-spacing:.12em;color:var(--mut)}
+.dots{display:flex;gap:4px 18px;flex:1;justify-content:center;flex-wrap:wrap}
+.dots a{font-size:.84rem;color:var(--mut);text-decoration:none;padding:4px 0;border-bottom:3px solid transparent;transition:color .2s}
+.dots a:hover{color:var(--fg)}
+.dots a.on{color:var(--fg);border-bottom-color:var(--fg)}
+.present{display:flex;align-items:center;gap:8px;font-size:.84rem;border:1px solid var(--line);background:none;border-radius:4px;padding:6px 12px}
+.present:hover{border-color:var(--fg)}
+.progress{position:absolute;inset-inline-start:0;bottom:-3px;height:3px;background:var(--camel);width:0}
 
-section.ch{padding-block:84px 72px;border-bottom:1px solid var(--rule);position:relative;scroll-margin-top:52px}
-.ch .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:48px;align-items:center}
+/* ===== woven seams between chapters ===== */
+.seam{height:72px;background-color:var(--black);background-repeat:repeat-x,repeat-x,repeat-x,repeat-x,repeat-x;
+  background-image:linear-gradient(var(--white),var(--white)),var(--teeth),var(--dia),var(--teeth-d),linear-gradient(var(--white),var(--white));
+  background-position:0 0,center 9px,center 24px,center 51px,0 69px;background-size:100% 3px,24px 12px,40px 24px,24px 12px,100% 3px}
+.seam.s1{background-image:var(--check),linear-gradient(var(--camel),var(--camel)),var(--teeth),linear-gradient(var(--camel),var(--camel)),var(--check);
+  background-position:center 6px,0 22px,center 30px,0 46px,center 58px;background-size:16px 8px,100% 4px,24px 12px,100% 4px,16px 8px}
+.seam.s2{background-image:linear-gradient(var(--camel),var(--camel)),var(--check),var(--dia),var(--check),linear-gradient(var(--camel),var(--camel));
+  background-position:0 4px,center 14px,center 24px,center 50px,0 64px;background-size:100% 4px,16px 8px,40px 24px,16px 8px,100% 4px}
+
+/* ===== chapters ===== */
+section.ch{padding-block:96px 88px;position:relative;scroll-margin-top:50px}
+.ch .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:56px;align-items:center}
 .ch .grid.rev{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
 .ch .grid.rev .text{order:2}
-.text{display:flex;flex-direction:column;gap:16px;min-width:0}
-.text h2{font-size:clamp(2rem,4.2vw,3.2rem)}
-.text .lede{font-size:1.12rem;color:var(--dim);max-width:52ch}
-.feat{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
-.feat li{display:grid;grid-template-columns:18px 1fr;gap:8px;font-size:.98rem}
-.feat li::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--radar);margin-top:11px}
-.feat b{color:#fff;font-weight:600}
-.aside{font-size:.92rem;color:var(--faint);border-inline-start:2px solid var(--sand);padding-inline-start:12px}
-.aside b{color:var(--sand);font-weight:600}
-.tag{font-family:var(--f-mono);font-size:.72rem;border:1px solid var(--rule-2);border-radius:999px;padding:4px 10px;color:var(--dim)}
-.chip{font-family:var(--f-ar);font-size:.76rem;padding:3px 9px;border-radius:7px;border:1px solid var(--c,var(--rule-2));color:var(--c,var(--dim));display:inline-block}
+.text{display:flex;flex-direction:column;gap:18px;min-width:0}
+.text h2{font-size:clamp(2rem,4.2vw,3.3rem)}
+.lede{font-size:1.12rem;color:var(--mut);max-width:58ch}
+.lede b,.caption b,.way p b{color:var(--fg);font-weight:600}
+.feat{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:10px}
+.feat li{display:grid;grid-template-columns:20px 1fr;gap:8px;font-size:.98rem}
+.feat li::before{content:"";width:8px;height:8px;background:var(--accent);transform:rotate(45deg);margin-top:.72em}
+.feat b{font-weight:600}
+.aside{font-size:.94rem;color:var(--mut);background:var(--raise);border-radius:4px;padding:14px 18px}
+.aside b{color:var(--fg);font-weight:600}
+.tag{font-family:var(--f-mono);font-size:.74rem;border:1px solid var(--line);border-radius:3px;padding:4px 10px;color:var(--mut)}
+.chip{font-size:.78rem;padding:3px 10px;border-radius:3px;border:1px solid var(--c,var(--line));color:var(--c,var(--mut));display:inline-block}
 
-/* screens: sharp 2x captures, framed like a browser window, tap to enlarge */
-.screen{margin:0;border:1px solid var(--rule-2);border-radius:14px;overflow:hidden;background:var(--deck);box-shadow:0 30px 80px -30px rgba(0,0,0,.85)}
-.screen .chrome{display:flex;align-items:center;gap:6px;padding:8px 12px;border-bottom:1px solid var(--rule);background:var(--deck-2)}
-.screen .chrome i{width:9px;height:9px;border-radius:50%;background:var(--rule-2)}
-.screen .chrome span{margin-inline-start:8px;font-family:var(--f-mono);font-size:.68rem;color:var(--faint)}
+/* screens: sharp captures, tap to enlarge */
+.screen{margin:0;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--raise);box-shadow:0 28px 56px -28px var(--shadow)}
 .screen button.zoom{all:unset;display:block;cursor:zoom-in;position:relative;width:100%}
-.screen button.zoom:focus-visible{outline:2px solid var(--radar);outline-offset:-2px}
-.screen button.zoom img{width:100%;height:auto;image-rendering:auto}
-.screen button.zoom::after{content:"⤢ اضغط للتكبير";position:absolute;left:10px;bottom:10px;font-family:var(--f-ar);font-size:.72rem;padding:3px 8px;border-radius:6px;background:rgba(0,0,0,.72);color:var(--ink);opacity:0;transition:opacity .2s}
+.screen button.zoom:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.screen button.zoom img{width:100%;height:auto}
+.screen button.zoom::after{content:"اضغط للتكبير";position:absolute;left:10px;bottom:10px;font-size:.74rem;padding:3px 10px;border-radius:3px;background:var(--black);color:var(--white);opacity:0;transition:opacity .2s}
 .screen button.zoom:hover::after,.screen button.zoom:focus-visible::after{opacity:1}
-.screen figcaption{font-family:var(--f-ar);font-size:.82rem;color:var(--dim);padding:9px 12px;border-top:1px solid var(--rule)}
+.screen figcaption{font-size:.86rem;color:var(--mut);padding:10px 14px;border-top:1px solid var(--line)}
 .tall{max-height:640px;overflow:hidden;position:relative}
-.tall::after{content:"";position:absolute;inset:auto 0 0;height:70px;background:linear-gradient(transparent,var(--deck));pointer-events:none}
-.lightbox{position:fixed;inset:0;z-index:50;background:rgba(2,4,9,.94);display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 14px) max(14px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 14px) max(14px,env(safe-area-inset-left,0px))}
+.tall::after{content:"";position:absolute;inset:auto 0 0;height:70px;background:linear-gradient(transparent,var(--raise));pointer-events:none}
+.lightbox{position:fixed;inset:0;z-index:50;background:rgba(21,16,14,.97);display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 14px) max(14px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 14px) max(14px,env(safe-area-inset-left,0px))}
 .lightbox .lbbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
-.lightbox .lbbar span{font-family:var(--f-ar);font-size:.9rem;color:var(--dim)}
+.lightbox .lbbar span{font-size:.92rem;color:var(--mut)}
 .lightbox .lbimg{flex:1;overflow:auto;display:flex;justify-content:center;align-items:flex-start}
-.lightbox img{max-width:min(100%,1600px);height:auto;border-radius:8px}
+.lightbox img{max-width:min(100%,1600px);height:auto;border-radius:4px}
 
-/* ===== hero + two-phone scene ===== */
-.hero{padding-block:56px 60px;background:radial-gradient(ellipse at 50% 0%,color-mix(in srgb,var(--alarm) 12%,transparent),transparent 65%)}
-.hero h1{font-size:clamp(2.4rem,6.4vw,5rem);max-width:18ch}
-.hero h1 em{font-style:normal;color:var(--radar)}
-.hero .lede{font-size:1.15rem;color:var(--dim);max-width:62ch;margin-top:16px}
-.stage{margin-top:34px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) minmax(0,1fr);gap:22px;align-items:start}
-.phone{border:2px solid var(--rule-2);border-radius:36px;background:#000;padding:14px 12px 16px;height:520px;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;transition:border-color .4s}
-.phone.scam{border-color:color-mix(in srgb,var(--alarm) 55%,var(--rule-2))}
-.phone .notch{width:84px;height:16px;border-radius:12px;background:#151515;margin:0 auto}
+/* ===== hero + the call ===== */
+.hero{padding-block:44px 88px}
+.herotop{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:48px;align-items:end}
+.hero h1{font-family:var(--f-display);font-size:clamp(2.7rem,6.6vw,5.6rem);line-height:1.25}
+.hero h1 span{color:var(--alarm)}
+.hero .lede{font-size:1.1rem;max-width:60ch}
+.credit{margin-top:12px;font-size:.84rem;color:var(--mut)}
+.stage{margin-top:28px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) minmax(0,1fr);gap:56px;align-items:start;position:relative}
+/* the line between the two phones: a woven cord with a channel for the red thread */
+.cord{position:absolute;top:92px;width:56px;height:34px;
+  background:var(--check) 0 0/16px 8px repeat-x,var(--check) 0 26px/16px 8px repeat-x,linear-gradient(rgba(244,239,230,.22),rgba(244,239,230,.22)) 0 12px/100% 10px no-repeat}
+.cord.in{inset-inline-start:-56px}
+.cord.out{inset-inline-end:-56px}
+.thread{position:absolute;inset-inline-start:0;top:12px;height:10px;width:calc(var(--risk,0) * 1%);background:var(--red);transition:width .9s var(--ease)}
+.phone{border:2px solid var(--fg);border-radius:34px;background:#000;padding:14px 12px 16px;height:540px;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;z-index:1;transition:border-color .5s}
+.phone.scam{border-color:var(--red)}
+.phone .notch{width:84px;height:14px;border-radius:12px;background:var(--black-2);margin:0 auto}
 .phone .who{text-align:center;display:flex;flex-direction:column;gap:2px;padding-top:6px}
-.phone .who .role{font-family:var(--f-ar);font-size:.78rem;color:var(--faint)}
-.phone .who b{font-family:var(--f-display);font-size:1.2rem}
-.phone .who .st{font-family:var(--f-ar);font-size:.76rem;color:var(--dim)}
-.phone .avatar{width:64px;height:64px;border-radius:50%;margin:8px auto 2px;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:1.4rem;background:var(--deck-2);border:1px solid var(--rule-2);position:relative}
-.phone .avatar.talk::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--sand);animation:ring 1s ease-out infinite}
+.phone .who .role{font-size:.78rem;color:var(--mut)}
+.phone .who b{font-family:var(--f-head);font-weight:700;font-size:1.15rem}
+.phone .who .st{font-size:.78rem;color:var(--mut)}
+.phone .avatar{width:64px;height:64px;border-radius:50%;margin:8px auto 2px;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:1.4rem;background:var(--black-2);border:1px solid var(--line);position:relative}
+.phone .avatar.talk::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--camel);animation:ring 1.1s var(--ease) infinite}
 @keyframes ring{from{transform:scale(.92);opacity:1}to{transform:scale(1.25);opacity:0}}
 .bubbles{flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;overflow:hidden;padding:0 2px}
-.bub{max-width:92%;padding:8px 11px;border-radius:14px;font-size:.88rem;line-height:1.5;background:var(--deck-2);border:1px solid var(--rule);animation:pop .35s ease-out}
-.bub.mine{align-self:flex-end;background:color-mix(in srgb,var(--radar) 14%,var(--deck-2));border-color:color-mix(in srgb,var(--radar) 30%,transparent)}
+.bub{max-width:92%;padding:8px 12px;border-radius:12px;font-size:.88rem;line-height:1.6;background:var(--black-2);animation:pop .4s var(--ease)}
+.bub.mine{align-self:flex-end;background:var(--white);color:var(--black)}
 .bub.theirs{align-self:flex-start}
-.bub[dir=rtl]{font-family:var(--f-ar)}
-.bub small{display:block;font-family:var(--f-ar);font-size:.64rem;color:var(--faint);margin-bottom:2px}
-@keyframes pop{from{transform:translateY(6px);opacity:0}to{transform:none;opacity:1}}
+.bub small{display:block;font-size:.66rem;opacity:.7;margin-bottom:2px}
+.bub.rasidsays{background:var(--red);color:#fff}
+@keyframes pop{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
 .callbtns{display:flex;justify-content:space-around;padding-top:6px}
-.callbtns span{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:1.1rem;background:var(--deck-2);border:1px solid var(--rule)}
-.callbtns span.end{background:var(--alarm);border-color:var(--alarm);color:#fff}
+.callbtns span{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--black-2);border:1px solid var(--line)}
+.callbtns span.end{background:var(--white);border-color:var(--white);color:var(--black)}
 .incoming{display:flex;justify-content:space-around;padding-top:6px}
-.incoming button{width:54px;height:54px;border-radius:50%;border:0;font-size:1.3rem;color:#fff}
-.incoming .acc{background:var(--safe);color:#04220f;animation:bounce 1.2s infinite}
-.incoming .dec{background:var(--alarm)}
-@keyframes bounce{50%{transform:translateY(-4px)}}
-.notif{position:absolute;left:10px;right:10px;top:44px;border-radius:16px;padding:12px 13px;background:color-mix(in srgb,#2a0710 92%,transparent);border:1px solid var(--alarm);box-shadow:0 20px 50px -10px rgba(0,0,0,.9);display:flex;flex-direction:column;gap:5px;animation:drop .45s ease-out}
-.notif b{font-size:.95rem;color:#fff}
-.notif p{font-size:.8rem;color:#ffd5dc;line-height:1.5}
-.notif .ar{direction:rtl;text-align:right}
+.incoming button{width:56px;height:56px;border-radius:50%;border:0;display:grid;place-items:center;font-size:1.2rem}
+.incoming .acc{background:var(--green);color:#fff;animation:bounce 1.4s var(--ease) infinite alternate}
+.incoming .dec{background:var(--black-2);color:var(--white);border:1px solid var(--line)}
+@keyframes bounce{to{transform:translateY(-5px)}}
+.notif{position:absolute;left:10px;right:10px;top:44px;border-radius:14px;padding:13px 14px;background:var(--red);color:#fff;box-shadow:0 18px 36px -12px rgba(0,0,0,.9);display:flex;flex-direction:column;gap:5px;animation:drop .5s var(--ease)}
+.notif b{font-size:.95rem}
+.notif p{font-size:.8rem;line-height:1.55}
 @keyframes drop{from{transform:translateY(-30px);opacity:0}to{transform:none;opacity:1}}
-.endedcard{margin:auto 0;text-align:center;display:flex;flex-direction:column;gap:6px;color:var(--dim);font-family:var(--f-ar);font-size:.85rem}
-.endedcard b{font-family:var(--f-display);font-size:1.3rem;color:var(--ink)}
+.endedcard{margin:auto 0;text-align:center;display:flex;flex-direction:column;gap:6px;color:var(--mut);font-size:.86rem}
+.endedcard b{font-family:var(--f-head);font-size:1.3rem;color:var(--white)}
 
-/* the agent in the middle */
-.agent{border:1px solid var(--rule-2);border-radius:20px;background:var(--deck);padding:16px;display:flex;flex-direction:column;gap:12px;height:520px;position:relative}
+/* RASID in the middle: a panel of wool cloth that turns red when it speaks */
+.agent{border-radius:6px;padding:20px;display:flex;flex-direction:column;gap:14px;height:540px;position:relative;z-index:1;transition:background-color .6s var(--ease),color .6s var(--ease)}
+.agent.alarm{--bg:var(--red);--fg:#fff;--mut:#ffe1dc;--line:rgba(255,255,255,.4);--alarm:#fff;--raise:#a81e24}
 .agent .head{display:flex;align-items:center;gap:12px}
-.radar{width:58px;height:58px;border-radius:50%;border:2px solid var(--radar);position:relative;flex:none;overflow:hidden}
-.radar::before{content:"";position:absolute;inset:0;background:conic-gradient(from 0deg,color-mix(in srgb,var(--radar) 55%,transparent),transparent 30%);animation:sweep 2.2s linear infinite}
-.radar::after{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px;border-radius:50%;background:var(--alarm)}
-.radar.off::before{animation:none;opacity:.2}
-@keyframes sweep{to{transform:rotate(360deg)}}
-.agent .head b{font-family:var(--f-display);font-size:1.2rem;display:block}
-.agent .head span{font-family:var(--f-ar);font-size:.78rem;color:var(--dim)}
-.wave{display:flex;align-items:center;gap:3px;height:26px}
-.wave i{flex:1;max-width:6px;height:4px;border-radius:2px;background:var(--rule-2)}
-.wave.on i{background:var(--sand);animation:wv .7s ease-in-out infinite}
-@keyframes wv{50%{height:24px}}
-.meter .n{font-family:"Bricolage Grotesque",var(--f-display);font-weight:800;font-size:2.8rem;line-height:1;font-variant-numeric:tabular-nums;transition:color .4s}
-.meter .bar2{height:8px;border-radius:4px;background:var(--rule);margin:8px 0 6px;overflow:hidden}
-.meter .bar2 span{display:block;height:100%;width:0;background:var(--safe);transition:width .5s,background .5s}
-.meter .vd{font-family:var(--f-ar);font-size:.85rem;font-weight:600}
-.log{flex:1;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;font-size:.82rem}
-.log div{border-inline-start:2px solid var(--rule-2);padding-inline-start:8px;color:var(--dim);animation:pop .35s ease-out}
-.log div.flag{border-color:var(--alarm);color:#ffc1cc}
-.log div.act{border-color:var(--radar);color:var(--ink)}
-.log div[dir=rtl]{font-family:var(--f-ar)}
-.saynow{font-size:1.05rem;color:var(--ink);min-height:2.8em}
+.mark{width:46px;height:46px;flex:none}
+.mark .eye{transform-origin:23px 23px;transition:transform .6s var(--ease)}
+.agent.off .mark .eye{transform:scale(.4)}
+.agent .head b{font-family:var(--f-head);font-size:1.1rem;display:block;line-height:1.4}
+.agent .head span{font-size:.8rem;color:var(--mut)}
+.wave{display:flex;align-items:center;gap:3px;height:22px}
+.wave i{flex:1;max-width:6px;height:4px;background:var(--line)}
+.wave.on i{background:var(--fg);animation:wv .7s ease-in-out infinite}
+@keyframes wv{50%{height:22px}}
+.meter{display:grid;grid-template-columns:auto 1fr;gap:2px 16px;align-items:end}
+.meter .lbl{grid-column:1 / -1;font-size:.8rem;color:var(--mut)}
+.meter .n{font-family:var(--f-display);font-weight:700;font-size:4.2rem;line-height:1;font-variant-numeric:tabular-nums;transition:color .4s}
+.meter .vd{font-size:1.05rem;font-weight:600;padding-bottom:.5em}
+.meter .bar2{grid-column:1 / -1;height:8px;background:var(--line);margin-top:8px;overflow:hidden}
+.meter .bar2 span{display:block;height:100%;width:0;background:var(--safe);transition:width .9s var(--ease),background .5s}
+.log{flex:1;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;gap:7px;font-size:.84rem;line-height:1.6}
+.log div{display:grid;grid-template-columns:14px 1fr;gap:6px;color:var(--mut);animation:pop .4s var(--ease)}
+.log div::before{content:"";width:6px;height:6px;margin-top:.62em;background:var(--line);transform:rotate(45deg)}
+.log div.flag{color:var(--alarm);font-weight:600}
+.log div.flag::before{background:var(--alarm)}
+.log div.act{color:var(--fg)}
+.log div.act::before{background:var(--fg)}
 
-.simctl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:22px}
-.btn{border:1px solid var(--rule-2);background:none;border-radius:12px;padding:10px 16px;font-family:var(--f-ar);font-size:.9rem}
-.btn:hover:not([disabled]){border-color:var(--radar)}
+.simctl{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:40px}
+.btn{border:1px solid var(--line);background:none;border-radius:4px;padding:10px 18px;font-size:.92rem;transition:border-color .2s}
+.btn:hover:not([disabled]){border-color:var(--fg)}
 .btn[disabled]{opacity:.35;cursor:default}
-.btn.next{background:var(--radar);border-color:var(--radar);color:#04121c;font-weight:700;font-size:1.05rem;padding:11px 26px}
-.seg{display:flex;border:1px solid var(--rule-2);border-radius:12px;overflow:hidden}
-.seg button{all:unset;cursor:pointer;padding:9px 13px;font-family:var(--f-ar);font-size:.86rem;color:var(--dim)}
-.seg button[aria-pressed="true"]{background:var(--deck-2);color:var(--ink)}
-.seg button:focus-visible{outline:2px solid var(--radar);outline-offset:-2px}
-.stepdots{display:flex;gap:5px;margin-inline-start:auto}
-.stepdots i{width:18px;height:4px;border-radius:2px;background:var(--rule-2)}
-.stepdots i.on{background:var(--radar)}
-.caption{margin-top:14px;font-size:1.05rem;color:var(--dim);max-width:70ch;min-height:3.4em}
-.caption b{color:var(--ink)}
+.btn.next{background:var(--fg);border-color:var(--fg);color:var(--bg);font-family:var(--f-head);font-weight:700;font-size:1.05rem;padding:10px 30px}
+.btn.next:hover:not([disabled]){background:var(--camel);border-color:var(--camel)}
+.seg{display:flex;border:1px solid var(--line);border-radius:4px;overflow:hidden}
+.seg button{all:unset;cursor:pointer;padding:9px 14px;font-size:.88rem;color:var(--mut)}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg)}
+.seg button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+/* each step of the call weaves one cell; a flagged sentence leaves a red one */
+.stepdots{display:flex;gap:9px;margin-inline-start:auto;align-items:center}
+.stepdots i{width:11px;height:11px;transform:rotate(45deg);border:1px solid var(--mut);transition:background-color .4s,border-color .4s}
+.stepdots i.on{background:var(--fg);border-color:var(--fg)}
+.stepdots i.flag{background:var(--red);border-color:var(--red)}
+.caption{margin-top:22px;font-size:1.08rem;color:var(--mut);max-width:70ch;min-height:3.8em}
 
-.ways{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px;margin-top:40px}
-.way{border:1px solid var(--rule);border-radius:14px;padding:18px;background:var(--deck);display:flex;flex-direction:column;gap:8px}
-.way h3{font-size:1.25rem}
-.way p{font-size:.96rem;color:var(--dim)}
-.way .st{font-family:var(--f-ar);font-size:.86rem;font-weight:600}
+.ways{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr));gap:0 48px;margin-top:72px}
+.way{border-top:1px solid var(--line);padding-top:18px;display:flex;flex-direction:column;gap:8px;margin-bottom:28px}
+.way .num{font-family:var(--f-display);font-weight:700;font-size:3.2rem;line-height:1;color:var(--accent)}
+.way h3{font-size:1.45rem}
+.way p{font-size:.98rem;color:var(--mut)}
+#gShots{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:28px;margin-top:44px;align-items:start}
+
+/* brief */
+.bignum{font-family:var(--f-head);font-weight:700;font-size:clamp(1.7rem,3.4vw,2.6rem);line-height:1.45}
+.bignum span{display:block;font-family:var(--f-display);font-size:clamp(3.6rem,10vw,6rem);line-height:1.05}
 
 /* quiz */
-.game{border:1px solid var(--rule-2);border-radius:18px;background:var(--deck);padding:20px;display:flex;flex-direction:column;gap:12px;margin-top:30px}
-.game h3{font-size:1.4rem}
-.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:10px}
-.opt{all:unset;cursor:pointer;border:1px solid var(--rule-2);border-radius:12px;padding:14px;background:var(--deck-2);display:flex;flex-direction:column;gap:6px;min-width:0}
-.opt:focus-visible{outline:2px solid var(--radar)}
-.opt .d{font-family:var(--f-mono);font-size:1.12rem;color:#fff;overflow-wrap:anywhere;text-align:right}
+.game{display:flex;flex-direction:column;gap:16px;margin-top:64px;border-top:1px solid var(--line);padding-top:28px}
+.game h3{font-size:1.7rem}
+.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:12px}
+.opt{all:unset;cursor:pointer;border:1px solid var(--line);border-radius:4px;padding:16px;background:var(--raise);display:flex;flex-direction:column;gap:6px;min-width:0;transition:border-color .2s}
+.opt:hover{border-color:var(--fg)}
+.opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.opt .d{font-family:var(--f-mono);font-size:1.12rem;overflow-wrap:anywhere;text-align:right}
 .opt .v,.opt .pill{display:none}
-.game.done .opt .v{display:block;font-size:.9rem;color:var(--dim)}
-.game.done .opt .pill{display:inline;font-family:var(--f-ar);font-size:.8rem;font-weight:600}
+.game.done .opt .v{display:block;font-size:.9rem;color:var(--mut)}
+.game.done .opt .pill{display:inline;font-size:.82rem;font-weight:600}
 .game.done .opt{cursor:default}
 .game.done .opt.good{border-color:var(--safe)} .game.done .opt.good .pill{color:var(--safe)}
 .game.done .opt.bad{border-color:var(--alarm)} .game.done .opt.bad .pill{color:var(--alarm)}
-.game.done .opt.meh{border-color:var(--sand)} .game.done .opt.meh .pill{color:var(--sand)}
-.result{font-size:1rem;color:var(--sand);min-height:1.4em}
+.game.done .opt.meh .pill{color:var(--accent)}
+.game .opt.picked{outline:3px solid var(--fg);outline-offset:2px}
+.result{font-size:1.05rem;font-weight:500;min-height:1.6em}
 
 /* compare (kept left-to-right so the slider maths matches the clip) */
-.compare{position:relative;border:1px solid var(--rule-2);border-radius:14px;overflow:hidden;aspect-ratio:1366/900;max-width:100%;background:#000;user-select:none}
+.compare{position:relative;border:1px solid var(--line);border-radius:4px;overflow:hidden;aspect-ratio:1366/900;max-width:100%;background:#000;user-select:none;box-shadow:0 28px 56px -28px var(--shadow)}
 .compare img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .compare .top{clip-path:inset(0 0 0 50%)}
-.compare .handle{position:absolute;top:0;bottom:0;left:50%;width:2px;background:var(--sand);transform:translateX(-1px);pointer-events:none}
-.compare .handle::after{content:"⇆";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:var(--sand);color:#1a1200;display:grid;place-items:center;font-weight:700}
+.compare .handle{position:absolute;top:0;bottom:0;left:50%;width:2px;background:var(--white);transform:translateX(-1px);pointer-events:none}
+.compare .handle::after{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%) rotate(45deg);width:30px;height:30px;background:var(--white);border:2px solid var(--black)}
 .compare input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
-.compare .lbl{position:absolute;top:10px;font-family:var(--f-ar);font-size:.8rem;padding:3px 8px;border-radius:6px;background:rgba(0,0,0,.75)}
-.compare .l1{left:10px;color:var(--safe)} .compare .l2{right:10px;color:var(--alarm)}
-.verdict{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.compare .lbl{position:absolute;top:10px;font-size:.8rem;padding:3px 10px;border-radius:3px;background:var(--black);color:var(--white)}
+.compare .l1{left:10px} .compare .l2{right:10px;background:var(--red);color:#fff}
+.verdict{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
 
 /* languages */
 .langs{display:flex;flex-wrap:wrap;gap:6px}
-.langs button{border:1px solid var(--rule-2);background:none;border-radius:8px;padding:5px 10px;font-family:var(--f-mono);font-size:.78rem;color:var(--dim)}
-.langs button[aria-pressed="true"]{border-color:var(--radar);color:var(--radar);background:color-mix(in srgb,var(--radar) 12%,transparent)}
-.lure{border:1px solid var(--rule-2);border-radius:14px;padding:18px;background:var(--deck);display:flex;flex-direction:column;gap:8px;min-height:150px}
-.lure .t{font-size:1.4rem;color:#fff}
+.langs button{border:1px solid var(--line);background:none;border-radius:3px;padding:5px 11px;font-family:var(--f-mono);font-size:.78rem;color:var(--mut)}
+.langs button:hover{border-color:var(--fg)}
+.langs button[aria-pressed="true"]{border-color:var(--fg);color:var(--bg);background:var(--fg)}
+.lure{border-radius:4px;padding:20px;background:var(--raise);display:flex;flex-direction:column;gap:8px;min-height:170px}
+.lure .t{font-size:1.4rem;line-height:1.7}
 .lure .t[dir=ltr]{text-align:right}
-.lure .g{color:var(--dim);font-size:.98rem}
+.lure .g{color:var(--mut);font-size:.98rem}
 .lure .flags{display:flex;flex-wrap:wrap;gap:6px}
 
 /* hotspots */
-.hot{position:relative}
-.hot .spot{position:absolute;width:28px;height:28px;margin:-14px 0 0 -14px;border-radius:50%;background:var(--sand);color:#1a1200;font-family:var(--f-mono);font-weight:700;font-size:.78rem;border:0;display:grid;place-items:center;box-shadow:0 0 0 6px color-mix(in srgb,var(--sand) 25%,transparent);animation:pulse 2.4s infinite;z-index:2}
-@keyframes pulse{50%{box-shadow:0 0 0 12px color-mix(in srgb,var(--sand) 0%,transparent)}}
-.hot .spot[aria-pressed="true"]{background:var(--radar)}
-.spotinfo{min-height:3.2em;margin-top:12px;font-size:1.05rem}
-.spotinfo b{color:var(--radar)}
+.hot{position:relative;overflow:visible}
+.hot .spot{position:absolute;width:30px;height:30px;margin:-15px 0 0 -15px;border-radius:50%;background:var(--white);color:var(--black);font-family:var(--f-body);font-weight:700;font-size:.82rem;border:2px solid var(--black);display:grid;place-items:center;box-shadow:0 0 0 4px rgba(244,239,230,.35);z-index:2;transition:transform .3s var(--ease)}
+.hot .spot:hover{transform:scale(1.15)}
+.hot .spot[aria-pressed="true"]{background:var(--camel);transform:scale(1.2)}
+.spotinfo{min-height:3.6em;margin-top:16px;font-size:1.08rem;max-width:80ch}
+.spotinfo b{font-weight:600}
 
-.closing{padding-block:96px}
-.closing h2{font-size:clamp(2.4rem,6.4vw,4.6rem);max-width:17ch}
-.closing h2 em{font-style:normal;color:var(--radar)}
-.stack{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
-.honest{margin-top:30px;font-size:.94rem;color:var(--faint);max-width:76ch}
+.closing{padding-block:110px 96px}
+.closing h2{font-family:var(--f-display);font-size:clamp(2.5rem,6.6vw,5rem);max-width:15ch;line-height:1.25}
+.closing h2 em{font-style:normal;color:var(--accent)}
+.stack{display:flex;flex-wrap:wrap;gap:8px;margin-top:34px}
+.honest{margin-top:34px;font-size:.96rem;color:var(--mut);max-width:76ch}
+.honest b{color:var(--fg);font-weight:600}
+.team{margin-top:34px;padding-top:20px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 32px;font-size:.92rem;color:var(--mut)}
+.team a{color:var(--fg);text-underline-offset:4px}
+.seam.end{height:144px;background-size:100% 3px,48px 24px,80px 48px,48px 24px,100% 3px;background-position:0 0,center 18px,center 48px,center 102px,0 141px}
 
 @media (max-width:980px){
-  .stage{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .dots{display:none}
+  .bar .wrap{justify-content:space-between}
+  .stage{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+  .cord{display:none}
+  .herotop{grid-template-columns:minmax(0,1fr);gap:20px}
   .agent{grid-column:1 / -1;order:3;height:auto;min-height:340px}
   .phone{height:440px}
-  .ch .grid,.ch .grid.rev{grid-template-columns:minmax(0,1fr)}
+  .ch .grid,.ch .grid.rev,#gShots{grid-template-columns:minmax(0,1fr);gap:36px}
   .ch .grid.rev .text{order:0}
-  #gShots{grid-template-columns:minmax(0,1fr)!important}
+  section.ch{padding-block:64px 60px}
 }
 @media (max-width:560px){
+  body{font-size:16px}
   .phone{height:400px;border-radius:26px;padding:10px 8px 12px}
   .phone .avatar{width:48px;height:48px;font-size:1.1rem}
   .bub{font-size:.8rem}
-  .stepdots{display:none}
+  .stepdots{margin-inline-start:0;width:100%;gap:7px}
+  .seam{height:48px;background-position:0 0,center 6px,center 12px,center 30px,0 45px;background-size:100% 3px,24px 12px,40px 24px,24px 12px,100% 3px}
+  .seam.s1,.seam.s2{background-position:0 0,center 6px,center 12px,center 30px,0 45px;background-size:100% 3px,16px 8px,40px 24px,16px 8px,100% 3px}
 }
 @media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}*{animation:none!important;transition:none!important}}
-.bub.rasidsays{background:color-mix(in oklab,var(--alarm) 22%,transparent);border:1px solid var(--alarm)}
 </style>
+</head>
+<body class="dark">
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></symbol>
+  <symbol id="i-mute" viewBox="0 0 24 24"><path d="M12 3a3 3 0 0 0-3 3v6a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3zM5 11a7 7 0 0 0 14 0M12 18v3M4 4l16 16"/></symbol>
+  <symbol id="i-keys" viewBox="0 0 24 24"><path d="M6 6h.01M12 6h.01M18 6h.01M6 12h.01M12 12h.01M18 12h.01M6 18h.01M12 18h.01M18 18h.01" stroke-width="3"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-screen" viewBox="0 0 24 24"><path d="M3 5h18v12H3zM8 21h8M12 17v4"/></symbol>
+</svg>
 
-<header class="bar" aria-label="الجولة">
+<header class="bar dark" aria-label="الجولة">
   <div class="wrap">
-    <div class="logo"><svg width="22" height="22" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="#4cc9f0" stroke-width="2"/><path d="M15 15 L26 8" stroke="#4cc9f0" stroke-width="2"/><circle cx="21" cy="11.5" r="2.4" fill="#ff4d6d"/></svg><span class="ar">راصد</span> RASID</div>
+    <div class="logo"><svg width="26" height="26" viewBox="0 0 46 46" aria-hidden="true"><path d="M23 2l21 21-21 21L2 23z" fill="none" stroke="#f4efe6" stroke-width="3"/><path d="M23 14l9 9-9 9-9-9z" fill="#f4efe6"/></svg>راصد <small>RASID</small></div>
     <nav class="dots" id="dots" aria-label="الفصول"></nav>
-    <button class="present" id="present" type="button">عرض ⛶</button>
+    <button class="present" id="present" type="button"><svg class="i" aria-hidden="true"><use href="#i-screen"/></svg><span>عرض</span></button>
   </div>
   <div class="progress" id="progress"></div>
 </header>
 
 <main>
 <!-- ============ ACT 1: THE CALL GUARDIAN ============ -->
-<section class="ch hero" id="guardian" data-title="حارس المكالمات">
+<section class="ch hero dark" id="guardian" data-title="حارس المكالمات">
   <div class="wrap">
-    <p class="kicker"><span dir="ltr">ScamShield AI · Abu Dhabi Police × 42 Abu Dhabi</span> · نموذجنا الأولي</p>
-    <h1>المحتال على الخط. <em>وراصد أيضاً.</em></h1>
-    <p class="lede">المواقع والإعلانات المزيفة تنتهي غالباً بمكالمة هاتفية، وفي هذه المكالمة تضيع الأموال. <b>حارس المكالمات (Call Guardian)</b> يستمع إلى المكالمة المشبوهة، ويحذّر بصوت عالٍ بالعربية والإنجليزية، ثم يبلّغ عنها بضغطة واحدة. اضغط <b>التالي</b> وشاهد.</p>
+    <div class="herotop">
+    <h1><span>المحتال على الخط.</span> وراصد أيضاً.</h1>
+    <div><p class="lede">المواقع والإعلانات المزيفة تنتهي غالباً بمكالمة هاتفية، وفي هذه المكالمة تضيع الأموال. <b>حارس المكالمات (Call Guardian)</b> يستمع إلى المكالمة المشبوهة، ويحذّر بصوت عالٍ بالعربية والإنجليزية، ثم يبلّغ عنها بضغطة واحدة. اضغط <b>ردّ على المكالمة</b> وشاهد.</p>
+    <p class="credit"><span dir="ltr">ScamShield AI · Abu Dhabi Police × 42 Abu Dhabi</span> · نموذجنا الأولي</p></div>
+    </div>
 
-    <div class="stage" aria-live="polite">
+    <div class="simctl">
+      <button class="btn next" id="next" type="button">التالي</button>
+      <button class="btn" id="back" type="button" aria-label="الخطوة السابقة">السابق</button>
+      <button class="btn" id="restart" type="button">من البداية</button>
+      <div class="seg" role="group" aria-label="السيناريو"><button type="button" id="scScam" aria-pressed="true">مكالمة احتيال</button><button type="button" id="scNice" aria-pressed="false">مكالمة عادية</button></div>
+      <div class="seg" role="group" aria-label="لغة المكالمة"><button type="button" id="lgEn" aria-pressed="false" lang="en">EN</button><button type="button" id="lgAr" aria-pressed="true" class="ar">عربي</button></div>
+      <div class="stepdots" id="stepdots" aria-hidden="true"></div>
+    </div>
+    <div class="stage" id="stage" aria-live="polite">
       <div class="phone" id="phScam">
         <div class="notch"></div>
         <div class="who"><span class="role">المتصل</span><div class="avatar" id="avScam">?</div><b id="nmScam" dir="auto">+971 55 ••• 2233</b><span class="st" id="stScam">جارٍ الاتصال…</span></div>
         <div class="bubbles" id="bbScam"></div>
-        <div class="callbtns" id="cbScam"><span>🔇</span><span>⌨</span><span class="end">✆</span></div>
+        <div class="callbtns" id="cbScam"><span><svg class="i" aria-hidden="true"><use href="#i-mute"/></svg></span><span><svg class="i" aria-hidden="true"><use href="#i-keys"/></svg></span><span class="end"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg></span></div>
       </div>
 
-      <div class="agent" id="agent">
-        <div class="head"><div class="radar" id="radar"></div><div><b>حارس المكالمات من راصد</b><span id="agStatus">جاهز · اضغط «استمع»</span></div></div>
+      <div class="agent light off" id="agent">
+        <span class="cord in" aria-hidden="true"><i class="thread"></i></span><span class="cord out" aria-hidden="true"></span>
+        <div class="head"><svg class="mark" id="radar" viewBox="0 0 46 46" aria-hidden="true"><path d="M23 2l21 21-21 21L2 23z" fill="none" stroke="currentColor" stroke-width="2.5"/><path class="eye" d="M23 13l10 10-10 10-10-10z" fill="currentColor"/></svg><div><b>حارس المكالمات من راصد</b><span id="agStatus">جاهز · اضغط «استمع»</span></div></div>
         <div class="wave" id="wave" aria-hidden="true"><i></i><i style="animation-delay:.1s"></i><i style="animation-delay:.2s"></i><i style="animation-delay:.3s"></i><i style="animation-delay:.15s"></i><i style="animation-delay:.25s"></i><i style="animation-delay:.05s"></i><i style="animation-delay:.35s"></i><i style="animation-delay:.2s"></i><i style="animation-delay:.1s"></i><i style="animation-delay:.3s"></i><i style="animation-delay:0s"></i></div>
-        <div class="meter"><div class="ar" style="font-size:.8rem;color:var(--dim)">درجة خطر الاحتيال</div><div class="n" id="risk">0</div><div class="bar2"><span id="riskBar"></span></div><div class="vd" id="riskVd">لا مؤشرات احتيال</div></div>
+        <div class="meter"><div class="lbl">درجة خطر الاحتيال</div><div class="n" id="risk">0</div><div class="vd" id="riskVd">لا مؤشرات احتيال</div><div class="bar2"><span id="riskBar"></span></div></div>
         <div class="log" id="log"></div>
       </div>
 
@@ -279,52 +350,41 @@ section.ch{padding-block:84px 72px;border-bottom:1px solid var(--rule);position:
       </div>
     </div>
 
-    <div class="simctl">
-      <button class="btn" id="back" type="button" aria-label="الخطوة السابقة">▶ السابق</button>
-      <button class="btn next" id="next" type="button">التالي ◀</button>
-      <button class="btn" id="restart" type="button">من البداية</button>
-      <div class="seg" role="group" aria-label="السيناريو"><button type="button" id="scScam" aria-pressed="true">مكالمة احتيال</button><button type="button" id="scNice" aria-pressed="false">مكالمة عادية</button></div>
-      <div class="seg" role="group" aria-label="لغة المكالمة"><button type="button" id="lgEn" aria-pressed="false" lang="en">EN</button><button type="button" id="lgAr" aria-pressed="true" class="ar">عربي</button></div>
-      <div class="stepdots" id="stepdots" aria-hidden="true"></div>
-    </div>
     <p class="caption" id="caption"></p>
 
     <div class="ways">
-      <div class="way"><span class="st" style="color:var(--radar)">1 · اضغط «استمع»</span><h3>تبويب داخل منصة راصد</h3><p>حارس المكالمات تبويب في منصة راصد. افتحه، واختر العربية أو الإنجليزية، ثم اضغط <b>استمع</b>. لا تطبيق، ولا رقم هاتف، ولا خدمة صوتية مدفوعة.</p></div>
-      <div class="way"><span class="st" style="color:var(--alarm)">2 · يحذّر بصوت عالٍ</span><h3>تحذير مسموع بلغتين</h3><p>قواعد فورية تقيّم كل جملة (رمز OTP، البطاقة، AnyDesk، التحويلات، انتحال صفة البنك أو الشرطة، التهديد، طلب السرّية)، و Claude يقرأ المكالمة كاملة. عند الوصول إلى «احتيال مرجّح» يعلن راصد التحذير بصوت عالٍ بالعربية والإنجليزية.</p></div>
-      <div class="way"><span class="st" style="color:var(--safe)">3 · إبلاغ بضغطة واحدة</span><h3>قضية جاهزة للشرطة</h3><p>بعد المكالمة، زر <b>إبلاغ</b> يسجّلها في المنصة مع كل مؤشرات الخطر، بجانب مواقع الاحتيال على الخريطة. لا يُسجَّل أي صوت ولا يُحفظ نص المكالمة.</p></div>
+      <div class="way"><span class="num" aria-hidden="true">١</span><h3>اضغط «استمع»</h3><p>حارس المكالمات تبويب في منصة راصد. افتحه، واختر العربية أو الإنجليزية، ثم اضغط <b>استمع</b>. لا تطبيق، ولا رقم هاتف، ولا خدمة صوتية مدفوعة.</p></div>
+      <div class="way"><span class="num" aria-hidden="true">٢</span><h3>يحذّر بصوت عالٍ، بلغتين</h3><p>قواعد فورية تقيّم كل جملة (رمز OTP، البطاقة، AnyDesk، التحويلات، انتحال صفة البنك أو الشرطة، التهديد، طلب السرّية)، و Claude يقرأ المكالمة كاملة. عند الوصول إلى «احتيال مرجّح» يعلن راصد التحذير بصوت عالٍ بالعربية والإنجليزية.</p></div>
+      <div class="way"><span class="num" aria-hidden="true">٣</span><h3>إبلاغ بضغطة واحدة</h3><p>بعد المكالمة، زر <b>إبلاغ</b> يسجّلها في المنصة كقضية جاهزة للشرطة مع كل مؤشرات الخطر، بجانب مواقع الاحتيال على الخريطة. لا يُسجَّل أي صوت ولا يُحفظ نص المكالمة.</p></div>
     </div>
 
-    <div class="grid" style="display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:24px;margin-top:40px;align-items:start" id="gShots">
-      <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · Call Guardian tab</span></div><button class="zoom" type="button" data-full="shots/09-call-guardian.jpg" data-cap="تبويب حارس المكالمات: مكالمة بنك مزيف بالعربية، الخطر 100"><img src="shots/09-call-guardian.jpg" alt="تبويب حارس المكالمات أثناء مكالمة بنك مزيف بالعربية، الخطر 100" width="2880" height="1440" loading="lazy"></button><figcaption>التبويب كما هو في المنصة: مكالمة بنك مزيف بالعربية، تحذير باللغتين، الخطر 100</figcaption></figure>
-      <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · case file</span></div><button class="zoom" type="button" data-full="shots/07-guardian-case.jpg" data-cap="المكالمة المُبلَّغ عنها كقضية في منصة الشرطة"><img src="shots/07-guardian-case.jpg" alt="مكالمة مُبلَّغ عنها كقضية في منصة الشرطة" width="1118" height="722" loading="lazy"></button><figcaption>…وتظهر للشرطة كقضية مع كل مؤشرات الخطر</figcaption></figure>
+    <div id="gShots">
+      <figure class="screen"><button class="zoom" type="button" data-full="shots/09-call-guardian.jpg" data-cap="تبويب حارس المكالمات: مكالمة بنك مزيف بالعربية، الخطر 100"><img src="shots/09-call-guardian.jpg" alt="تبويب حارس المكالمات أثناء مكالمة بنك مزيف بالعربية، الخطر 100" width="2880" height="1440" loading="lazy"></button><figcaption>التبويب كما هو في المنصة: مكالمة بنك مزيف بالعربية، تحذير باللغتين، الخطر 100</figcaption></figure>
+      <figure class="screen"><button class="zoom" type="button" data-full="shots/07-guardian-case.jpg" data-cap="المكالمة المُبلَّغ عنها كقضية في منصة الشرطة"><img src="shots/07-guardian-case.jpg" alt="مكالمة مُبلَّغ عنها كقضية في منصة الشرطة" width="1118" height="722" loading="lazy"></button><figcaption>وتظهر للشرطة كقضية مع كل مؤشرات الخطر</figcaption></figure>
     </div>
   </div>
 </section>
 
 <!-- ============ ACT 2: BEFORE THEY CALL ============ -->
-<section class="ch" id="brief" data-title="لماذا">
+<section class="ch camel" id="brief" data-title="لماذا">
   <div class="wrap grid">
     <div class="text">
-      <p class="kicker">الفصل الثاني · قبل أن يتصلوا أصلاً</p>
       <h2>معظم عمليات الاحتيال تبدأ بموقع مزيف أو موقع وهمي على الخريطة أو إعلان مزيف.</h2>
-      <p class="lede">يطلب التحدي أدوات تكشف الروابط والمواقع الاحتيالية على الإنترنت المفتوح، بما فيها محركات البحث والخرائط. الضحايا لا يلصقون الرابط في أداة فحص أبداً. لذلك يبحث راصد بنفسه كل ليلة، قبل أن ينقر أي شخص.</p>
+      <p class="lede"><b>قبل أن يتصلوا أصلاً.</b> يطلب التحدي أدوات تكشف الروابط والمواقع الاحتيالية على الإنترنت المفتوح، بما فيها محركات البحث والخرائط. الضحايا لا يلصقون الرابط في أداة فحص أبداً. لذلك يبحث راصد بنفسه كل ليلة، قبل أن ينقر أي شخص.</p>
     </div>
     <div class="text">
-      <p class="mono" style="font-family:'Bricolage Grotesque',var(--f-display);font-weight:800;font-size:clamp(3rem,8vw,5.4rem);line-height:1;color:var(--sand)" id="nrd"><span dir="ltr">≈70,000</span></p>
-      <p class="lede">نطاق جديد يُسجَّل كل يوم. وراصد يقرأها كلها قبل الفطور.</p>
+      <p class="bignum" id="nrd"><span dir="ltr">≈70,000</span> نطاق جديد يُسجَّل كل يوم. وراصد يقرأها كلها قبل الفطور.</p>
       <p class="aside"><b>معلومة طريفة:</b> مواقع تذاكر الفورمولا 1 المزيفة تظهر قبل نحو ثلاثة أسابيع من السباق. راصد يبدأ مراقبة الفعاليات قبل ذلك.</p>
     </div>
   </div>
 </section>
 
-<section class="ch" id="hunt" data-title="الصيد">
+<section class="ch light" id="hunt" data-title="الصيد">
   <div class="wrap">
     <div class="grid rev">
       <div class="text">
-        <p class="kicker">الفصل 1 · سمِّه، واصطده</p>
         <h2>اكتب اسماً، وراصد يتخيّل كل طريقة لتزويره.</h2>
-        <p class="lede">يكتب الضابط «ADCB» أو «Abu Dhabi Grand Prix» أو «Tadbeer»، أو يضغط <b>+</b> على قائمة مراقبة. يولّد راصد مئات الأسماء المشابهة ويتحقق أيّها يعمل فعلاً.</p>
+        <p class="lede"><b>سمِّه، واصطده.</b> يكتب الضابط «ADCB» أو «Abu Dhabi Grand Prix» أو «Tadbeer»، أو يضغط <b>+</b> على قائمة مراقبة. يولّد راصد مئات الأسماء المشابهة ويتحقق أيّها يعمل فعلاً.</p>
         <ul class="feat">
           <li><span><b>قوائم مراقبة</b> للعلامات التجارية والخدمات الحكومية والفعاليات وشركات التوظيف، مع نطاقاتها وأرقامها الرسمية.</span></li>
           <li><span><b>أسماء مشابهة</b>: أخطاء إملائية، <span class="mono" dir="ltr">l↔1↔I</span>، <span class="mono" dir="ltr">rn→m</span>، حروف سيريلية، <span class="mono" dir="ltr" style="white-space:nowrap">-secure-verify</span>، تبديل الامتداد، وحيل النطاقات الفرعية.</span></li>
@@ -332,10 +392,10 @@ section.ch{padding-block:84px 72px;border-bottom:1px solid var(--rule);position:
           <li><span><b>عدّ تنازلي للفعاليات</b>: اليوم الوطني، سباق الجائزة الكبرى، رمضان، الحج.</span></li>
         </ul>
       </div>
-      <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · Watch → Seeds</span></div><div class="tall"><button class="zoom" type="button" data-full="shots/04-seeds.jpg" data-cap="82 اسماً مشابهاً لـ ADCB، السيريلية أولاً"><img src="shots/04-seeds.jpg" alt="أسماء مشابهة مولّدة لـ ADCB" width="1118" height="1500" loading="lazy"></button></div><figcaption>82 اسماً مشابهاً لـ ADCB، والأكثر خداعاً (السيريلية) أولاً</figcaption></figure>
+      <figure class="screen"><div class="tall"><button class="zoom" type="button" data-full="shots/04-seeds.jpg" data-cap="82 اسماً مشابهاً لـ ADCB، السيريلية أولاً"><img src="shots/04-seeds.jpg" alt="أسماء مشابهة مولّدة لـ ADCB" width="1118" height="1500" loading="lazy"></button></div><figcaption>82 اسماً مشابهاً لـ ADCB، والأكثر خداعاً (السيريلية) أولاً</figcaption></figure>
     </div>
     <div class="game" id="game" aria-live="polite">
-      <p class="kicker">جرّبها · أيّها موقع ADCB الحقيقي؟</p>
+      <h3>جرّبها: أيّها موقع ADCB الحقيقي؟</h3>
       <div class="opts">
         <button class="opt good" data-k="real"><span class="pill">رسمي</span><span class="d" dir="ltr">adcb.com</span><span class="v">البنك الحقيقي. مُدرج في قائمة راصد الرسمية، فلا يمكن أن يُصنَّف مشبوهاً.</span></button>
         <button class="opt bad" data-k="cyr"><span class="pill">حرف مشابه (Homoglyph)</span><span class="d" dir="ltr">аdcb.com</span><span class="v">حرف «а» هنا سيريلي. المتصفح يعرضه هكذا: <span class="mono" dir="ltr" style="white-space:nowrap">xn--dcb-5cd.com</span>.</span></button>
@@ -347,14 +407,13 @@ section.ch{padding-block:84px 72px;border-bottom:1px solid var(--rule);position:
   </div>
 </section>
 
-<section class="ch" id="inspect" data-title="الفحص">
+<section class="ch light" id="inspect" data-title="الفحص">
   <div class="wrap">
-    <div class="text" style="max-width:800px">
-      <p class="kicker">الفصل 2 · لا تحكم على النطاق من اسمه</p>
+    <div class="text" style="max-width:820px">
       <h2>راصد يفتح كل اسم مشابه في متصفحه الخاص وينظر بنفسه.</h2>
-      <p class="lede">تشابه الاسم وحده لا يكفي لتصنيف الموقع. يلتقط راصد صورة الشاشة بنفسه، ويقارنها بالموقع الرسمي، ويقرأ الصفحة كما يقرؤها الضحية. اسحب المقبض على نسخة تصيّد بنيناها للاختبار.</p>
+      <p class="lede"><b>لا تحكم على النطاق من اسمه.</b> تشابه الاسم وحده لا يكفي لتصنيف الموقع. يلتقط راصد صورة الشاشة بنفسه، ويقارنها بالموقع الرسمي، ويقرأ الصفحة كما يقرؤها الضحية. اسحب المقبض على نسخة تصيّد بنيناها للاختبار.</p>
     </div>
-    <div class="grid" style="margin-top:28px;align-items:start">
+    <div class="grid" style="margin-top:40px;align-items:start">
       <div class="text">
         <ul class="feat">
           <li><span><b>هل يشبه الموقع الرسمي؟</b> مطابقة بصرية من لقطات راصد نفسه، إضافة إلى الأيقونة والتخطيط والنصوص والتنسيقات.</span></li>
@@ -373,22 +432,21 @@ section.ch{padding-block:84px 72px;border-bottom:1px solid var(--rule);position:
           <span class="handle" id="cmpHandle"></span>
           <input type="range" id="cmpRange" min="0" max="100" value="50" aria-label="قارن بين الموقع الرسمي والنسخة المزيفة">
         </div>
-        <div class="verdict"><span class="chip" style="--c:var(--alarm)">انتحال · 100/100</span><span class="chip" style="--c:var(--sand)">تطابق بصري 81%</span><span class="chip">نفس الأيقونة</span><span class="chip">يطلب دفع 450 درهماً</span></div>
+        <div class="verdict"><span class="chip" style="--c:var(--alarm)">انتحال · 100/100</span><span class="chip" style="--c:var(--accent)">تطابق بصري 81%</span><span class="chip">نفس الأيقونة</span><span class="chip">يطلب دفع 450 درهماً</span></div>
       </div>
     </div>
-    <div class="grid" style="margin-top:44px">
-      <div class="text"><p class="kicker">والحالة المعاكسة</p><h2 style="font-size:clamp(1.6rem,3.2vw,2.4rem)"><span dir="ltr">adpuae.com</span> يبيع قطع غيار الشاحنات. وراصد يوافق.</h2><p class="lede">تطابق الواجهة 3%، والتطابق البصري 2%، ولا نموذج بطاقة. الحكم: نشاط تجاري غير مرتبط، الدرجة 10. يُترك وشأنه. النطاقات المعروضة للبيع تبقى تحت المراقبة، والأسماء المشابهة بالاسم فقط تبقى درجتها تحت خط التصنيف.</p></div>
-      <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · case file · site inspection</span></div><div class="tall"><button class="zoom" type="button" data-full="shots/05-inspection-unrelated.jpg" data-cap="فحص الموقع: نشاط تجاري غير مرتبط، ولقطات راصد جنباً إلى جنب"><img src="shots/05-inspection-unrelated.jpg" alt="ملف قضية adpuae.com مع فحص الموقع ولقطات متجاورة" width="1118" height="1724" loading="lazy"></button></div><figcaption>فحص الموقع بلقطات راصد نفسه: الموقع المشبوه مقابل الرسمي</figcaption></figure>
+    <div class="grid" style="margin-top:72px">
+      <div class="text"><h2 style="font-size:clamp(1.6rem,3.2vw,2.4rem)"><span dir="ltr">adpuae.com</span> يبيع قطع غيار الشاحنات. وراصد يوافق.</h2><p class="lede"><b>والحالة المعاكسة.</b> تطابق الواجهة 3%، والتطابق البصري 2%، ولا نموذج بطاقة. الحكم: نشاط تجاري غير مرتبط، الدرجة 10. يُترك وشأنه. النطاقات المعروضة للبيع تبقى تحت المراقبة، والأسماء المشابهة بالاسم فقط تبقى درجتها تحت خط التصنيف.</p></div>
+      <figure class="screen"><div class="tall"><button class="zoom" type="button" data-full="shots/05-inspection-unrelated.jpg" data-cap="فحص الموقع: نشاط تجاري غير مرتبط، ولقطات راصد جنباً إلى جنب"><img src="shots/05-inspection-unrelated.jpg" alt="ملف قضية adpuae.com مع فحص الموقع ولقطات متجاورة" width="1118" height="1724" loading="lazy"></button></div><figcaption>فحص الموقع بلقطات راصد نفسه: الموقع المشبوه مقابل الرسمي</figcaption></figure>
     </div>
   </div>
 </section>
 
-<section class="ch" id="maps" data-title="الخرائط">
+<section class="ch dark" id="maps" data-title="الخرائط">
   <div class="wrap grid rev">
     <div class="text">
-      <p class="kicker">الفصل 3 · الفرع المزيف على الخريطة</p>
       <h2>«خدمة عملاء ADCB على مدار الساعة»، برقم موبايل؟</h2>
-      <p class="lede">يبحث الناس في الخرائط عن «خدمة عملاء البنك» ويتصلون بأول نتيجة. يفحص راصد كل نتيجة تحمل اسم علامة مراقَبة، إمارة بعد إمارة.</p>
+      <p class="lede"><b>الفرع المزيف على الخريطة.</b> يبحث الناس في الخرائط عن «خدمة عملاء البنك» ويتصلون بأول نتيجة. يفحص راصد كل نتيجة تحمل اسم علامة مراقَبة، إمارة بعد إمارة.</p>
       <ul class="feat">
         <li><span><b>مقارنة الهاتف والموقع الإلكتروني بالسجل الرسمي.</b></span></li>
         <li><span><b>أرقام موبايل أو واتساب</b> على صفحات البنوك وشركات الاتصالات.</span></li>
@@ -396,16 +454,15 @@ section.ch{padding-block:84px 72px;border-bottom:1px solid var(--rule);position:
       </ul>
       <p class="aside"><b>فعلياً:</b> فحصنا 130 نتيجة لـ Aramex و ADCB عبر Google Places API. لم تكن أيّ منها مزيفة. خبر سار لـ Aramex.</p>
     </div>
-    <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · UAE ground view</span></div><button class="zoom" type="button" data-full="shots/02-uae-ground.jpg" data-cap="عرض ميداني للإمارات لنتائج Google Maps المفحوصة"><img src="shots/02-uae-ground.jpg" alt="عرض ميداني للإمارات مع نتائج Google Maps المفحوصة" width="1153" height="736" loading="lazy"></button><figcaption>الميدان الإماراتي: كل نتيجة مفحوصة؛ الأخضر موثّق والأحمر مشبوه</figcaption></figure>
+    <figure class="screen"><button class="zoom" type="button" data-full="shots/02-uae-ground.jpg" data-cap="عرض ميداني للإمارات لنتائج Google Maps المفحوصة"><img src="shots/02-uae-ground.jpg" alt="عرض ميداني للإمارات مع نتائج Google Maps المفحوصة" width="1153" height="736" loading="lazy"></button><figcaption>الميدان الإماراتي: كل نتيجة مفحوصة؛ الأخضر موثّق والأحمر مشبوه</figcaption></figure>
   </div>
 </section>
 
-<section class="ch" id="ads" data-title="الإعلانات">
+<section class="ch dark" id="ads" data-title="الإعلانات">
   <div class="wrap grid">
     <div class="text">
-      <p class="kicker">الفصل 4 · تذكرة VIP بـ 99 درهماً</p>
       <h2>إعلانات ونتائج بحث تنتحل اسم غيرها.</h2>
-      <p class="lede">يبحث راصد كما يبحث أي شخص في الإمارات، وبعدة لغات، ويتتبّع كل إعلان حتى صفحته النهائية.</p>
+      <p class="lede"><b>تذكرة VIP بـ 99 درهماً.</b> يبحث راصد كما يبحث أي شخص في الإمارات، وبعدة لغات، ويتتبّع كل إعلان حتى صفحته النهائية.</p>
       <ul class="feat">
         <li><span><b>Meta Ad Library</b>: إعلانات فيسبوك وإنستغرام وواتساب وماسنجر وثريدز التي تستخدم اسم علامة تجارية.</span></li>
         <li><span><b>Google Ads Transparency Center</b> للإمارات.</span></li>
@@ -414,67 +471,66 @@ section.ch{padding-block:84px 72px;border-bottom:1px solid var(--rule);position:
         <li><span><b>الإخفاء (Cloaking)</b>: هل يرى Googlebot صفحة ويرى هاتف إماراتي صفحة أخرى؟ يُكشف ذلك.</span></li>
       </ul>
     </div>
-    <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · Tools</span></div><button class="zoom" type="button" data-full="shots/08-tools.jpg" data-cap="الأدوات: مسح النطاقات الجديدة، فاحص الإعلانات، تقييم إعلانات الوظائف"><img src="shots/08-tools.jpg" alt="لوحة أدوات راصد" width="1118" height="1470" loading="lazy"></button><figcaption>الأدوات: مسح النطاقات الجديدة، فاحص الإعلانات، تقييم إعلانات الوظائف</figcaption></figure>
+    <figure class="screen"><button class="zoom" type="button" data-full="shots/08-tools.jpg" data-cap="الأدوات: مسح النطاقات الجديدة، فاحص الإعلانات، تقييم إعلانات الوظائف"><img src="shots/08-tools.jpg" alt="لوحة أدوات راصد" width="1118" height="1470" loading="lazy"></button><figcaption>الأدوات: مسح النطاقات الجديدة، فاحص الإعلانات، تقييم إعلانات الوظائف</figcaption></figure>
   </div>
 </section>
 
-<section class="ch" id="langs" data-title="اللغات">
+<section class="ch light" id="langs" data-title="اللغات">
   <div class="wrap grid rev">
     <div class="text">
-      <p class="kicker">الفصل 5 · الاحتيال لا يتكلم الإنجليزية فقط</p>
       <h2>«التأشيرة مجانية. ادفع الرسوم فقط». بإحدى عشرة لغة.</h2>
-      <p class="lede">احتيال الوظائف والتأشيرات يستهدف العمال بلغتهم، وغالباً بحروف لاتينية. يقرأ راصد المنشورات العامة وقنوات Telegram بالعربية والإنجليزية والهندية والأردية والأردية اللاتينية والمالايالامية والتاميلية والسنهالية والتاغالوغية والبنغالية والنيبالية.</p>
+      <p class="lede"><b>الاحتيال لا يتكلم الإنجليزية فقط.</b> احتيال الوظائف والتأشيرات يستهدف العمال بلغتهم، وغالباً بحروف لاتينية. يقرأ راصد المنشورات العامة وقنوات Telegram بالعربية والإنجليزية والهندية والأردية والأردية اللاتينية والمالايالامية والتاميلية والسنهالية والتاغالوغية والبنغالية والنيبالية.</p>
       <div class="langs" id="langBtns" role="group" aria-label="اختر لغة"></div>
       <div class="lure" id="lure" aria-live="polite"></div>
     </div>
-    <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · case file · Job &amp; Visa</span></div><div class="tall"><button class="zoom" type="button" data-full="shots/06-job-scam.jpg" data-cap="احتيال وظيفي بالتاغالوغية بدرجة 100"><img src="shots/06-job-scam.jpg" alt="قضية احتيال وظيفي بالتاغالوغية بدرجة 100" width="1118" height="1724" loading="lazy"></button></div><figcaption>منشور بالتاغالوغية: رسوم مقابل التأشيرة، تأشيرة زيارة للعمل، واتساب فقط ← الدرجة 100</figcaption></figure>
+    <figure class="screen"><div class="tall"><button class="zoom" type="button" data-full="shots/06-job-scam.jpg" data-cap="احتيال وظيفي بالتاغالوغية بدرجة 100"><img src="shots/06-job-scam.jpg" alt="قضية احتيال وظيفي بالتاغالوغية بدرجة 100" width="1118" height="1724" loading="lazy"></button></div><figcaption>منشور بالتاغالوغية: رسوم مقابل التأشيرة، تأشيرة زيارة للعمل، واتساب فقط. الدرجة 100</figcaption></figure>
   </div>
 </section>
 
-<section class="ch" id="actors" data-title="الجهات">
+<section class="ch light" id="actors" data-title="الجهات">
   <div class="wrap grid">
     <div class="text">
-      <p class="kicker">الفصل 6 · نفس العُدّة، نفس المحتال</p>
       <h2>أسقِط الشبكة كلها، لا موقعاً واحداً.</h2>
-      <p class="lede">يربط راصد العناصر التي تشترك في الأيقونة أو بوت Telegram أو معرّف التحليلات أو رقم الهاتف أو الاستضافة، ويبني ملف أدلة واحداً لكل جهة احتيال.</p>
+      <p class="lede"><b>نفس العُدّة، نفس المحتال.</b> يربط راصد العناصر التي تشترك في الأيقونة أو بوت Telegram أو معرّف التحليلات أو رقم الهاتف أو الاستضافة، ويبني ملف أدلة واحداً لكل جهة احتيال.</p>
       <ul class="feat">
-        <li><span><b>بصمات العُدّة</b> ← جهات احتيال، تظهر كمجموعات نجمية على الخريطة.</span></li>
+        <li><span><b>بصمات العُدّة</b> تكشف جهات الاحتيال، وتظهر كمجموعات نجمية على الخريطة.</span></li>
         <li><span><b>حزمة الإزالة (Strike pack)</b>: المواقع، وجهات التسجيل، والاستضافة، واللقطات، ورسائل بلاغات جاهزة للإرسال.</span></li>
         <li><span><b>ملاحظات القضية بالعربية والإنجليزية</b>، يكتبها Claude من الأدلة.</span></li>
         <li><span><b>الضابط يوافق على كل عملية إزالة.</b> لا شيء يُرسل تلقائياً.</span></li>
       </ul>
       <p class="aside"><b>مثال فعلي:</b> إعلانات وظائف بالمالايالامية والأردية والتاغالوغية تشترك في رقم واتساب واحد. ربطها راصد بجهة واحدة من تلقاء نفسه.</p>
     </div>
-    <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · strike pack A-026</span></div><button class="zoom" type="button" data-full="shots/10-strike-pack.jpg" data-cap="حزمة الإزالة A-026: ثلاثة منشورات، ثلاث لغات، رقم واحد"><img src="shots/10-strike-pack.jpg" alt="حزمة إزالة مع ملاحظات القضية ورسائل البلاغ" width="2400" height="1800" loading="lazy"></button><figcaption>حزمة الإزالة: ثلاثة منشورات، ثلاث لغات، رقم واحد</figcaption></figure>
+    <figure class="screen"><button class="zoom" type="button" data-full="shots/10-strike-pack.jpg" data-cap="حزمة الإزالة A-026: ثلاثة منشورات، ثلاث لغات، رقم واحد"><img src="shots/10-strike-pack.jpg" alt="حزمة إزالة مع ملاحظات القضية ورسائل البلاغ" width="2400" height="1800" loading="lazy"></button><figcaption>حزمة الإزالة: ثلاثة منشورات، ثلاث لغات، رقم واحد</figcaption></figure>
   </div>
 </section>
 
-<section class="ch" id="console" data-title="المنصة">
+<section class="ch dark" id="console" data-title="المنصة">
   <div class="wrap">
     <div class="text" style="max-width:760px">
-      <p class="kicker">الفصل 7 · غرفة العمليات</p>
       <h2>شاشة واحدة لمناوبة الليل كلها.</h2>
-      <p class="lede">اضغط على النقاط. واضغط على الصورة لرؤيتها بالحجم الكامل.</p>
+      <p class="lede"><b>غرفة العمليات.</b> اضغط على النقاط. واضغط على الصورة لرؤيتها بالحجم الكامل.</p>
     </div>
-    <figure class="screen hot" style="margin-top:24px" id="hot"><button class="zoom" type="button" data-full="shots/01-console.jpg" data-cap="منصة راصد للشرطة"><img src="shots/01-console.jpg" alt="نظرة عامة على منصة راصد" width="2880" height="1800" loading="lazy"></button></figure>
+    <figure class="screen hot" style="margin-top:32px" id="hot"><button class="zoom" type="button" data-full="shots/01-console.jpg" data-cap="منصة راصد للشرطة"><img src="shots/01-console.jpg" alt="نظرة عامة على منصة راصد" width="2880" height="1800" loading="lazy"></button></figure>
     <p class="spotinfo" id="spotinfo"><b>ابدأ من أي مكان.</b> كل نقطة جزء حقيقي من المنصة.</p>
   </div>
 </section>
 
-<section class="ch closing" id="end" data-title="الختام">
+<section class="ch closing dark" id="end" data-title="الختام">
   <div class="wrap">
-    <p class="kicker">هذه هي المناوبة</p>
     <h2>اصطد أولاً. <em>احرس المكالمة.</em> وحذّر بلغتهم.</h2>
+    <p class="lede" style="margin-top:22px">هذه هي المناوبة.</p>
     <div class="stack" dir="ltr" style="justify-content:flex-end">
       <span class="tag">Python · FastAPI</span><span class="tag">Playwright browser</span><span class="tag">Claude</span><span class="tag">Google Places</span><span class="tag">Meta Ad Library</span><span class="tag">SerpApi</span><span class="tag">crt.sh · RDAP · NRD</span><span class="tag">Web Speech API</span>
     </div>
-    <p class="honest">يعمل اليوم: عمليات الصيد، والنطاقات الجديدة، وفحص المواقع بلقطات راصد نفسه، و«افحص رابطاً» (مع تتبّع التحويلات والروابط المختصرة)، والتحقق من الخرائط، وتقييم الوظائف والتأشيرات، والجهات وحزم الإزالة، ومستمع حارس المكالمات. يحتاج إلى مفاتيح ليعمل بالكامل: مسح إعلانات Meta و Google، و Safe Browsing و VirusTotal. الحدود: التعرف على الكلام يحتاج إلى اتصال بالإنترنت ويتعثّر مع المكالمات المليئة بالضوضاء؛ والصفحات التي تختبئ خلف ملفات تعريف الارتباط أو فحص الدولة قد تبدو نظيفة. نسخة التصيّد وعيّنات المكالمات في هذه الجولة اختبارات من إعدادنا.</p>
+    <p class="honest"><b>يعمل اليوم:</b> عمليات الصيد، والنطاقات الجديدة، وفحص المواقع بلقطات راصد نفسه، و«افحص رابطاً» (مع تتبّع التحويلات والروابط المختصرة)، والتحقق من الخرائط، وتقييم الوظائف والتأشيرات، والجهات وحزم الإزالة، ومستمع حارس المكالمات. <b>يحتاج إلى مفاتيح ليعمل بالكامل:</b> مسح إعلانات Meta و Google، و Safe Browsing و VirusTotal. <b>الحدود:</b> التعرف على الكلام يحتاج إلى اتصال بالإنترنت ويتعثّر مع المكالمات المليئة بالضوضاء؛ والصفحات التي تختبئ خلف ملفات تعريف الارتباط أو فحص الدولة قد تبدو نظيفة. نسخة التصيّد وعيّنات المكالمات في هذه الجولة اختبارات من إعدادنا.</p>
+    <p class="team"><span>الفريق: <span dir="ltr">Omer Wasiyehun · Ibrahim Abulaban · Ahmed Ismail Bulbul</span></span><a href="https://rasid-scam-radar.onrender.com" dir="ltr">rasid-scam-radar.onrender.com</a></p>
   </div>
 </section>
+<div class="seam end" aria-hidden="true"></div>
 </main>
 
-<div class="lightbox" id="lb" hidden role="dialog" aria-modal="true" aria-label="لقطة شاشة مكبّرة">
-  <div class="lbbar"><span id="lbCap"></span><button class="btn" id="lbClose" type="button">إغلاق ✕</button></div>
+<div class="lightbox dark" id="lb" hidden role="dialog" aria-modal="true" aria-label="لقطة شاشة مكبّرة">
+  <div class="lbbar"><span id="lbCap"></span><button class="btn" id="lbClose" type="button">إغلاق</button></div>
   <div class="lbimg"><img id="lbImg" alt=""></div>
 </div>
 
@@ -486,7 +542,8 @@ const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /* ---------- chapter nav ---------- */
 const chapters = [...document.querySelectorAll('section.ch')];
-$('dots').innerHTML = chapters.map(c => `<a href="#${c.id}" title="${c.dataset.title}" aria-label="${c.dataset.title}"></a>`).join('');
+$('dots').innerHTML = chapters.map(c => `<a href="#${c.id}">${c.dataset.title}</a>`).join('');
+chapters.slice(1).forEach((c, k) => c.insertAdjacentHTML('beforebegin', `<div class="seam s${k % 3}" aria-hidden="true"></div>`));
 const dots = [...$('dots').children];
 function current(){ let i = 0; chapters.forEach((c, k) => { if (c.getBoundingClientRect().top < innerHeight * 0.4) i = k; }); return i; }
 function onScroll(){
@@ -505,7 +562,7 @@ addEventListener('keydown', e => {
   if (e.key === 'ArrowLeft' || e.key === 'PageDown') { e.preventDefault(); go(i + 1); }
   if (e.key === 'ArrowRight' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
 });
-$('present').onclick = () => { const el = document.documentElement; (el.requestFullscreen ? el.requestFullscreen() : Promise.reject()).catch(() => { $('present').textContent = 'استخدم ← →'; }); };
+$('present').onclick = () => { const el = document.documentElement; (el.requestFullscreen ? el.requestFullscreen() : Promise.reject()).catch(() => { $('present').lastElementChild.textContent = 'استخدم الأسهم'; }); };
 
 /* ---------- lightbox ---------- */
 let lastZoom = null;
@@ -551,6 +608,7 @@ function setRisk(r){
   $('riskBar').style.width = r + '%'; $('riskBar').style.background = c;
   $('riskVd').textContent = r >= 80 ? 'احتيال مرجّح' : r >= 40 ? 'مشبوهة' : 'لا مؤشرات احتيال'; $('riskVd').style.color = c;
   $('phScam').classList.toggle('scam', r >= 80);
+  $('stage').style.setProperty('--risk', r); $('agent').classList.toggle('alarm', r >= 80);
 }
 function bubble(text, mine, label){
   const d = document.createElement('div');
@@ -564,9 +622,9 @@ function logLine(text, cls){
 }
 function render(){
   const steps = S(); const s = steps[step];
-  $('stepdots').innerHTML = steps.map((_, i) => `<i class="${i <= step ? 'on' : ''}"></i>`).join('');
+  $('stepdots').innerHTML = steps.map((x, i) => `<i class="${i <= step ? (x.flag ? 'on flag' : 'on') : ''}"></i>`).join('');
   $('back').disabled = step === 0; $('next').disabled = step === steps.length - 1;
-  $('next').textContent = step === steps.length - 1 ? 'انتهت الجولة' : (step === 0 ? 'ردّ على المكالمة ◀' : 'التالي ◀');
+  $('next').textContent = step === steps.length - 1 ? 'انتهت الجولة' : (step === 0 ? 'ردّ على المكالمة' : 'التالي');
   // reset and replay the call up to this step (keeps Back simple and exact)
   ['bbScam', 'bbYou', 'log'].forEach(id => $(id).replaceChildren());
   let risk = 0, ended = false, phase = 'ring', talking = null;
@@ -575,17 +633,17 @@ function render(){
     if (x.ph === 'call') logLine(x.agent, 'act');
     if (x.who === 'rasid') {
       const txt = x[lang];
-      ['bbScam', 'bbYou'].forEach(id => { const b = bubble(txt, false, lang === 'ar' ? 'راصد يحذّر بصوت عالٍ 🔊' : 'RASID warns out loud 🔊'); b.classList.add('rasidsays'); $(id).append(b); });
-      logLine('🔊 ' + txt, 'act'); risk = x.risk; if (i === step) talking = 'rasid';
+      ['bbScam', 'bbYou'].forEach(id => { const b = bubble(txt, false, lang === 'ar' ? 'راصد يحذّر بصوت عالٍ' : 'RASID warns out loud'); b.classList.add('rasidsays'); $(id).append(b); });
+      logLine(txt, 'act'); risk = x.risk; if (i === step) talking = 'rasid';
     } else if (x.who) {
       const txt = x[lang]; const fromScam = x.who === 'scam';
       const scamName = scen === 'scam' ? (lang === 'ar' ? 'المتصل' : 'Caller') : (lang === 'ar' ? 'العيادة' : 'Clinic');
       const youName = lang === 'ar' ? 'فاطمة' : 'Fatima';
       $('bbScam').append(bubble(txt, fromScam, fromScam ? (lang === 'ar' ? 'أنت تقول' : 'you say') : `${youName} ${lang === 'ar' ? 'تقول' : 'says'}`));
       $('bbYou').append(bubble(txt, !fromScam, fromScam ? `${scamName} ${lang === 'ar' ? 'يقول' : 'says'}` : (lang === 'ar' ? 'أنتِ تقولين' : 'you say')));
-      logLine((fromScam ? '🎙 ' : '🎙 ') + (lang === 'ar' ? '«' + txt + '»' : '“' + txt + '”'));
-      if (x.flag) logLine('⚑ ' + x.flag[lang === 'ar' ? 'ar' : 'en'], 'flag');
-      if (x.act) logLine('⏻ ' + x.act, 'act');
+      logLine((lang === 'ar' ? '«' + txt + '»' : '“' + txt + '”'));
+      if (x.flag) logLine(x.flag[lang === 'ar' ? 'ar' : 'en'], 'flag');
+      if (x.act) logLine(x.act, 'act');
       risk = x.risk; if (i === step) talking = x.who;
     }
     if (x.ph === 'ended') ended = true;
@@ -597,7 +655,7 @@ function render(){
   $('avScam').textContent = scamCaller ? '?' : 'س';
   $('avScam').classList.toggle('talk', talking === 'scam'); $('avYou').classList.toggle('talk', talking === 'you');
   $('wave').classList.toggle('on', !!talking && !reduce);
-  $('radar').classList.toggle('off', phase === 'ring' || phase === 'ended' || phase === 'normalend');
+  $('agent').classList.toggle('off', phase === 'ring' || phase === 'ended' || phase === 'normalend');
   const secs = Math.max(0, step - 1) * 7;
   const t = '00:' + String(secs).padStart(2, '0');
   $('stScam').textContent = phase === 'ring' ? 'جارٍ الاتصال…' : phase === 'ended' ? 'أنهت فاطمة المكالمة' : phase === 'normalend' ? 'انتهت المكالمة' : 'على الخط · ' + t;
@@ -606,9 +664,9 @@ function render(){
   // controls on the user's phone
   const ctl = $('ctlYou'); ctl.replaceChildren();
   if (phase === 'ring') {
-    ctl.className = 'incoming'; ctl.innerHTML = '<button class="dec" type="button" aria-label="رفض" tabindex="-1">✕</button><button class="acc" type="button" aria-label="الرد على المكالمة">✆</button>';
+    ctl.className = 'incoming'; ctl.innerHTML = '<button class="dec" type="button" aria-label="رفض" tabindex="-1"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button><button class="acc" type="button" aria-label="الرد على المكالمة"><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg></button>';
     ctl.querySelector('.acc').onclick = next;
-  } else if (phase === 'call') { ctl.className = 'callbtns'; ctl.innerHTML = '<span>🔇</span><span>⌨</span><span class="end">✆</span>'; }
+  } else if (phase === 'call') { ctl.className = 'callbtns'; ctl.innerHTML = $('cbScam').innerHTML; }
   else { ctl.className = ''; }
   $('cbScam').style.visibility = phase === 'call' ? 'visible' : 'hidden';
   // endings
@@ -616,14 +674,14 @@ function render(){
   if (ended) {
     $('bbScam').replaceChildren(Object.assign(document.createElement('div'), {className: 'endedcard', innerHTML: '<b>انتهت المكالمة</b>أنهت فاطمة المكالمة'}));
     const n = document.createElement('div'); n.className = 'notif';
-    n.innerHTML = `<b>🚨 راصد: مكالمة احتيال مرجّحة · تم الإبلاغ</b><p><span dir="ltr">+971 55 ••• 2233</span> · الخطر 100/100</p><p>طلب رمز التحقق · ادّعى أنه من البنك · ضغط لإبقاء الأمر سراً</p><p class="ar">انتهت مكالمة احتيال. لا تشارك أي رمز أو بيانات بطاقة مع أي متصل.</p>`;
+    n.innerHTML = `<b>راصد: مكالمة احتيال مرجّحة · تم الإبلاغ</b><p><span dir="ltr">+971 55 ••• 2233</span> · الخطر 100/100</p><p>طلب رمز التحقق · ادّعى أنه من البنك · ضغط لإبقاء الأمر سراً</p><p class="ar">انتهت مكالمة احتيال. لا تشارك أي رمز أو بيانات بطاقة مع أي متصل.</p>`;
     $('phYou').append(n);
-    logLine('📁 فُتحت قضية في منصة الشرطة (حارس المكالمات)', 'act');
-    logLine('☎ رقم المتصل مُرفق بالقضية', 'act');
+    logLine('فُتحت قضية في منصة الشرطة (حارس المكالمات)', 'act');
+    logLine('رقم المتصل مُرفق بالقضية', 'act');
   }
   if (S()[step].ph === 'normalend') {
     $('bbScam').append(Object.assign(document.createElement('div'), {className: 'endedcard', innerHTML: '<b>انتهت المكالمة</b>مع السلامة!'}));
-    logLine('✓ لا مؤشرات احتيال · لم يُحفظ شيء', 'act');
+    logLine('لا مؤشرات احتيال · لم يُحفظ شيء', 'act');
   }
   $('caption').innerHTML = (s.cap && s.cap.en) || '';
 }
@@ -641,7 +699,7 @@ render();
 const msgs = {real: 'صحيح. الآن تخيّل أن تفعل ذلك 70,000 مرة في اليوم.', cyr: 'وقعت في الفخ. حرف «а» هنا سيريلي، ومعظم الناس يختارون هذا.', combo: 'هذا موقع تصيّد. يبدو واثقاً جداً، لكنه مزيف.', pool: 'هذه شركة لتنظيف طاولات البلياردو في يوتا. لا تريد منك سوى البلياردو.'};
 document.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => {
   const g = $('game'); if (g.classList.contains('done')) return;
-  g.classList.add('done'); $('gameResult').textContent = msgs[b.dataset.k]; b.style.boxShadow = '0 0 0 3px var(--radar)';
+  g.classList.add('done'); $('gameResult').textContent = msgs[b.dataset.k]; b.classList.add('picked');
 }));
 
 /* ---------- compare ---------- */
@@ -692,3 +750,5 @@ $('hot').querySelectorAll('.spot').forEach(b => b.addEventListener('click', e =>
 }));
 })();
 </script>
+</body>
+</html>
