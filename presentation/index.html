@@ -1,25 +1,25 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="RASID: proactive scam radar for the UAE. Interactive walkthrough for the ScamShield AI Hackathon.">
-<title>RASID Walkthrough</title>
+<meta name="description" content="راصد (RASID): رادار استباقي لكشف الاحتيال في الإمارات. جولة تفاعلية لهاكاثون ScamShield AI.">
+<title>جولة راصد</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=JetBrains+Mono:wght@400;600&family=Noto+Nastaliq+Urdu&family=Noto+Sans+Devanagari&family=Noto+Sans+Malayalam&family=Noto+Sans+Tamil&family=Noto+Sans+Sinhala&family=Noto+Sans+Bengali&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&family=Noto+Nastaliq+Urdu&family=Noto+Sans+Devanagari&family=Noto+Sans+Malayalam&family=Noto+Sans+Tamil&family=Noto+Sans+Sinhala&family=Noto+Sans+Bengali&display=swap">
 <style>
-/* Layout: the Call Guardian opens the show as a live two-phone scene; the rest of the night shift (the fraud hunt)
+/* Layout: the Call Guardian opens the show as a two-phone scene; the rest of the night shift (the fraud hunt)
    follows as short chapters, each pairing one line of story with a sharp screen from RASID and one thing to touch.
-   Single deliberate dark look: a police ops room at 3 a.m. */
+   Single deliberate dark look: a police ops room at 3 a.m. Arabic, right-to-left. */
 :root{
   color-scheme: dark;
   --night:#05080f; --deck:#0b1220; --deck-2:#111b2e; --rule:#1d2b44; --rule-2:#2a3d60;
   --ink:#e6edf7; --dim:#8ea0bb; --faint:#56698a;
   --radar:#4cc9f0; --sand:#f2c14e; --alarm:#ff4d6d; --safe:#4fe0a2; --violet:#b48cff;
-  --f-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
-  --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
-  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+  --f-display:"IBM Plex Sans Arabic","Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans Arabic","IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono","IBM Plex Sans Arabic",ui-monospace,Consolas,monospace;
   --f-ar:"IBM Plex Sans Arabic",Tahoma,sans-serif;
   --f-ur:"Noto Nastaliq Urdu","IBM Plex Sans Arabic",serif;
   --f-indic:"Noto Sans Devanagari","Noto Sans Malayalam","Noto Sans Tamil","Noto Sans Sinhala","Noto Sans Bengali","Nirmala UI",sans-serif;
@@ -27,12 +27,13 @@
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html{scroll-behavior:smooth}
-body{margin:0;background:var(--night);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.6}
+body{margin:0;background:var(--night);color:var(--ink);font-family:var(--f-body);font-size:17px;line-height:1.75}
 .wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-h1,h2,h3{font-family:var(--f-display);margin:0;line-height:1.02;letter-spacing:-.02em;text-wrap:balance}
+h1,h2,h3{font-family:var(--f-display);font-weight:700;margin:0;line-height:1.3;letter-spacing:0;text-wrap:balance}
 p{margin:0}
 .mono{font-family:var(--f-mono)} .ar{font-family:var(--f-ar)} .ur{font-family:var(--f-ur);line-height:2.1} .indic{font-family:var(--f-indic)}
-.kicker{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.18em;text-transform:uppercase;color:var(--radar)}
+.en{font-family:"Bricolage Grotesque",var(--f-body)}
+.kicker{font-family:var(--f-ar);font-size:.9rem;font-weight:600;letter-spacing:0;color:var(--radar)}
 :focus-visible{outline:2px solid var(--radar);outline-offset:3px}
 button{font:inherit;color:inherit;cursor:pointer}
 img{max-width:100%;display:block}
@@ -40,72 +41,72 @@ img{max-width:100%;display:block}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--night)}
 .bar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--night) 88%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--rule)}
 .bar .wrap{display:flex;align-items:center;gap:14px;padding-block:10px}
-.logo{display:flex;align-items:center;gap:8px;font-family:var(--f-display);font-weight:800;letter-spacing:.04em}
-.logo .ar{color:var(--radar);font-weight:700}
+.logo{display:flex;align-items:center;gap:8px;font-family:"Bricolage Grotesque",var(--f-display);font-weight:800;letter-spacing:.04em}
+.logo .ar{color:var(--radar);font-weight:700;letter-spacing:0}
 .dots{display:flex;gap:6px;flex:1;justify-content:center;flex-wrap:wrap}
 .dots a{width:9px;height:9px;border-radius:50%;background:var(--rule-2);display:block}
 .dots a.on{background:var(--radar);box-shadow:0 0 0 4px color-mix(in srgb,var(--radar) 25%,transparent)}
-.present{font-family:var(--f-mono);font-size:.72rem;border:1px solid var(--rule-2);background:none;border-radius:999px;padding:5px 12px;color:var(--dim)}
+.present{font-family:var(--f-ar);font-size:.8rem;border:1px solid var(--rule-2);background:none;border-radius:999px;padding:5px 12px;color:var(--dim)}
 .present:hover{color:var(--ink);border-color:var(--radar)}
-.progress{position:absolute;left:0;bottom:-1px;height:2px;background:var(--radar);width:0}
+.progress{position:absolute;inset-inline-start:0;bottom:-1px;height:2px;background:var(--radar);width:0}
 
 section.ch{padding-block:84px 72px;border-bottom:1px solid var(--rule);position:relative;scroll-margin-top:52px}
 .ch .grid{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:48px;align-items:center}
 .ch .grid.rev{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
 .ch .grid.rev .text{order:2}
 .text{display:flex;flex-direction:column;gap:16px;min-width:0}
-.text h2{font-size:clamp(2.1rem,4.6vw,3.6rem)}
-.text .lede{font-size:1.12rem;color:var(--dim);max-width:48ch}
+.text h2{font-size:clamp(2rem,4.2vw,3.2rem)}
+.text .lede{font-size:1.12rem;color:var(--dim);max-width:52ch}
 .feat{list-style:none;margin:6px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
-.feat li{display:grid;grid-template-columns:18px 1fr;gap:8px;font-size:.96rem}
-.feat li::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--radar);margin-top:9px}
+.feat li{display:grid;grid-template-columns:18px 1fr;gap:8px;font-size:.98rem}
+.feat li::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--radar);margin-top:11px}
 .feat b{color:#fff;font-weight:600}
-.aside{font-size:.9rem;color:var(--faint);border-left:2px solid var(--sand);padding-left:12px}
+.aside{font-size:.92rem;color:var(--faint);border-inline-start:2px solid var(--sand);padding-inline-start:12px}
 .aside b{color:var(--sand);font-weight:600}
 .tag{font-family:var(--f-mono);font-size:.72rem;border:1px solid var(--rule-2);border-radius:999px;padding:4px 10px;color:var(--dim)}
-.chip{font-family:var(--f-mono);font-size:.72rem;padding:3px 9px;border-radius:7px;border:1px solid var(--c,var(--rule-2));color:var(--c,var(--dim));display:inline-block}
+.chip{font-family:var(--f-ar);font-size:.76rem;padding:3px 9px;border-radius:7px;border:1px solid var(--c,var(--rule-2));color:var(--c,var(--dim));display:inline-block}
 
 /* screens: sharp 2x captures, framed like a browser window, tap to enlarge */
 .screen{margin:0;border:1px solid var(--rule-2);border-radius:14px;overflow:hidden;background:var(--deck);box-shadow:0 30px 80px -30px rgba(0,0,0,.85)}
 .screen .chrome{display:flex;align-items:center;gap:6px;padding:8px 12px;border-bottom:1px solid var(--rule);background:var(--deck-2)}
 .screen .chrome i{width:9px;height:9px;border-radius:50%;background:var(--rule-2)}
-.screen .chrome span{margin-left:8px;font-family:var(--f-mono);font-size:.68rem;color:var(--faint)}
+.screen .chrome span{margin-inline-start:8px;font-family:var(--f-mono);font-size:.68rem;color:var(--faint)}
 .screen button.zoom{all:unset;display:block;cursor:zoom-in;position:relative;width:100%}
 .screen button.zoom:focus-visible{outline:2px solid var(--radar);outline-offset:-2px}
 .screen button.zoom img{width:100%;height:auto;image-rendering:auto}
-.screen button.zoom::after{content:"⤢ tap to enlarge";position:absolute;right:10px;bottom:10px;font-family:var(--f-mono);font-size:.66rem;padding:3px 8px;border-radius:6px;background:rgba(0,0,0,.72);color:var(--ink);opacity:0;transition:opacity .2s}
+.screen button.zoom::after{content:"⤢ اضغط للتكبير";position:absolute;left:10px;bottom:10px;font-family:var(--f-ar);font-size:.72rem;padding:3px 8px;border-radius:6px;background:rgba(0,0,0,.72);color:var(--ink);opacity:0;transition:opacity .2s}
 .screen button.zoom:hover::after,.screen button.zoom:focus-visible::after{opacity:1}
-.screen figcaption{font-family:var(--f-mono);font-size:.72rem;color:var(--dim);padding:9px 12px;border-top:1px solid var(--rule)}
+.screen figcaption{font-family:var(--f-ar);font-size:.82rem;color:var(--dim);padding:9px 12px;border-top:1px solid var(--rule)}
 .tall{max-height:640px;overflow:hidden;position:relative}
 .tall::after{content:"";position:absolute;inset:auto 0 0;height:70px;background:linear-gradient(transparent,var(--deck));pointer-events:none}
 .lightbox{position:fixed;inset:0;z-index:50;background:rgba(2,4,9,.94);display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 14px) max(14px,env(safe-area-inset-right,0px)) calc(env(safe-area-inset-bottom,0px) + 14px) max(14px,env(safe-area-inset-left,0px))}
 .lightbox .lbbar{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
-.lightbox .lbbar span{font-family:var(--f-mono);font-size:.8rem;color:var(--dim)}
+.lightbox .lbbar span{font-family:var(--f-ar);font-size:.9rem;color:var(--dim)}
 .lightbox .lbimg{flex:1;overflow:auto;display:flex;justify-content:center;align-items:flex-start}
 .lightbox img{max-width:min(100%,1600px);height:auto;border-radius:8px}
 
 /* ===== hero + two-phone scene ===== */
 .hero{padding-block:56px 60px;background:radial-gradient(ellipse at 50% 0%,color-mix(in srgb,var(--alarm) 12%,transparent),transparent 65%)}
-.hero h1{font-size:clamp(2.6rem,7vw,5.6rem);max-width:16ch}
+.hero h1{font-size:clamp(2.4rem,6.4vw,5rem);max-width:18ch}
 .hero h1 em{font-style:normal;color:var(--radar)}
-.hero .lede{font-size:1.15rem;color:var(--dim);max-width:58ch;margin-top:16px}
+.hero .lede{font-size:1.15rem;color:var(--dim);max-width:62ch;margin-top:16px}
 .stage{margin-top:34px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr) minmax(0,1fr);gap:22px;align-items:start}
 .phone{border:2px solid var(--rule-2);border-radius:36px;background:#000;padding:14px 12px 16px;height:520px;display:flex;flex-direction:column;gap:10px;position:relative;overflow:hidden;transition:border-color .4s}
 .phone.scam{border-color:color-mix(in srgb,var(--alarm) 55%,var(--rule-2))}
 .phone .notch{width:84px;height:16px;border-radius:12px;background:#151515;margin:0 auto}
 .phone .who{text-align:center;display:flex;flex-direction:column;gap:2px;padding-top:6px}
-.phone .who .role{font-family:var(--f-mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint)}
-.phone .who b{font-family:var(--f-display);font-size:1.25rem}
-.phone .who .st{font-family:var(--f-mono);font-size:.72rem;color:var(--dim)}
-.phone .avatar{width:64px;height:64px;border-radius:50%;margin:8px auto 2px;display:grid;place-items:center;font-family:var(--f-display);font-weight:800;font-size:1.4rem;background:var(--deck-2);border:1px solid var(--rule-2);position:relative}
+.phone .who .role{font-family:var(--f-ar);font-size:.78rem;color:var(--faint)}
+.phone .who b{font-family:var(--f-display);font-size:1.2rem}
+.phone .who .st{font-family:var(--f-ar);font-size:.76rem;color:var(--dim)}
+.phone .avatar{width:64px;height:64px;border-radius:50%;margin:8px auto 2px;display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:1.4rem;background:var(--deck-2);border:1px solid var(--rule-2);position:relative}
 .phone .avatar.talk::after{content:"";position:absolute;inset:-6px;border-radius:50%;border:2px solid var(--sand);animation:ring 1s ease-out infinite}
 @keyframes ring{from{transform:scale(.92);opacity:1}to{transform:scale(1.25);opacity:0}}
 .bubbles{flex:1;display:flex;flex-direction:column;justify-content:flex-end;gap:8px;overflow:hidden;padding:0 2px}
-.bub{max-width:92%;padding:8px 11px;border-radius:14px;font-size:.88rem;line-height:1.4;background:var(--deck-2);border:1px solid var(--rule);animation:pop .35s ease-out}
+.bub{max-width:92%;padding:8px 11px;border-radius:14px;font-size:.88rem;line-height:1.5;background:var(--deck-2);border:1px solid var(--rule);animation:pop .35s ease-out}
 .bub.mine{align-self:flex-end;background:color-mix(in srgb,var(--radar) 14%,var(--deck-2));border-color:color-mix(in srgb,var(--radar) 30%,transparent)}
 .bub.theirs{align-self:flex-start}
 .bub[dir=rtl]{font-family:var(--f-ar)}
-.bub small{display:block;font-family:var(--f-mono);font-size:.6rem;color:var(--faint);margin-bottom:2px}
+.bub small{display:block;font-family:var(--f-ar);font-size:.64rem;color:var(--faint);margin-bottom:2px}
 @keyframes pop{from{transform:translateY(6px);opacity:0}to{transform:none;opacity:1}}
 .callbtns{display:flex;justify-content:space-around;padding-top:6px}
 .callbtns span{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;font-size:1.1rem;background:var(--deck-2);border:1px solid var(--rule)}
@@ -117,10 +118,10 @@ section.ch{padding-block:84px 72px;border-bottom:1px solid var(--rule);position:
 @keyframes bounce{50%{transform:translateY(-4px)}}
 .notif{position:absolute;left:10px;right:10px;top:44px;border-radius:16px;padding:12px 13px;background:color-mix(in srgb,#2a0710 92%,transparent);border:1px solid var(--alarm);box-shadow:0 20px 50px -10px rgba(0,0,0,.9);display:flex;flex-direction:column;gap:5px;animation:drop .45s ease-out}
 .notif b{font-size:.95rem;color:#fff}
-.notif p{font-size:.78rem;color:#ffd5dc;line-height:1.4}
+.notif p{font-size:.8rem;color:#ffd5dc;line-height:1.5}
 .notif .ar{direction:rtl;text-align:right}
 @keyframes drop{from{transform:translateY(-30px);opacity:0}to{transform:none;opacity:1}}
-.endedcard{margin:auto 0;text-align:center;display:flex;flex-direction:column;gap:6px;color:var(--dim);font-family:var(--f-mono);font-size:.8rem}
+.endedcard{margin:auto 0;text-align:center;display:flex;flex-direction:column;gap:6px;color:var(--dim);font-family:var(--f-ar);font-size:.85rem}
 .endedcard b{font-family:var(--f-display);font-size:1.3rem;color:var(--ink)}
 
 /* the agent in the middle */
@@ -131,43 +132,43 @@ section.ch{padding-block:84px 72px;border-bottom:1px solid var(--rule);position:
 .radar::after{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;margin:-4px;border-radius:50%;background:var(--alarm)}
 .radar.off::before{animation:none;opacity:.2}
 @keyframes sweep{to{transform:rotate(360deg)}}
-.agent .head b{font-family:var(--f-display);font-size:1.25rem;display:block}
-.agent .head span{font-family:var(--f-mono);font-size:.72rem;color:var(--dim)}
+.agent .head b{font-family:var(--f-display);font-size:1.2rem;display:block}
+.agent .head span{font-family:var(--f-ar);font-size:.78rem;color:var(--dim)}
 .wave{display:flex;align-items:center;gap:3px;height:26px}
 .wave i{flex:1;max-width:6px;height:4px;border-radius:2px;background:var(--rule-2)}
 .wave.on i{background:var(--sand);animation:wv .7s ease-in-out infinite}
 @keyframes wv{50%{height:24px}}
-.meter .n{font-family:var(--f-display);font-weight:800;font-size:2.8rem;line-height:1;font-variant-numeric:tabular-nums;transition:color .4s}
+.meter .n{font-family:"Bricolage Grotesque",var(--f-display);font-weight:800;font-size:2.8rem;line-height:1;font-variant-numeric:tabular-nums;transition:color .4s}
 .meter .bar2{height:8px;border-radius:4px;background:var(--rule);margin:8px 0 6px;overflow:hidden}
 .meter .bar2 span{display:block;height:100%;width:0;background:var(--safe);transition:width .5s,background .5s}
-.meter .vd{font-family:var(--f-mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase}
+.meter .vd{font-family:var(--f-ar);font-size:.85rem;font-weight:600}
 .log{flex:1;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;gap:6px;font-size:.82rem}
-.log div{border-left:2px solid var(--rule-2);padding-left:8px;color:var(--dim);animation:pop .35s ease-out}
+.log div{border-inline-start:2px solid var(--rule-2);padding-inline-start:8px;color:var(--dim);animation:pop .35s ease-out}
 .log div.flag{border-color:var(--alarm);color:#ffc1cc}
 .log div.act{border-color:var(--radar);color:var(--ink)}
-.log div[dir=rtl]{font-family:var(--f-ar);border-left:0;border-right:2px solid var(--rule-2);padding:0 8px 0 0}
+.log div[dir=rtl]{font-family:var(--f-ar)}
 .saynow{font-size:1.05rem;color:var(--ink);min-height:2.8em}
 
 .simctl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:22px}
-.btn{border:1px solid var(--rule-2);background:none;border-radius:12px;padding:10px 16px;font-family:var(--f-mono);font-size:.82rem}
+.btn{border:1px solid var(--rule-2);background:none;border-radius:12px;padding:10px 16px;font-family:var(--f-ar);font-size:.9rem}
 .btn:hover:not([disabled]){border-color:var(--radar)}
 .btn[disabled]{opacity:.35;cursor:default}
-.btn.next{background:var(--radar);border-color:var(--radar);color:#04121c;font-weight:700;font-size:1rem;padding:12px 26px}
+.btn.next{background:var(--radar);border-color:var(--radar);color:#04121c;font-weight:700;font-size:1.05rem;padding:11px 26px}
 .seg{display:flex;border:1px solid var(--rule-2);border-radius:12px;overflow:hidden}
-.seg button{all:unset;cursor:pointer;padding:9px 13px;font-family:var(--f-mono);font-size:.78rem;color:var(--dim)}
+.seg button{all:unset;cursor:pointer;padding:9px 13px;font-family:var(--f-ar);font-size:.86rem;color:var(--dim)}
 .seg button[aria-pressed="true"]{background:var(--deck-2);color:var(--ink)}
 .seg button:focus-visible{outline:2px solid var(--radar);outline-offset:-2px}
-.stepdots{display:flex;gap:5px;margin-left:auto}
+.stepdots{display:flex;gap:5px;margin-inline-start:auto}
 .stepdots i{width:18px;height:4px;border-radius:2px;background:var(--rule-2)}
 .stepdots i.on{background:var(--radar)}
-.caption{margin-top:14px;font-size:1.02rem;color:var(--dim);max-width:70ch;min-height:3.2em}
+.caption{margin-top:14px;font-size:1.05rem;color:var(--dim);max-width:70ch;min-height:3.4em}
 .caption b{color:var(--ink)}
 
 .ways{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px;margin-top:40px}
 .way{border:1px solid var(--rule);border-radius:14px;padding:18px;background:var(--deck);display:flex;flex-direction:column;gap:8px}
 .way h3{font-size:1.25rem}
-.way p{font-size:.94rem;color:var(--dim)}
-.way .st{font-family:var(--f-mono);font-size:.68rem;letter-spacing:.1em;text-transform:uppercase}
+.way p{font-size:.96rem;color:var(--dim)}
+.way .st{font-family:var(--f-ar);font-size:.86rem;font-weight:600}
 
 /* quiz */
 .game{border:1px solid var(--rule-2);border-radius:18px;background:var(--deck);padding:20px;display:flex;flex-direction:column;gap:12px;margin-top:30px}
@@ -175,24 +176,24 @@ section.ch{padding-block:84px 72px;border-bottom:1px solid var(--rule);position:
 .opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:10px}
 .opt{all:unset;cursor:pointer;border:1px solid var(--rule-2);border-radius:12px;padding:14px;background:var(--deck-2);display:flex;flex-direction:column;gap:6px;min-width:0}
 .opt:focus-visible{outline:2px solid var(--radar)}
-.opt .d{font-family:var(--f-mono);font-size:1.12rem;color:#fff;overflow-wrap:anywhere}
+.opt .d{font-family:var(--f-mono);font-size:1.12rem;color:#fff;overflow-wrap:anywhere;text-align:right}
 .opt .v,.opt .pill{display:none}
-.game.done .opt .v{display:block;font-size:.86rem;color:var(--dim)}
-.game.done .opt .pill{display:inline;font-family:var(--f-mono);font-size:.66rem;letter-spacing:.1em;text-transform:uppercase}
+.game.done .opt .v{display:block;font-size:.9rem;color:var(--dim)}
+.game.done .opt .pill{display:inline;font-family:var(--f-ar);font-size:.8rem;font-weight:600}
 .game.done .opt{cursor:default}
 .game.done .opt.good{border-color:var(--safe)} .game.done .opt.good .pill{color:var(--safe)}
 .game.done .opt.bad{border-color:var(--alarm)} .game.done .opt.bad .pill{color:var(--alarm)}
 .game.done .opt.meh{border-color:var(--sand)} .game.done .opt.meh .pill{color:var(--sand)}
 .result{font-size:1rem;color:var(--sand);min-height:1.4em}
 
-/* compare */
+/* compare (kept left-to-right so the slider maths matches the clip) */
 .compare{position:relative;border:1px solid var(--rule-2);border-radius:14px;overflow:hidden;aspect-ratio:1366/900;max-width:100%;background:#000;user-select:none}
 .compare img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
 .compare .top{clip-path:inset(0 0 0 50%)}
 .compare .handle{position:absolute;top:0;bottom:0;left:50%;width:2px;background:var(--sand);transform:translateX(-1px);pointer-events:none}
 .compare .handle::after{content:"⇆";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;background:var(--sand);color:#1a1200;display:grid;place-items:center;font-weight:700}
 .compare input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
-.compare .lbl{position:absolute;top:10px;font-family:var(--f-mono);font-size:.72rem;padding:3px 8px;border-radius:6px;background:rgba(0,0,0,.75)}
+.compare .lbl{position:absolute;top:10px;font-family:var(--f-ar);font-size:.8rem;padding:3px 8px;border-radius:6px;background:rgba(0,0,0,.75)}
 .compare .l1{left:10px;color:var(--safe)} .compare .l2{right:10px;color:var(--alarm)}
 .verdict{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 
@@ -202,7 +203,8 @@ section.ch{padding-block:84px 72px;border-bottom:1px solid var(--rule);position:
 .langs button[aria-pressed="true"]{border-color:var(--radar);color:var(--radar);background:color-mix(in srgb,var(--radar) 12%,transparent)}
 .lure{border:1px solid var(--rule-2);border-radius:14px;padding:18px;background:var(--deck);display:flex;flex-direction:column;gap:8px;min-height:150px}
 .lure .t{font-size:1.4rem;color:#fff}
-.lure .g{color:var(--dim);font-size:.95rem}
+.lure .t[dir=ltr]{text-align:right}
+.lure .g{color:var(--dim);font-size:.98rem}
 .lure .flags{display:flex;flex-wrap:wrap;gap:6px}
 
 /* hotspots */
@@ -210,14 +212,14 @@ section.ch{padding-block:84px 72px;border-bottom:1px solid var(--rule);position:
 .hot .spot{position:absolute;width:28px;height:28px;margin:-14px 0 0 -14px;border-radius:50%;background:var(--sand);color:#1a1200;font-family:var(--f-mono);font-weight:700;font-size:.78rem;border:0;display:grid;place-items:center;box-shadow:0 0 0 6px color-mix(in srgb,var(--sand) 25%,transparent);animation:pulse 2.4s infinite;z-index:2}
 @keyframes pulse{50%{box-shadow:0 0 0 12px color-mix(in srgb,var(--sand) 0%,transparent)}}
 .hot .spot[aria-pressed="true"]{background:var(--radar)}
-.spotinfo{min-height:3.2em;margin-top:12px;font-size:1.02rem}
+.spotinfo{min-height:3.2em;margin-top:12px;font-size:1.05rem}
 .spotinfo b{color:var(--radar)}
 
 .closing{padding-block:96px}
-.closing h2{font-size:clamp(2.6rem,7vw,5.2rem);max-width:15ch}
+.closing h2{font-size:clamp(2.4rem,6.4vw,4.6rem);max-width:17ch}
 .closing h2 em{font-style:normal;color:var(--radar)}
 .stack{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px}
-.honest{margin-top:30px;font-size:.9rem;color:var(--faint);max-width:72ch}
+.honest{margin-top:30px;font-size:.94rem;color:var(--faint);max-width:76ch}
 
 @media (max-width:980px){
   .stage{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
@@ -237,242 +239,242 @@ section.ch{padding-block:84px 72px;border-bottom:1px solid var(--rule);position:
 .bub.rasidsays{background:color-mix(in oklab,var(--alarm) 22%,transparent);border:1px solid var(--alarm)}
 </style>
 
-<header class="bar" aria-label="Walkthrough">
+<header class="bar" aria-label="الجولة">
   <div class="wrap">
-    <div class="logo"><svg width="22" height="22" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="#4cc9f0" stroke-width="2"/><path d="M15 15 L26 8" stroke="#4cc9f0" stroke-width="2"/><circle cx="21" cy="11.5" r="2.4" fill="#ff4d6d"/></svg>RASID <span class="ar">راصد</span></div>
-    <nav class="dots" id="dots" aria-label="Chapters"></nav>
-    <button class="present" id="present" type="button">Present ⛶</button>
+    <div class="logo"><svg width="22" height="22" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="#4cc9f0" stroke-width="2"/><path d="M15 15 L26 8" stroke="#4cc9f0" stroke-width="2"/><circle cx="21" cy="11.5" r="2.4" fill="#ff4d6d"/></svg><span class="ar">راصد</span> RASID</div>
+    <nav class="dots" id="dots" aria-label="الفصول"></nav>
+    <button class="present" id="present" type="button">عرض ⛶</button>
   </div>
   <div class="progress" id="progress"></div>
 </header>
 
 <main>
 <!-- ============ ACT 1: THE CALL GUARDIAN ============ -->
-<section class="ch hero" id="guardian" data-title="Call Guardian">
+<section class="ch hero" id="guardian" data-title="حارس المكالمات">
   <div class="wrap">
-    <p class="kicker">ScamShield AI · Abu Dhabi Police × 42 Abu Dhabi · Our MVP</p>
-    <h1>The scammer is on the line. <em>So is RASID.</em></h1>
-    <p class="lede">Fake sites and fake ads usually end in a phone call, and that call is where the money goes. Fatima puts the call on speaker next to her laptop and presses <b>Listen</b>. Press <b>Next</b> and watch.</p>
+    <p class="kicker"><span dir="ltr">ScamShield AI · Abu Dhabi Police × 42 Abu Dhabi</span> · نموذجنا الأولي</p>
+    <h1>المحتال على الخط. <em>وراصد أيضاً.</em></h1>
+    <p class="lede">المواقع والإعلانات المزيفة تنتهي غالباً بمكالمة هاتفية، وفي هذه المكالمة تضيع الأموال. <b>حارس المكالمات (Call Guardian)</b> يستمع إلى المكالمة المشبوهة، ويحذّر بصوت عالٍ بالعربية والإنجليزية، ثم يبلّغ عنها بضغطة واحدة. اضغط <b>التالي</b> وشاهد.</p>
 
     <div class="stage" aria-live="polite">
       <div class="phone" id="phScam">
         <div class="notch"></div>
-        <div class="who"><span class="role">Caller</span><div class="avatar" id="avScam">?</div><b id="nmScam">+971 55 ••• 2233</b><span class="st" id="stScam">dialling…</span></div>
+        <div class="who"><span class="role">المتصل</span><div class="avatar" id="avScam">?</div><b id="nmScam" dir="auto">+971 55 ••• 2233</b><span class="st" id="stScam">جارٍ الاتصال…</span></div>
         <div class="bubbles" id="bbScam"></div>
         <div class="callbtns" id="cbScam"><span>🔇</span><span>⌨</span><span class="end">✆</span></div>
       </div>
 
       <div class="agent" id="agent">
-        <div class="head"><div class="radar" id="radar"></div><div><b>RASID Call Guardian · laptop</b><span id="agStatus">Ready · press Listen</span></div></div>
+        <div class="head"><div class="radar" id="radar"></div><div><b>حارس المكالمات من راصد</b><span id="agStatus">جاهز · اضغط «استمع»</span></div></div>
         <div class="wave" id="wave" aria-hidden="true"><i></i><i style="animation-delay:.1s"></i><i style="animation-delay:.2s"></i><i style="animation-delay:.3s"></i><i style="animation-delay:.15s"></i><i style="animation-delay:.25s"></i><i style="animation-delay:.05s"></i><i style="animation-delay:.35s"></i><i style="animation-delay:.2s"></i><i style="animation-delay:.1s"></i><i style="animation-delay:.3s"></i><i style="animation-delay:0s"></i></div>
-        <div class="meter"><div class="mono" style="font-size:.66rem;color:var(--dim);letter-spacing:.14em">SCAM RISK</div><div class="n" id="risk">0</div><div class="bar2"><span id="riskBar"></span></div><div class="vd" id="riskVd">no scam signs</div></div>
+        <div class="meter"><div class="ar" style="font-size:.8rem;color:var(--dim)">درجة خطر الاحتيال</div><div class="n" id="risk">0</div><div class="bar2"><span id="riskBar"></span></div><div class="vd" id="riskVd">لا مؤشرات احتيال</div></div>
         <div class="log" id="log"></div>
       </div>
 
       <div class="phone" id="phYou">
         <div class="notch"></div>
-        <div class="who"><span class="role">You</span><div class="avatar" id="avYou">F</div><b id="nmYou">Fatima</b><span class="st" id="stYou">incoming call…</span></div>
+        <div class="who"><span class="role">أنتِ</span><div class="avatar" id="avYou">ف</div><b id="nmYou" class="ar">فاطمة</b><span class="st" id="stYou">مكالمة واردة…</span></div>
         <div class="bubbles" id="bbYou"></div>
         <div id="ctlYou"></div>
       </div>
     </div>
 
     <div class="simctl">
-      <button class="btn" id="back" type="button" aria-label="Previous step">◀ Back</button>
-      <button class="btn next" id="next" type="button">Next ▶</button>
-      <button class="btn" id="restart" type="button">Restart</button>
-      <div class="seg" role="group" aria-label="Scenario"><button type="button" id="scScam" aria-pressed="true">Scam call</button><button type="button" id="scNice" aria-pressed="false">Normal call</button></div>
-      <div class="seg" role="group" aria-label="Call language"><button type="button" id="lgEn" aria-pressed="true">EN</button><button type="button" id="lgAr" aria-pressed="false" class="ar">عربي</button></div>
+      <button class="btn" id="back" type="button" aria-label="الخطوة السابقة">▶ السابق</button>
+      <button class="btn next" id="next" type="button">التالي ◀</button>
+      <button class="btn" id="restart" type="button">من البداية</button>
+      <div class="seg" role="group" aria-label="السيناريو"><button type="button" id="scScam" aria-pressed="true">مكالمة احتيال</button><button type="button" id="scNice" aria-pressed="false">مكالمة عادية</button></div>
+      <div class="seg" role="group" aria-label="لغة المكالمة"><button type="button" id="lgEn" aria-pressed="false" lang="en">EN</button><button type="button" id="lgAr" aria-pressed="true" class="ar">عربي</button></div>
       <div class="stepdots" id="stepdots" aria-hidden="true"></div>
     </div>
     <p class="caption" id="caption"></p>
 
     <div class="ways">
-      <div class="way"><span class="st" style="color:var(--radar)">1 · Press Listen</span><h3>Speakerphone, next to the laptop</h3><p>The Call Guardian is a tab in the RASID console. Open it, choose Arabic or English, press <b>Listen</b> and talk normally. No app, no phone number, no paid voice service.</p></div>
-      <div class="way"><span class="st" style="color:var(--alarm)">2 · It warns out loud</span><h3>The caller hears it too</h3><p>Rules score every sentence instantly (OTP, card, AnyDesk, transfers, fake bank or police, threats, secrecy) and Claude reads the whole call. At "likely scam" RASID says so out loud in Arabic and English.</p></div>
-      <div class="way"><span class="st" style="color:var(--safe)">3 · One-click report</span><h3>A case for the police</h3><p>After the call, <b>Report</b> files it in the console with every red flag, next to the scam sites on the map. No audio is recorded and no transcript is kept.</p></div>
+      <div class="way"><span class="st" style="color:var(--radar)">1 · اضغط «استمع»</span><h3>تبويب داخل منصة راصد</h3><p>حارس المكالمات تبويب في منصة راصد. افتحه، واختر العربية أو الإنجليزية، ثم اضغط <b>استمع</b>. لا تطبيق، ولا رقم هاتف، ولا خدمة صوتية مدفوعة.</p></div>
+      <div class="way"><span class="st" style="color:var(--alarm)">2 · يحذّر بصوت عالٍ</span><h3>تحذير مسموع بلغتين</h3><p>قواعد فورية تقيّم كل جملة (رمز OTP، البطاقة، AnyDesk، التحويلات، انتحال صفة البنك أو الشرطة، التهديد، طلب السرّية)، و Claude يقرأ المكالمة كاملة. عند الوصول إلى «احتيال مرجّح» يعلن راصد التحذير بصوت عالٍ بالعربية والإنجليزية.</p></div>
+      <div class="way"><span class="st" style="color:var(--safe)">3 · إبلاغ بضغطة واحدة</span><h3>قضية جاهزة للشرطة</h3><p>بعد المكالمة، زر <b>إبلاغ</b> يسجّلها في المنصة مع كل مؤشرات الخطر، بجانب مواقع الاحتيال على الخريطة. لا يُسجَّل أي صوت ولا يُحفظ نص المكالمة.</p></div>
     </div>
 
     <div class="grid" style="display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:24px;margin-top:40px;align-items:start" id="gShots">
-      <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · Call Guardian tab</span></div><button class="zoom" type="button" data-full="shots/09-call-guardian.jpg" data-cap="Call Guardian tab: Arabic fake-bank call, risk 100"><img src="shots/09-call-guardian.jpg" alt="The Call Guardian tab during an Arabic fake-bank call, risk 100" width="2880" height="1440" loading="lazy"></button><figcaption>The real tab: an Arabic fake-bank call, warning in both languages, risk 100</figcaption></figure>
-      <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · case file</span></div><button class="zoom" type="button" data-full="shots/07-guardian-case.jpg" data-cap="The reported call as a case in the police console"><img src="shots/07-guardian-case.jpg" alt="A reported call as a case in the police console" width="1118" height="722" loading="lazy"></button><figcaption>…and the police see it as a case, with every red flag</figcaption></figure>
+      <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · Call Guardian tab</span></div><button class="zoom" type="button" data-full="shots/09-call-guardian.jpg" data-cap="تبويب حارس المكالمات: مكالمة بنك مزيف بالعربية، الخطر 100"><img src="shots/09-call-guardian.jpg" alt="تبويب حارس المكالمات أثناء مكالمة بنك مزيف بالعربية، الخطر 100" width="2880" height="1440" loading="lazy"></button><figcaption>التبويب كما هو في المنصة: مكالمة بنك مزيف بالعربية، تحذير باللغتين، الخطر 100</figcaption></figure>
+      <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · case file</span></div><button class="zoom" type="button" data-full="shots/07-guardian-case.jpg" data-cap="المكالمة المُبلَّغ عنها كقضية في منصة الشرطة"><img src="shots/07-guardian-case.jpg" alt="مكالمة مُبلَّغ عنها كقضية في منصة الشرطة" width="1118" height="722" loading="lazy"></button><figcaption>…وتظهر للشرطة كقضية مع كل مؤشرات الخطر</figcaption></figure>
     </div>
   </div>
 </section>
 
 <!-- ============ ACT 2: BEFORE THEY CALL ============ -->
-<section class="ch" id="brief" data-title="Why">
+<section class="ch" id="brief" data-title="لماذا">
   <div class="wrap grid">
     <div class="text">
-      <p class="kicker">Act 2 · Before they even call</p>
-      <h2>Most scams start with a fake site, a fake pin or a fake ad.</h2>
-      <p class="lede">The challenge asks for tools that detect fraudulent links and sites on the open internet, including search engines and Maps. Victims never paste the link into a checker. So RASID goes looking, every night, before anyone clicks.</p>
+      <p class="kicker">الفصل الثاني · قبل أن يتصلوا أصلاً</p>
+      <h2>معظم عمليات الاحتيال تبدأ بموقع مزيف أو موقع وهمي على الخريطة أو إعلان مزيف.</h2>
+      <p class="lede">يطلب التحدي أدوات تكشف الروابط والمواقع الاحتيالية على الإنترنت المفتوح، بما فيها محركات البحث والخرائط. الضحايا لا يلصقون الرابط في أداة فحص أبداً. لذلك يبحث راصد بنفسه كل ليلة، قبل أن ينقر أي شخص.</p>
     </div>
     <div class="text">
-      <p class="mono" style="font-family:var(--f-display);font-weight:800;font-size:clamp(3rem,8vw,5.4rem);line-height:1;color:var(--sand)" id="nrd">≈70,000</p>
-      <p class="lede">new domains are registered every day. RASID reads all of them before breakfast.</p>
-      <p class="aside"><b>Fun fact:</b> fake F1 ticket sites appear about three weeks before race weekend. RASID starts watching events earlier.</p>
+      <p class="mono" style="font-family:'Bricolage Grotesque',var(--f-display);font-weight:800;font-size:clamp(3rem,8vw,5.4rem);line-height:1;color:var(--sand)" id="nrd"><span dir="ltr">≈70,000</span></p>
+      <p class="lede">نطاق جديد يُسجَّل كل يوم. وراصد يقرأها كلها قبل الفطور.</p>
+      <p class="aside"><b>معلومة طريفة:</b> مواقع تذاكر الفورمولا 1 المزيفة تظهر قبل نحو ثلاثة أسابيع من السباق. راصد يبدأ مراقبة الفعاليات قبل ذلك.</p>
     </div>
   </div>
 </section>
 
-<section class="ch" id="hunt" data-title="Hunt">
+<section class="ch" id="hunt" data-title="الصيد">
   <div class="wrap">
     <div class="grid rev">
       <div class="text">
-        <p class="kicker">Chapter 1 · Name it, hunt it</p>
-        <h2>Type a name. RASID imagines every way to fake it.</h2>
-        <p class="lede">An officer types "ADCB", "Abu Dhabi Grand Prix" or "Tadbeer", or presses <b>+</b> on a watchlist. RASID generates hundreds of lookalikes and checks which ones are alive.</p>
+        <p class="kicker">الفصل 1 · سمِّه، واصطده</p>
+        <h2>اكتب اسماً، وراصد يتخيّل كل طريقة لتزويره.</h2>
+        <p class="lede">يكتب الضابط «ADCB» أو «Abu Dhabi Grand Prix» أو «Tadbeer»، أو يضغط <b>+</b> على قائمة مراقبة. يولّد راصد مئات الأسماء المشابهة ويتحقق أيّها يعمل فعلاً.</p>
         <ul class="feat">
-          <li><span><b>Watchlists</b> for brands, government services, events and recruiters, with official domains and phones.</span></li>
-          <li><span><b>Lookalikes</b>: typos, l↔1↔I, rn→m, Cyrillic letters, "-secure-verify", TLD swaps, subdomain tricks.</span></li>
-          <li><span><b>Lure words in transliteration</b>: <span class="mono">naukri</span>, <span class="mono">trabaho</span>, <span class="mono">joli</span>, <span class="mono">velai</span>.</span></li>
-          <li><span><b>Event countdowns</b>: National Day, the Grand Prix, Ramadan, Hajj.</span></li>
+          <li><span><b>قوائم مراقبة</b> للعلامات التجارية والخدمات الحكومية والفعاليات وشركات التوظيف، مع نطاقاتها وأرقامها الرسمية.</span></li>
+          <li><span><b>أسماء مشابهة</b>: أخطاء إملائية، <span class="mono" dir="ltr">l↔1↔I</span>، <span class="mono" dir="ltr">rn→m</span>، حروف سيريلية، <span class="mono" dir="ltr" style="white-space:nowrap">-secure-verify</span>، تبديل الامتداد، وحيل النطاقات الفرعية.</span></li>
+          <li><span><b>كلمات الإغراء بحروف لاتينية</b>: <span class="mono">naukri</span>، <span class="mono">trabaho</span>، <span class="mono">joli</span>، <span class="mono">velai</span>.</span></li>
+          <li><span><b>عدّ تنازلي للفعاليات</b>: اليوم الوطني، سباق الجائزة الكبرى، رمضان، الحج.</span></li>
         </ul>
       </div>
-      <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · Watch → Seeds</span></div><div class="tall"><button class="zoom" type="button" data-full="shots/04-seeds.jpg" data-cap="82 lookalikes for ADCB, Cyrillic ones first"><img src="shots/04-seeds.jpg" alt="Lookalike seeds for ADCB" width="1118" height="1500" loading="lazy"></button></div><figcaption>82 lookalikes for ADCB, the sneakiest (Cyrillic) first</figcaption></figure>
+      <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · Watch → Seeds</span></div><div class="tall"><button class="zoom" type="button" data-full="shots/04-seeds.jpg" data-cap="82 اسماً مشابهاً لـ ADCB، السيريلية أولاً"><img src="shots/04-seeds.jpg" alt="أسماء مشابهة مولّدة لـ ADCB" width="1118" height="1500" loading="lazy"></button></div><figcaption>82 اسماً مشابهاً لـ ADCB، والأكثر خداعاً (السيريلية) أولاً</figcaption></figure>
     </div>
     <div class="game" id="game" aria-live="polite">
-      <p class="kicker">Try it · which one is the real ADCB?</p>
+      <p class="kicker">جرّبها · أيّها موقع ADCB الحقيقي؟</p>
       <div class="opts">
-        <button class="opt good" data-k="real"><span class="pill">Official</span><span class="d">adcb.com</span><span class="v">The real bank. On RASID's official list, so it can never be flagged.</span></button>
-        <button class="opt bad" data-k="cyr"><span class="pill">Homoglyph</span><span class="d">аdcb.com</span><span class="v">That "а" is Cyrillic. Browsers show it as <span class="mono">xn--dcb-5cd.com</span>.</span></button>
-        <button class="opt bad" data-k="combo"><span class="pill">Combosquat</span><span class="d">adcb-secure-verify.top</span><span class="v">Brand + "secure" + "verify" on a cheap TLD. The classic.</span></button>
-        <button class="opt meh" data-k="pool"><span class="pill">Unrelated · 3/100</span><span class="d">adcbilliardcare.com</span><span class="v">A pool-table cleaner in Utah. RASID opened it, found no bank, and let it go.</span></button>
+        <button class="opt good" data-k="real"><span class="pill">رسمي</span><span class="d" dir="ltr">adcb.com</span><span class="v">البنك الحقيقي. مُدرج في قائمة راصد الرسمية، فلا يمكن أن يُصنَّف مشبوهاً.</span></button>
+        <button class="opt bad" data-k="cyr"><span class="pill">حرف مشابه (Homoglyph)</span><span class="d" dir="ltr">аdcb.com</span><span class="v">حرف «а» هنا سيريلي. المتصفح يعرضه هكذا: <span class="mono" dir="ltr" style="white-space:nowrap">xn--dcb-5cd.com</span>.</span></button>
+        <button class="opt bad" data-k="combo"><span class="pill">دمج كلمات (Combosquat)</span><span class="d" dir="ltr">adcb-secure-verify.top</span><span class="v">اسم العلامة + «secure» + «verify» على امتداد رخيص. الحيلة الكلاسيكية.</span></button>
+        <button class="opt meh" data-k="pool"><span class="pill">غير مرتبط · 3/100</span><span class="d" dir="ltr">adcbilliardcare.com</span><span class="v">شركة لتنظيف طاولات البلياردو في يوتا. فتحه راصد، ولم يجد أي بنك، فتركه.</span></button>
       </div>
-      <p class="result" id="gameResult">Tap one.</p>
+      <p class="result" id="gameResult">اختر واحداً.</p>
     </div>
   </div>
 </section>
 
-<section class="ch" id="inspect" data-title="Inspect">
+<section class="ch" id="inspect" data-title="الفحص">
   <div class="wrap">
     <div class="text" style="max-width:800px">
-      <p class="kicker">Chapter 2 · Don't judge a domain by its name</p>
-      <h2>RASID opens every lookalike in its own browser and looks.</h2>
-      <p class="lede">A similar name alone never flags a site. RASID takes its own screenshot, compares it with the official site, and reads the page like a victim would. Drag the handle on a phishing clone we built for testing.</p>
+      <p class="kicker">الفصل 2 · لا تحكم على النطاق من اسمه</p>
+      <h2>راصد يفتح كل اسم مشابه في متصفحه الخاص وينظر بنفسه.</h2>
+      <p class="lede">تشابه الاسم وحده لا يكفي لتصنيف الموقع. يلتقط راصد صورة الشاشة بنفسه، ويقارنها بالموقع الرسمي، ويقرأ الصفحة كما يقرؤها الضحية. اسحب المقبض على نسخة تصيّد بنيناها للاختبار.</p>
     </div>
     <div class="grid" style="margin-top:28px;align-items:start">
       <div class="text">
         <ul class="feat">
-          <li><span><b>Looks like the official site?</b> Visual match from RASID's own screenshots, plus favicon, layout, text and styles.</span></li>
-          <li><span><b>Malicious links</b>: forms posting to a Telegram bot, shorteners, APK downloads, links to known scam sites.</span></li>
-          <li><span><b>Malicious code</b>: self-decoding scripts, hidden frames, wallet drainers, "no right-click".</span></li>
-          <li><span><b>Payment capture</b>: card, CVV, OTP and Emirates ID fields, IBANs, crypto wallets, "Pay AED 450".</span></li>
-          <li><span><b>Reputation</b>: Google Safe Browsing and VirusTotal, when keys are added.</span></li>
+          <li><span><b>هل يشبه الموقع الرسمي؟</b> مطابقة بصرية من لقطات راصد نفسه، إضافة إلى الأيقونة والتخطيط والنصوص والتنسيقات.</span></li>
+          <li><span><b>روابط خبيثة</b>: نماذج ترسل البيانات إلى بوت Telegram، روابط مختصرة، تنزيل ملفات APK، روابط لمواقع احتيال معروفة.</span></li>
+          <li><span><b>شيفرة خبيثة</b>: سكربتات تفكّ تشفيرها ذاتياً، إطارات مخفية، أدوات سرقة المحافظ الرقمية، منع النقر بالزر الأيمن.</span></li>
+          <li><span><b>سرقة بيانات الدفع</b>: حقول البطاقة و CVV ورمز OTP والهوية الإماراتية، أرقام IBAN، محافظ العملات الرقمية، «ادفع 450 درهماً».</span></li>
+          <li><span><b>السمعة</b>: Google Safe Browsing و VirusTotal، عند إضافة المفاتيح.</span></li>
         </ul>
-        <p class="aside"><b>Plot twist:</b> RASID once flagged appl-e.com, then noticed it forwards to apple.com. Brands buy their own typos. Those now score 0.</p>
+        <p class="aside"><b>مفاجأة:</b> صنّف راصد مرة النطاق <span dir="ltr">appl-e.com</span>، ثم لاحظ أنه يحوّل إلى <span dir="ltr">apple.com</span>. العلامات التجارية تشتري أخطاءها الإملائية بنفسها. هذه الحالات تحصل الآن على 0.</p>
       </div>
       <div>
-        <div class="compare">
-          <img src="shots/13-official.jpg" alt="Official Abu Dhabi Police homepage" width="1366" height="900">
-          <img class="top" id="cmpTop" src="shots/12-clone.jpg" alt="Phishing clone of the homepage with a card form" width="1366" height="900">
-          <span class="lbl l1">official site</span><span class="lbl l2">phishing clone (test)</span>
+        <div class="compare" dir="ltr">
+          <img src="shots/13-official.jpg" alt="الصفحة الرئيسية الرسمية لشرطة أبوظبي" width="1366" height="900">
+          <img class="top" id="cmpTop" src="shots/12-clone.jpg" alt="نسخة تصيّد من الصفحة الرئيسية مع نموذج بطاقة" width="1366" height="900">
+          <span class="lbl l1" dir="rtl">الموقع الرسمي</span><span class="lbl l2" dir="rtl">نسخة تصيّد (اختبار)</span>
           <span class="handle" id="cmpHandle"></span>
-          <input type="range" id="cmpRange" min="0" max="100" value="50" aria-label="Compare the official site and the clone">
+          <input type="range" id="cmpRange" min="0" max="100" value="50" aria-label="قارن بين الموقع الرسمي والنسخة المزيفة">
         </div>
-        <div class="verdict"><span class="chip" style="--c:var(--alarm)">Impersonation · 100/100</span><span class="chip" style="--c:var(--sand)">81% visual match</span><span class="chip">same favicon</span><span class="chip">asks to pay AED 450</span></div>
+        <div class="verdict"><span class="chip" style="--c:var(--alarm)">انتحال · 100/100</span><span class="chip" style="--c:var(--sand)">تطابق بصري 81%</span><span class="chip">نفس الأيقونة</span><span class="chip">يطلب دفع 450 درهماً</span></div>
       </div>
     </div>
     <div class="grid" style="margin-top:44px">
-      <div class="text"><p class="kicker">And the opposite case</p><h2 style="font-size:clamp(1.7rem,3.4vw,2.6rem)">adpuae.com sells truck parts. RASID agrees.</h2><p class="lede">3% UI match, 2% visual match, no card form. Verdict: unrelated business, score 10. Left alone. Parked "for sale" domains stay on watch, and name-only lookalikes are capped below the flag line.</p></div>
-      <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · case file · site inspection</span></div><div class="tall"><button class="zoom" type="button" data-full="shots/05-inspection-unrelated.jpg" data-cap="Site inspection: unrelated business, RASID's own screenshots side by side"><img src="shots/05-inspection-unrelated.jpg" alt="Case file of adpuae.com with site inspection and side-by-side screenshots" width="1118" height="1724" loading="lazy"></button></div><figcaption>Site inspection with RASID's own screenshots, suspect vs official</figcaption></figure>
+      <div class="text"><p class="kicker">والحالة المعاكسة</p><h2 style="font-size:clamp(1.6rem,3.2vw,2.4rem)"><span dir="ltr">adpuae.com</span> يبيع قطع غيار الشاحنات. وراصد يوافق.</h2><p class="lede">تطابق الواجهة 3%، والتطابق البصري 2%، ولا نموذج بطاقة. الحكم: نشاط تجاري غير مرتبط، الدرجة 10. يُترك وشأنه. النطاقات المعروضة للبيع تبقى تحت المراقبة، والأسماء المشابهة بالاسم فقط تبقى درجتها تحت خط التصنيف.</p></div>
+      <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · case file · site inspection</span></div><div class="tall"><button class="zoom" type="button" data-full="shots/05-inspection-unrelated.jpg" data-cap="فحص الموقع: نشاط تجاري غير مرتبط، ولقطات راصد جنباً إلى جنب"><img src="shots/05-inspection-unrelated.jpg" alt="ملف قضية adpuae.com مع فحص الموقع ولقطات متجاورة" width="1118" height="1724" loading="lazy"></button></div><figcaption>فحص الموقع بلقطات راصد نفسه: الموقع المشبوه مقابل الرسمي</figcaption></figure>
     </div>
   </div>
 </section>
 
-<section class="ch" id="maps" data-title="Maps">
+<section class="ch" id="maps" data-title="الخرائط">
   <div class="wrap grid rev">
     <div class="text">
-      <p class="kicker">Chapter 3 · The fake branch on the map</p>
-      <h2>"ADCB Customer Care 24/7", on a mobile number?</h2>
-      <p class="lede">People search Maps for "bank customer service" and call the first pin. RASID checks every listing for a watched brand, emirate by emirate.</p>
+      <p class="kicker">الفصل 3 · الفرع المزيف على الخريطة</p>
+      <h2>«خدمة عملاء ADCB على مدار الساعة»، برقم موبايل؟</h2>
+      <p class="lede">يبحث الناس في الخرائط عن «خدمة عملاء البنك» ويتصلون بأول نتيجة. يفحص راصد كل نتيجة تحمل اسم علامة مراقَبة، إمارة بعد إمارة.</p>
       <ul class="feat">
-        <li><span><b>Phone and website vs. the official registry.</b></span></li>
-        <li><span><b>Mobile or WhatsApp numbers</b> on bank and telco listings.</span></li>
-        <li><span><b>One number, many masks</b>: the same phone on Aramex, e& and a job post is one actor.</span></li>
+        <li><span><b>مقارنة الهاتف والموقع الإلكتروني بالسجل الرسمي.</b></span></li>
+        <li><span><b>أرقام موبايل أو واتساب</b> على صفحات البنوك وشركات الاتصالات.</span></li>
+        <li><span><b>رقم واحد، أقنعة كثيرة</b>: نفس الرقم على Aramex و e&amp; وإعلان وظيفة يعني جهة واحدة.</span></li>
       </ul>
-      <p class="aside"><b>Live:</b> 130 real Aramex and ADCB listings checked through Google's Places API. None were fake. Good news for Aramex.</p>
+      <p class="aside"><b>فعلياً:</b> فحصنا 130 نتيجة لـ Aramex و ADCB عبر Google Places API. لم تكن أيّ منها مزيفة. خبر سار لـ Aramex.</p>
     </div>
-    <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · UAE ground view</span></div><button class="zoom" type="button" data-full="shots/02-uae-ground.jpg" data-cap="UAE ground view of checked Google Maps listings"><img src="shots/02-uae-ground.jpg" alt="UAE ground view with checked Google Maps listings" width="1153" height="736" loading="lazy"></button><figcaption>UAE ground: every checked listing; green verified, red flagged</figcaption></figure>
+    <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · UAE ground view</span></div><button class="zoom" type="button" data-full="shots/02-uae-ground.jpg" data-cap="عرض ميداني للإمارات لنتائج Google Maps المفحوصة"><img src="shots/02-uae-ground.jpg" alt="عرض ميداني للإمارات مع نتائج Google Maps المفحوصة" width="1153" height="736" loading="lazy"></button><figcaption>الميدان الإماراتي: كل نتيجة مفحوصة؛ الأخضر موثّق والأحمر مشبوه</figcaption></figure>
   </div>
 </section>
 
-<section class="ch" id="ads" data-title="Ads">
+<section class="ch" id="ads" data-title="الإعلانات">
   <div class="wrap grid">
     <div class="text">
-      <p class="kicker">Chapter 4 · The VIP pass for AED 99</p>
-      <h2>Ads and search results that wear someone else's name.</h2>
-      <p class="lede">RASID searches the way a person in the UAE would, in several languages, and follows every ad to its landing page.</p>
+      <p class="kicker">الفصل 4 · تذكرة VIP بـ 99 درهماً</p>
+      <h2>إعلانات ونتائج بحث تنتحل اسم غيرها.</h2>
+      <p class="lede">يبحث راصد كما يبحث أي شخص في الإمارات، وبعدة لغات، ويتتبّع كل إعلان حتى صفحته النهائية.</p>
       <ul class="feat">
-        <li><span><b>Meta Ad Library</b>: Facebook, Instagram, WhatsApp, Messenger and Threads ads using a brand's name.</span></li>
-        <li><span><b>Google Ads Transparency Center</b> for the UAE.</span></li>
-        <li><span><b>Search sweep</b>: "pay fines Abu Dhabi", "دفع المخالفات", "Dubai naukri visa".</span></li>
-        <li><span><b>Paste an ad</b> (text, link or screenshot); Claude reads the screenshot.</span></li>
-        <li><span><b>Cloaking</b>: Googlebot and a UAE phone get different pages? Caught.</span></li>
+        <li><span><b>Meta Ad Library</b>: إعلانات فيسبوك وإنستغرام وواتساب وماسنجر وثريدز التي تستخدم اسم علامة تجارية.</span></li>
+        <li><span><b>Google Ads Transparency Center</b> للإمارات.</span></li>
+        <li><span><b>مسح نتائج البحث</b>: «دفع المخالفات»، «pay fines Abu Dhabi»، «Dubai naukri visa».</span></li>
+        <li><span><b>الصق إعلاناً</b> (نصاً أو رابطاً أو لقطة شاشة)؛ و Claude يقرأ اللقطة.</span></li>
+        <li><span><b>الإخفاء (Cloaking)</b>: هل يرى Googlebot صفحة ويرى هاتف إماراتي صفحة أخرى؟ يُكشف ذلك.</span></li>
       </ul>
     </div>
-    <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · Tools</span></div><button class="zoom" type="button" data-full="shots/08-tools.jpg" data-cap="Tools: newborn sweep, ad inspector, job-post scoring"><img src="shots/08-tools.jpg" alt="RASID tools panel" width="1118" height="1470" loading="lazy"></button><figcaption>Tools: newborn sweep, ad inspector, job-post scoring</figcaption></figure>
+    <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · Tools</span></div><button class="zoom" type="button" data-full="shots/08-tools.jpg" data-cap="الأدوات: مسح النطاقات الجديدة، فاحص الإعلانات، تقييم إعلانات الوظائف"><img src="shots/08-tools.jpg" alt="لوحة أدوات راصد" width="1118" height="1470" loading="lazy"></button><figcaption>الأدوات: مسح النطاقات الجديدة، فاحص الإعلانات، تقييم إعلانات الوظائف</figcaption></figure>
   </div>
 </section>
 
-<section class="ch" id="langs" data-title="Languages">
+<section class="ch" id="langs" data-title="اللغات">
   <div class="wrap grid rev">
     <div class="text">
-      <p class="kicker">Chapter 5 · Scams don't speak English</p>
-      <h2>"Visa free. Just pay the fee." In eleven languages.</h2>
-      <p class="lede">Job and visa scams target workers in their own language, often in Roman script. RASID reads public posts and Telegram channels in Arabic, English, Hindi, Urdu, Roman Urdu, Malayalam, Tamil, Sinhala, Tagalog, Bengali and Nepali.</p>
-      <div class="langs" id="langBtns" role="group" aria-label="Choose a language"></div>
+      <p class="kicker">الفصل 5 · الاحتيال لا يتكلم الإنجليزية فقط</p>
+      <h2>«التأشيرة مجانية. ادفع الرسوم فقط». بإحدى عشرة لغة.</h2>
+      <p class="lede">احتيال الوظائف والتأشيرات يستهدف العمال بلغتهم، وغالباً بحروف لاتينية. يقرأ راصد المنشورات العامة وقنوات Telegram بالعربية والإنجليزية والهندية والأردية والأردية اللاتينية والمالايالامية والتاميلية والسنهالية والتاغالوغية والبنغالية والنيبالية.</p>
+      <div class="langs" id="langBtns" role="group" aria-label="اختر لغة"></div>
       <div class="lure" id="lure" aria-live="polite"></div>
     </div>
-    <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · case file · Job & Visa</span></div><div class="tall"><button class="zoom" type="button" data-full="shots/06-job-scam.jpg" data-cap="A Tagalog job scam scored 100"><img src="shots/06-job-scam.jpg" alt="A Tagalog job scam case scored 100" width="1118" height="1724" loading="lazy"></button></div><figcaption>A Tagalog post: fee for a visa, visit visa for work, WhatsApp only → 100</figcaption></figure>
+    <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · case file · Job &amp; Visa</span></div><div class="tall"><button class="zoom" type="button" data-full="shots/06-job-scam.jpg" data-cap="احتيال وظيفي بالتاغالوغية بدرجة 100"><img src="shots/06-job-scam.jpg" alt="قضية احتيال وظيفي بالتاغالوغية بدرجة 100" width="1118" height="1724" loading="lazy"></button></div><figcaption>منشور بالتاغالوغية: رسوم مقابل التأشيرة، تأشيرة زيارة للعمل، واتساب فقط ← الدرجة 100</figcaption></figure>
   </div>
 </section>
 
-<section class="ch" id="actors" data-title="Actors">
+<section class="ch" id="actors" data-title="الجهات">
   <div class="wrap grid">
     <div class="text">
-      <p class="kicker">Chapter 6 · Same kit, same crook</p>
-      <h2>Take down the operation, not one website.</h2>
-      <p class="lede">RASID joins items that share a favicon, a Telegram bot, an analytics ID, a phone number or hosting, and builds one evidence pack per actor.</p>
+      <p class="kicker">الفصل 6 · نفس العُدّة، نفس المحتال</p>
+      <h2>أسقِط الشبكة كلها، لا موقعاً واحداً.</h2>
+      <p class="lede">يربط راصد العناصر التي تشترك في الأيقونة أو بوت Telegram أو معرّف التحليلات أو رقم الهاتف أو الاستضافة، ويبني ملف أدلة واحداً لكل جهة احتيال.</p>
       <ul class="feat">
-        <li><span><b>Kit fingerprints</b> → actors, drawn as constellations on the map.</span></li>
-        <li><span><b>Strike pack</b>: sites, registrars, hosting, screenshots and ready-to-send abuse letters.</span></li>
-        <li><span><b>Case notes in Arabic and English</b>, written by Claude from the evidence.</span></li>
-        <li><span><b>An officer approves every takedown.</b> Nothing is sent automatically.</span></li>
+        <li><span><b>بصمات العُدّة</b> ← جهات احتيال، تظهر كمجموعات نجمية على الخريطة.</span></li>
+        <li><span><b>حزمة الإزالة (Strike pack)</b>: المواقع، وجهات التسجيل، والاستضافة، واللقطات، ورسائل بلاغات جاهزة للإرسال.</span></li>
+        <li><span><b>ملاحظات القضية بالعربية والإنجليزية</b>، يكتبها Claude من الأدلة.</span></li>
+        <li><span><b>الضابط يوافق على كل عملية إزالة.</b> لا شيء يُرسل تلقائياً.</span></li>
       </ul>
-      <p class="aside"><b>Real example:</b> job posts in Malayalam, Urdu and Tagalog shared one WhatsApp number. RASID joined them into one actor on its own.</p>
+      <p class="aside"><b>مثال فعلي:</b> إعلانات وظائف بالمالايالامية والأردية والتاغالوغية تشترك في رقم واتساب واحد. ربطها راصد بجهة واحدة من تلقاء نفسه.</p>
     </div>
-    <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · strike pack A-026</span></div><button class="zoom" type="button" data-full="shots/10-strike-pack.jpg" data-cap="Strike pack A-026: three posts, three languages, one number"><img src="shots/10-strike-pack.jpg" alt="Strike pack with case notes and abuse letters" width="2400" height="1800" loading="lazy"></button><figcaption>Strike pack: three posts, three languages, one number</figcaption></figure>
+    <figure class="screen"><div class="chrome"><i></i><i></i><i></i><span>rasid · strike pack A-026</span></div><button class="zoom" type="button" data-full="shots/10-strike-pack.jpg" data-cap="حزمة الإزالة A-026: ثلاثة منشورات، ثلاث لغات، رقم واحد"><img src="shots/10-strike-pack.jpg" alt="حزمة إزالة مع ملاحظات القضية ورسائل البلاغ" width="2400" height="1800" loading="lazy"></button><figcaption>حزمة الإزالة: ثلاثة منشورات، ثلاث لغات، رقم واحد</figcaption></figure>
   </div>
 </section>
 
-<section class="ch" id="console" data-title="Console">
+<section class="ch" id="console" data-title="المنصة">
   <div class="wrap">
     <div class="text" style="max-width:760px">
-      <p class="kicker">Chapter 7 · The ops room</p>
-      <h2>One screen for the whole night shift.</h2>
-      <p class="lede">Tap the dots. Tap the picture to see it full size.</p>
+      <p class="kicker">الفصل 7 · غرفة العمليات</p>
+      <h2>شاشة واحدة لمناوبة الليل كلها.</h2>
+      <p class="lede">اضغط على النقاط. واضغط على الصورة لرؤيتها بالحجم الكامل.</p>
     </div>
-    <figure class="screen hot" style="margin-top:24px" id="hot"><button class="zoom" type="button" data-full="shots/01-console.jpg" data-cap="The RASID police console"><img src="shots/01-console.jpg" alt="RASID console overview" width="2880" height="1800" loading="lazy"></button></figure>
-    <p class="spotinfo" id="spotinfo"><b>Start anywhere.</b> Every dot is a real part of the console.</p>
+    <figure class="screen hot" style="margin-top:24px" id="hot"><button class="zoom" type="button" data-full="shots/01-console.jpg" data-cap="منصة راصد للشرطة"><img src="shots/01-console.jpg" alt="نظرة عامة على منصة راصد" width="2880" height="1800" loading="lazy"></button></figure>
+    <p class="spotinfo" id="spotinfo"><b>ابدأ من أي مكان.</b> كل نقطة جزء حقيقي من المنصة.</p>
   </div>
 </section>
 
-<section class="ch closing" id="end" data-title="End">
+<section class="ch closing" id="end" data-title="الختام">
   <div class="wrap">
-    <p class="kicker">That's the shift</p>
-    <h2>Hunt first. <em>Guard the call.</em> Warn in their language.</h2>
-    <div class="stack">
+    <p class="kicker">هذه هي المناوبة</p>
+    <h2>اصطد أولاً. <em>احرس المكالمة.</em> وحذّر بلغتهم.</h2>
+    <div class="stack" dir="ltr" style="justify-content:flex-end">
       <span class="tag">Python · FastAPI</span><span class="tag">Playwright browser</span><span class="tag">Claude</span><span class="tag">Google Places</span><span class="tag">Meta Ad Library</span><span class="tag">SerpApi</span><span class="tag">crt.sh · RDAP · NRD</span><span class="tag">Web Speech API</span>
     </div>
-    <p class="honest">Live today: hunts, newborn domains, site inspection with RASID's own screenshots, Check a link (redirects and shorteners followed), Maps verification, job and visa scoring, actors and strike packs, and the Call Guardian listener. Needs keys to run in full: Meta and Google ad sweeps, Safe Browsing and VirusTotal. Limits: speech recognition needs internet and struggles on noisy calls; pages that hide behind cookies or a country check can look clean. The phishing clone and sample calls in this walkthrough are our own tests.</p>
+    <p class="honest">يعمل اليوم: عمليات الصيد، والنطاقات الجديدة، وفحص المواقع بلقطات راصد نفسه، و«افحص رابطاً» (مع تتبّع التحويلات والروابط المختصرة)، والتحقق من الخرائط، وتقييم الوظائف والتأشيرات، والجهات وحزم الإزالة، ومستمع حارس المكالمات. يحتاج إلى مفاتيح ليعمل بالكامل: مسح إعلانات Meta و Google، و Safe Browsing و VirusTotal. الحدود: التعرف على الكلام يحتاج إلى اتصال بالإنترنت ويتعثّر مع المكالمات المليئة بالضوضاء؛ والصفحات التي تختبئ خلف ملفات تعريف الارتباط أو فحص الدولة قد تبدو نظيفة. نسخة التصيّد وعيّنات المكالمات في هذه الجولة اختبارات من إعدادنا.</p>
   </div>
 </section>
 </main>
 
-<div class="lightbox" id="lb" hidden role="dialog" aria-modal="true" aria-label="Enlarged screenshot">
-  <div class="lbbar"><span id="lbCap"></span><button class="btn" id="lbClose" type="button">Close ✕</button></div>
+<div class="lightbox" id="lb" hidden role="dialog" aria-modal="true" aria-label="لقطة شاشة مكبّرة">
+  <div class="lbbar"><span id="lbCap"></span><button class="btn" id="lbClose" type="button">إغلاق ✕</button></div>
   <div class="lbimg"><img id="lbImg" alt=""></div>
 </div>
 
@@ -498,12 +500,12 @@ addEventListener('keydown', e => {
   if (e.target.closest('input,textarea')) return;
   const i = current();
   // while the call is on screen, arrows drive the call first
-  if (i === 0 && e.key === 'ArrowRight' && step < S().length - 1) { e.preventDefault(); next(); return; }
-  if (i === 0 && e.key === 'ArrowLeft' && step > 0) { e.preventDefault(); back(); return; }
-  if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); go(i + 1); }
-  if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
+  if (i === 0 && e.key === 'ArrowLeft' && step < S().length - 1) { e.preventDefault(); next(); return; }
+  if (i === 0 && e.key === 'ArrowRight' && step > 0) { e.preventDefault(); back(); return; }
+  if (e.key === 'ArrowLeft' || e.key === 'PageDown') { e.preventDefault(); go(i + 1); }
+  if (e.key === 'ArrowRight' || e.key === 'PageUp') { e.preventDefault(); go(i - 1); }
 });
-$('present').onclick = () => { const el = document.documentElement; (el.requestFullscreen ? el.requestFullscreen() : Promise.reject()).catch(() => { $('present').textContent = 'Use ← →'; }); };
+$('present').onclick = () => { const el = document.documentElement; (el.requestFullscreen ? el.requestFullscreen() : Promise.reject()).catch(() => { $('present').textContent = 'استخدم ← →'; }); };
 
 /* ---------- lightbox ---------- */
 let lastZoom = null;
@@ -519,52 +521,52 @@ $('lb').addEventListener('click', e => { if (e.target === $('lb') || e.target.cl
 /* ---------- the call ---------- */
 const T = {
   scam: [
-    {ph: 'ring', cap: {en: '<b>An unknown number calls Fatima.</b> Her laptop is open on the RASID Call Guardian tab.', ar: ''}},
-    {ph: 'call', agent: 'Speakerphone on · Listen pressed · hearing both sides (Arabic + English). Nothing is recorded.', cap: {en: '<b>She answers, turns on the speaker and presses Listen.</b> The laptop hears both sides of the call.'}},
-    {who: 'scam', en: 'Hello, this is Ahmed from your bank’s security team.', ar: 'السلام عليكم، معك أحمد من قسم الحماية في البنك.', risk: 25, flag: {en: 'Claims to be a bank', ar: 'يدّعي أنه من البنك'}, cap: {en: '<b>The caller claims to be the bank.</b> RASID notes it. Not enough to act yet.'}},
-    {who: 'you', en: 'Oh, hello. Is something wrong?', ar: 'وعليكم السلام، خير؟', risk: 25, cap: {en: '<b>Fatima is polite.</b> Scammers count on that.'}},
-    {who: 'scam', en: 'Your account has been blocked. There was suspicious activity.', ar: 'حسابك موقوف بسبب عملية مشبوهة.', risk: 45, flag: {en: 'Threats or urgency', ar: 'تهديد أو استعجال'}, cap: {en: '<b>Fear.</b> Risk climbs to "suspicious".'}},
-    {who: 'you', en: 'Blocked? What do I need to do?', ar: 'موقوف؟ شو المطلوب مني؟', risk: 45, cap: {en: '<b>She is worried now.</b> This is the moment people lose money.'}},
-    {who: 'scam', en: 'Don’t tell anyone and stay on the line. It’s urgent.', ar: 'لا تخبر أحداً وابقَ على الخط، الأمر عاجل.', risk: 70, flag: {en: 'Pressure to keep it secret', ar: 'ضغط لإبقاء الأمر سراً'}, cap: {en: '<b>Secrecy and pressure.</b> No real bank says this.'}},
-    {who: 'scam', en: 'We just sent you a code by SMS. Read me the OTP.', ar: 'أرسلنا لك رمز تحقق برسالة، اقرأ لي الرمز الآن.', risk: 100, flag: {en: 'Asks for a one-time code (OTP)', ar: 'يطلب رمز التحقق (OTP)'}, act: 'Likely scam · warning spoken out loud', cap: {en: '<b>The OTP request.</b> Risk 100. RASID speaks up before she reads the code.'}},
-    {who: 'rasid', en: 'RASID warning: this call matches a known scam. Banks and police never ask for codes. Hang up now.', ar: 'تحذير من راصد: هذه المكالمة تطابق أسلوب احتيال معروف. البنوك والشرطة لا تطلب الرمز أبداً. أنهِ المكالمة الآن.', risk: 100, cap: {en: '<b>Out loud, through the speaker.</b> Fatima hears it, and so does the caller.'}},
-    {ph: 'ended', cap: {en: '<b>Fatima hangs up</b> without reading the code. One click on Report files the case in the police console, with the caller’s number.'}},
+    {ph: 'ring', cap: {en: '<b>رقم غير معروف يتصل بفاطمة.</b> حاسوبها مفتوح على تبويب حارس المكالمات في راصد.', ar: ''}},
+    {ph: 'call', agent: 'تم الضغط على «استمع» · يتابع الطرفين (عربي + English) · لا يُسجَّل أي صوت', cap: {en: '<b>تردّ فاطمة وتضغط «استمع».</b> يتابع راصد كلام طرفَي المكالمة.'}},
+    {who: 'scam', en: 'Hello, this is Ahmed from your bank’s security team.', ar: 'السلام عليكم، معك أحمد من قسم الحماية في البنك.', risk: 25, flag: {en: 'Claims to be a bank', ar: 'يدّعي أنه من البنك'}, cap: {en: '<b>المتصل يدّعي أنه من البنك.</b> يسجّل راصد الملاحظة، لكنها لا تكفي للتحذير بعد.'}},
+    {who: 'you', en: 'Oh, hello. Is something wrong?', ar: 'وعليكم السلام، خير؟', risk: 25, cap: {en: '<b>فاطمة تردّ بلطف.</b> وهذا بالضبط ما يعتمد عليه المحتالون.'}},
+    {who: 'scam', en: 'Your account has been blocked. There was suspicious activity.', ar: 'حسابك موقوف بسبب عملية مشبوهة.', risk: 45, flag: {en: 'Threats or urgency', ar: 'تهديد أو استعجال'}, cap: {en: '<b>تخويف.</b> ترتفع درجة الخطر إلى «مشبوهة».'}},
+    {who: 'you', en: 'Blocked? What do I need to do?', ar: 'موقوف؟ شو المطلوب مني؟', risk: 45, cap: {en: '<b>بدأ القلق.</b> في هذه اللحظة يخسر الناس أموالهم.'}},
+    {who: 'scam', en: 'Don’t tell anyone and stay on the line. It’s urgent.', ar: 'لا تخبر أحداً وابقَ على الخط، الأمر عاجل.', risk: 70, flag: {en: 'Pressure to keep it secret', ar: 'ضغط لإبقاء الأمر سراً'}, cap: {en: '<b>سرّية وضغط.</b> لا يوجد بنك حقيقي يطلب ذلك.'}},
+    {who: 'scam', en: 'We just sent you a code by SMS. Read me the OTP.', ar: 'أرسلنا لك رمز تحقق برسالة، اقرأ لي الرمز الآن.', risk: 100, flag: {en: 'Asks for a one-time code (OTP)', ar: 'يطلب رمز التحقق (OTP)'}, act: 'احتيال مرجّح · تحذير بصوت عالٍ', cap: {en: '<b>طلب رمز التحقق (OTP).</b> الخطر 100. يتكلّم راصد قبل أن تقرأ فاطمة الرمز.'}},
+    {who: 'rasid', en: 'RASID warning: this call matches a known scam. Banks and police never ask for codes. Hang up now.', ar: 'تحذير من راصد: هذه المكالمة تطابق أسلوب احتيال معروف. البنوك والشرطة لا تطلب الرمز أبداً. أنهِ المكالمة الآن.', risk: 100, cap: {en: '<b>تحذير بصوت عالٍ، بالعربية والإنجليزية.</b> تسمع فاطمة التحذير قبل أن تشارك أي رمز.'}},
+    {ph: 'ended', cap: {en: '<b>تُنهي فاطمة المكالمة</b> دون أن تقرأ الرمز. وبضغطة واحدة على «إبلاغ» تُفتح قضية في منصة الشرطة مع رقم المتصل.'}},
   ],
   nice: [
-    {ph: 'ring', cap: {en: '<b>The dental clinic calls Fatima.</b> She is unsure, so she presses Listen anyway.'}},
-    {ph: 'call', agent: 'Call answered · listening', cap: {en: '<b>She answers.</b> RASID listens quietly.'}},
-    {who: 'scam', en: 'Hi Fatima, it’s Sara from the dental clinic.', ar: 'مرحبا فاطمة، معك سارة من عيادة الأسنان.', risk: 0, cap: {en: '<b>No bank, no threats, no codes.</b> Risk stays at 0.'}},
-    {who: 'you', en: 'Hi Sara!', ar: 'أهلاً سارة!', risk: 0, cap: {en: '<b>A normal chat.</b>'}},
-    {who: 'scam', en: 'Just reminding you about tomorrow at five.', ar: 'بس أذكّرك بموعدك بكرة الساعة خمسة.', risk: 0, cap: {en: '<b>Still nothing suspicious.</b>'}},
-    {who: 'you', en: 'Perfect, see you then.', ar: 'تمام، أشوفك بكرة.', risk: 0, cap: {en: '<b>Bye.</b>'}},
-    {ph: 'normalend', cap: {en: '<b>RASID stayed silent the whole call.</b> Nothing was kept. Normal calls are left alone.'}},
+    {ph: 'ring', cap: {en: '<b>عيادة الأسنان تتصل بفاطمة.</b> لم تكن متأكدة من الرقم، فضغطت «استمع» احتياطاً.'}},
+    {ph: 'call', agent: 'تم الرد على المكالمة · يستمع', cap: {en: '<b>تردّ على المكالمة.</b> راصد يستمع بهدوء.'}},
+    {who: 'scam', en: 'Hi Fatima, it’s Sara from the dental clinic.', ar: 'مرحبا فاطمة، معك سارة من عيادة الأسنان.', risk: 0, cap: {en: '<b>لا بنك، ولا تهديد، ولا رموز.</b> الخطر يبقى 0.'}},
+    {who: 'you', en: 'Hi Sara!', ar: 'أهلاً سارة!', risk: 0, cap: {en: '<b>محادثة عادية.</b>'}},
+    {who: 'scam', en: 'Just reminding you about tomorrow at five.', ar: 'بس أذكّرك بموعدك بكرة الساعة خمسة.', risk: 0, cap: {en: '<b>لا شيء مشبوه حتى الآن.</b>'}},
+    {who: 'you', en: 'Perfect, see you then.', ar: 'تمام، أشوفك بكرة.', risk: 0, cap: {en: '<b>مع السلامة.</b>'}},
+    {ph: 'normalend', cap: {en: '<b>بقي راصد صامتاً طوال المكالمة.</b> لم يُحفظ شيء. المكالمات العادية تُترك وشأنها.'}},
   ],
 };
-let scen = 'scam', lang = 'en', step = 0;
+let scen = 'scam', lang = 'ar', step = 0;
 const S = () => T[scen];
 $('stepdots').innerHTML = '';
 function setRisk(r){
   const c = r >= 80 ? 'var(--alarm)' : r >= 40 ? 'var(--sand)' : 'var(--safe)';
   $('risk').textContent = r; $('risk').style.color = c;
   $('riskBar').style.width = r + '%'; $('riskBar').style.background = c;
-  $('riskVd').textContent = r >= 80 ? 'likely scam' : r >= 40 ? 'suspicious' : 'no scam signs'; $('riskVd').style.color = c;
+  $('riskVd').textContent = r >= 80 ? 'احتيال مرجّح' : r >= 40 ? 'مشبوهة' : 'لا مؤشرات احتيال'; $('riskVd').style.color = c;
   $('phScam').classList.toggle('scam', r >= 80);
 }
 function bubble(text, mine, label){
   const d = document.createElement('div');
   d.className = 'bub ' + (mine ? 'mine' : 'theirs');
-  if (lang === 'ar') d.dir = 'rtl';
+  d.dir = lang === 'ar' ? 'rtl' : 'ltr';
   d.innerHTML = `<small>${label}</small>`; d.append(document.createTextNode(text));
   return d;
 }
 function logLine(text, cls){
-  const d = document.createElement('div'); if (cls) d.className = cls; if (lang === 'ar' && cls !== 'act') d.dir = 'rtl'; d.textContent = text; $('log').append(d);
+  const d = document.createElement('div'); if (cls) d.className = cls; d.dir = 'auto'; d.textContent = text; $('log').append(d);
 }
 function render(){
   const steps = S(); const s = steps[step];
   $('stepdots').innerHTML = steps.map((_, i) => `<i class="${i <= step ? 'on' : ''}"></i>`).join('');
   $('back').disabled = step === 0; $('next').disabled = step === steps.length - 1;
-  $('next').textContent = step === steps.length - 1 ? 'Done' : (step === 0 ? 'Answer ▶' : 'Next ▶');
+  $('next').textContent = step === steps.length - 1 ? 'انتهت الجولة' : (step === 0 ? 'ردّ على المكالمة ◀' : 'التالي ◀');
   // reset and replay the call up to this step (keeps Back simple and exact)
   ['bbScam', 'bbYou', 'log'].forEach(id => $(id).replaceChildren());
   let risk = 0, ended = false, phase = 'ring', talking = null;
@@ -573,7 +575,7 @@ function render(){
     if (x.ph === 'call') logLine(x.agent, 'act');
     if (x.who === 'rasid') {
       const txt = x[lang];
-      ['bbScam', 'bbYou'].forEach(id => { const b = bubble(txt, false, lang === 'ar' ? 'راصد عبر السماعة 🔊' : 'RASID on the speaker 🔊'); b.classList.add('rasidsays'); $(id).append(b); });
+      ['bbScam', 'bbYou'].forEach(id => { const b = bubble(txt, false, lang === 'ar' ? 'راصد يحذّر بصوت عالٍ 🔊' : 'RASID warns out loud 🔊'); b.classList.add('rasidsays'); $(id).append(b); });
       logLine('🔊 ' + txt, 'act'); risk = x.risk; if (i === step) talking = 'rasid';
     } else if (x.who) {
       const txt = x[lang]; const fromScam = x.who === 'scam';
@@ -581,7 +583,7 @@ function render(){
       const youName = lang === 'ar' ? 'فاطمة' : 'Fatima';
       $('bbScam').append(bubble(txt, fromScam, fromScam ? (lang === 'ar' ? 'أنت تقول' : 'you say') : `${youName} ${lang === 'ar' ? 'تقول' : 'says'}`));
       $('bbYou').append(bubble(txt, !fromScam, fromScam ? `${scamName} ${lang === 'ar' ? 'يقول' : 'says'}` : (lang === 'ar' ? 'أنتِ تقولين' : 'you say')));
-      logLine((fromScam ? '🎙 ' : '🎙 ') + '“' + txt + '”');
+      logLine((fromScam ? '🎙 ' : '🎙 ') + (lang === 'ar' ? '«' + txt + '»' : '“' + txt + '”'));
       if (x.flag) logLine('⚑ ' + x.flag[lang === 'ar' ? 'ar' : 'en'], 'flag');
       if (x.act) logLine('⏻ ' + x.act, 'act');
       risk = x.risk; if (i === step) talking = x.who;
@@ -591,20 +593,20 @@ function render(){
   setRisk(risk);
   // phones' state
   const scamCaller = scen === 'scam';
-  $('nmScam').textContent = scamCaller ? '+971 55 ••• 2233' : 'Smile Dental Clinic';
-  $('avScam').textContent = scamCaller ? '?' : 'S';
+  $('nmScam').textContent = scamCaller ? '+971 55 ••• 2233' : 'عيادة سمايل للأسنان';
+  $('avScam').textContent = scamCaller ? '?' : 'س';
   $('avScam').classList.toggle('talk', talking === 'scam'); $('avYou').classList.toggle('talk', talking === 'you');
   $('wave').classList.toggle('on', !!talking && !reduce);
   $('radar').classList.toggle('off', phase === 'ring' || phase === 'ended' || phase === 'normalend');
   const secs = Math.max(0, step - 1) * 7;
   const t = '00:' + String(secs).padStart(2, '0');
-  $('stScam').textContent = phase === 'ring' ? 'calling…' : phase === 'ended' ? 'call ended by Fatima' : phase === 'normalend' ? 'call ended' : 'on call · ' + t;
-  $('stYou').textContent = phase === 'ring' ? 'incoming call…' : phase === 'ended' ? 'you hung up' : phase === 'normalend' ? 'call ended' : 'on call · ' + t;
-  $('agStatus').textContent = phase === 'ring' ? 'Ready · press Listen' : phase === 'ended' ? 'Call over · reported' : phase === 'normalend' ? 'Call over · nothing kept' : risk >= 100 ? 'Warning out loud' : 'Listening';
+  $('stScam').textContent = phase === 'ring' ? 'جارٍ الاتصال…' : phase === 'ended' ? 'أنهت فاطمة المكالمة' : phase === 'normalend' ? 'انتهت المكالمة' : 'على الخط · ' + t;
+  $('stYou').textContent = phase === 'ring' ? 'مكالمة واردة…' : phase === 'ended' ? 'أنهيتِ المكالمة' : phase === 'normalend' ? 'انتهت المكالمة' : 'على الخط · ' + t;
+  $('agStatus').textContent = phase === 'ring' ? 'جاهز · اضغط «استمع»' : phase === 'ended' ? 'انتهت المكالمة · تم الإبلاغ' : phase === 'normalend' ? 'انتهت المكالمة · لم يُحفظ شيء' : risk >= 100 ? 'يحذّر بصوت عالٍ' : 'يستمع';
   // controls on the user's phone
   const ctl = $('ctlYou'); ctl.replaceChildren();
   if (phase === 'ring') {
-    ctl.className = 'incoming'; ctl.innerHTML = '<button class="dec" type="button" aria-label="Decline" tabindex="-1">✕</button><button class="acc" type="button" aria-label="Answer the call">✆</button>';
+    ctl.className = 'incoming'; ctl.innerHTML = '<button class="dec" type="button" aria-label="رفض" tabindex="-1">✕</button><button class="acc" type="button" aria-label="الرد على المكالمة">✆</button>';
     ctl.querySelector('.acc').onclick = next;
   } else if (phase === 'call') { ctl.className = 'callbtns'; ctl.innerHTML = '<span>🔇</span><span>⌨</span><span class="end">✆</span>'; }
   else { ctl.className = ''; }
@@ -612,16 +614,16 @@ function render(){
   // endings
   document.querySelectorAll('.notif,.endedcard').forEach(n => n.remove());
   if (ended) {
-    $('bbScam').replaceChildren(Object.assign(document.createElement('div'), {className: 'endedcard', innerHTML: '<b>Call ended</b>Fatima hung up'}));
+    $('bbScam').replaceChildren(Object.assign(document.createElement('div'), {className: 'endedcard', innerHTML: '<b>انتهت المكالمة</b>أنهت فاطمة المكالمة'}));
     const n = document.createElement('div'); n.className = 'notif';
-    n.innerHTML = `<b>🚨 RASID: likely scam call · reported</b><p>+971 55 ••• 2233 · risk 100/100</p><p>Asked for your OTP · Claimed to be your bank · Pressure to keep it secret</p><p class="ar">انتهت مكالمة احتيال. لا تشارك أي رمز أو بيانات بطاقة مع أي متصل.</p>`;
+    n.innerHTML = `<b>🚨 راصد: مكالمة احتيال مرجّحة · تم الإبلاغ</b><p><span dir="ltr">+971 55 ••• 2233</span> · الخطر 100/100</p><p>طلب رمز التحقق · ادّعى أنه من البنك · ضغط لإبقاء الأمر سراً</p><p class="ar">انتهت مكالمة احتيال. لا تشارك أي رمز أو بيانات بطاقة مع أي متصل.</p>`;
     $('phYou').append(n);
-    logLine('📁 Case filed in the police console (Call Guardian)', 'act');
-    logLine('☎ Caller’s number attached to the case', 'act');
+    logLine('📁 فُتحت قضية في منصة الشرطة (حارس المكالمات)', 'act');
+    logLine('☎ رقم المتصل مُرفق بالقضية', 'act');
   }
   if (S()[step].ph === 'normalend') {
-    $('bbScam').append(Object.assign(document.createElement('div'), {className: 'endedcard', innerHTML: '<b>Call ended</b>bye!'}));
-    logLine('✓ No scam signs · nothing stored', 'act');
+    $('bbScam').append(Object.assign(document.createElement('div'), {className: 'endedcard', innerHTML: '<b>انتهت المكالمة</b>مع السلامة!'}));
+    logLine('✓ لا مؤشرات احتيال · لم يُحفظ شيء', 'act');
   }
   $('caption').innerHTML = (s.cap && s.cap.en) || '';
 }
@@ -636,7 +638,7 @@ $('lgEn').onclick = () => setLang('en'); $('lgAr').onclick = () => setLang('ar')
 render();
 
 /* ---------- quiz ---------- */
-const msgs = {real: 'Correct. Now imagine doing that 70,000 times a day.', cyr: 'Gotcha. That "а" is Cyrillic. Most people pick this one.', combo: 'That one is a phishing site. Very confident-looking, though.', pool: 'That is a pool-table cleaner in Utah. It only wants your billiards.'};
+const msgs = {real: 'صحيح. الآن تخيّل أن تفعل ذلك 70,000 مرة في اليوم.', cyr: 'وقعت في الفخ. حرف «а» هنا سيريلي، ومعظم الناس يختارون هذا.', combo: 'هذا موقع تصيّد. يبدو واثقاً جداً، لكنه مزيف.', pool: 'هذه شركة لتنظيف طاولات البلياردو في يوتا. لا تريد منك سوى البلياردو.'};
 document.querySelectorAll('.opt').forEach(b => b.addEventListener('click', () => {
   const g = $('game'); if (g.classList.contains('done')) return;
   g.classList.add('done'); $('gameResult').textContent = msgs[b.dataset.k]; b.style.boxShadow = '0 0 0 3px var(--radar)';
@@ -647,40 +649,40 @@ $('cmpRange').addEventListener('input', e => { const v = e.target.value; $('cmpT
 
 /* ---------- languages ---------- */
 const L = [
-  ['TL', 'Tagalog', 'Hiring sa Abu Dhabi! Walang experience, bayad lang sa visa processing.', 'Hiring in Abu Dhabi! No experience, just pay for visa processing.', ['fee for visa', 'no experience'], ''],
-  ['ML', 'Malayalam', 'ദുബായിൽ ജോലി, വിസ സൗജന്യം', 'Job in Dubai, free visa', ['free visa'], 'indic'],
-  ['UR', 'Urdu', 'ابوظہبی میں سیکیورٹی گارڈ کی نوکری، ویزا فیس صرف ۵۰۰ درہم', 'Security guard job in Abu Dhabi, visa fee only 500 dirhams', ['fee for visa'], 'ur'],
-  ['UR-L', 'Roman Urdu', 'Abu Dhabi mein job, visa free, sirf WhatsApp karein', 'Job in Abu Dhabi, visa free, just WhatsApp', ['free visa', 'WhatsApp only'], ''],
-  ['HI', 'Hindi', 'दुबई में ड्राइवर की नौकरी, वीज़ा फ्री। सिर्फ ₹40,000 जमा करें', 'Driver job in Dubai, visa free. Just deposit ₹40,000', ['free visa', 'deposit'], 'indic'],
-  ['SI', 'Sinhala', 'ඩුබායි රැකියා, වීසා නොමිලේ!', 'Dubai jobs, free visa!', ['free visa'], 'indic'],
-  ['TA', 'Tamil', 'துபாயில் வேலை, விசா இலவசம்', 'Job in Dubai, free visa', ['free visa'], 'indic'],
-  ['BN', 'Bengali', 'দুবাইতে চাকরি, ফ্রি ভিসা', 'Job in Dubai, free visa', ['free visa'], 'indic'],
-  ['NE', 'Nepali', 'दुबईमा रोजगारी, भिसा निःशुल्क', 'Employment in Dubai, visa free', ['free visa'], 'indic'],
-  ['AR', 'Arabic', 'مطلوب سائقين في أبوظبي، رسوم التأشيرة على العامل', 'Drivers wanted in Abu Dhabi, the worker pays the visa fee', ['fee for visa'], 'ar'],
-  ['EN', 'English', 'Hiring cabin crew. Apply only through the official careers site. We never ask for fees.', 'A genuine post, for contrast', [], ''],
+  ['TL', 'التاغالوغية', 'Hiring sa Abu Dhabi! Walang experience, bayad lang sa visa processing.', 'توظيف في أبوظبي! بدون خبرة، فقط ادفع رسوم معاملة التأشيرة.', ['رسوم مقابل التأشيرة', 'بدون خبرة'], ''],
+  ['ML', 'المالايالامية', 'ദുബായിൽ ജോലി, വിസ സൗജന്യം', 'وظيفة في دبي، تأشيرة مجانية', ['تأشيرة مجانية'], 'indic'],
+  ['UR', 'الأردية', 'ابوظہبی میں سیکیورٹی گارڈ کی نوکری، ویزا فیس صرف ۵۰۰ درہم', 'وظيفة حارس أمن في أبوظبي، رسوم التأشيرة 500 درهم فقط', ['رسوم مقابل التأشيرة'], 'ur'],
+  ['UR-L', 'الأردية بحروف لاتينية', 'Abu Dhabi mein job, visa free, sirf WhatsApp karein', 'وظيفة في أبوظبي، التأشيرة مجانية، تواصل عبر واتساب فقط', ['تأشيرة مجانية', 'واتساب فقط'], ''],
+  ['HI', 'الهندية', 'दुबई में ड्राइवर की नौकरी, वीज़ा फ्री। सिर्फ ₹40,000 जमा करें', 'وظيفة سائق في دبي، التأشيرة مجانية. فقط أودِع 40,000 روبية', ['تأشيرة مجانية', 'طلب إيداع'], 'indic'],
+  ['SI', 'السنهالية', 'ඩුබායි රැකියා, වීසා නොමිලේ!', 'وظائف في دبي، تأشيرة مجانية!', ['تأشيرة مجانية'], 'indic'],
+  ['TA', 'التاميلية', 'துபாயில் வேலை, விசா இலவசம்', 'وظيفة في دبي، تأشيرة مجانية', ['تأشيرة مجانية'], 'indic'],
+  ['BN', 'البنغالية', 'দুবাইতে চাকরি, ফ্রি ভিসা', 'وظيفة في دبي، تأشيرة مجانية', ['تأشيرة مجانية'], 'indic'],
+  ['NE', 'النيبالية', 'दुबईमा रोजगारी, भिसा निःशुल्क', 'عمل في دبي، التأشيرة مجانية', ['تأشيرة مجانية'], 'indic'],
+  ['AR', 'العربية', 'مطلوب سائقين في أبوظبي، رسوم التأشيرة على العامل', 'إعلان بالعربية: العامل يدفع رسوم التأشيرة', ['رسوم مقابل التأشيرة'], 'ar'],
+  ['EN', 'الإنجليزية', 'Hiring cabin crew. Apply only through the official careers site. We never ask for fees.', 'منشور حقيقي للمقارنة: التقديم عبر موقع الوظائف الرسمي فقط، ولا رسوم', [], ''],
 ];
 function showLang(i){
   const [code, name, t, g, flags, cls] = L[i];
   [...$('langBtns').children].forEach((b, k) => b.setAttribute('aria-pressed', k === i));
   const rtl = code === 'UR' || code === 'AR';
-  $('lure').innerHTML = `<span class="mono" style="font-size:.7rem;color:var(--faint)">${name} · what the post says</span>
-    <span class="t ${cls}" ${rtl ? 'dir="rtl"' : ''}>${t}</span><span class="g">“${g}”</span>
-    <span class="flags">${flags.length ? flags.map(f => `<span class="chip" style="--c:var(--alarm)">${f}</span>`).join('') : '<span class="chip" style="--c:var(--safe)">no scam signs</span>'}</span>`;
+  $('lure').innerHTML = `<span class="ar" style="font-size:.8rem;color:var(--faint)">${name} · ماذا يقول المنشور</span>
+    <span class="t ${cls}" dir="${rtl ? 'rtl' : 'ltr'}">${t}</span><span class="g">«${g}»</span>
+    <span class="flags">${flags.length ? flags.map(f => `<span class="chip" style="--c:var(--alarm)">${f}</span>`).join('') : '<span class="chip" style="--c:var(--safe)">لا مؤشرات احتيال</span>'}</span>`;
 }
-$('langBtns').innerHTML = L.map((l, i) => `<button type="button" aria-pressed="false" data-i="${i}">${l[0]}</button>`).join('');
+$('langBtns').innerHTML = L.map((l, i) => `<button type="button" aria-pressed="false" data-i="${i}" aria-label="${l[1]}">${l[0]}</button>`).join('');
 [...$('langBtns').children].forEach(b => b.onclick = () => showLang(+b.dataset.i));
 showLang(0);
 
 /* ---------- console hotspots (% of the 1440x900 console) ---------- */
 const H = [
-  [29, 4.7, 'Two tools, one console', '<b>Fraud Hunt</b> and <b>Call Guardian</b> tabs. The Guardian keeps running in the background with a LIVE badge.'],
-  [62, 4.7, 'Command bar', '<b>Hunt any name</b>: brand, event or recruiter. RASID creates the watchlist if it is new.'],
-  [8, 30, 'Seven sensors', '<b>Maps, lookalikes, newborn domains, ads, kit fingerprints, job & visa, Call Guardian.</b> Toggle any of them.'],
-  [9, 66, 'Victim language', '<b>Filter by language</b>: "show me what targets Malayalam speakers this week".'],
-  [8, 87, 'Keys', '<b>Free sensors run with no keys.</b> Paid ones light up as keys are added.'],
-  [52, 30, 'The map', '<b>Arcs from hosting to the brand being copied</b>; green arcs are recruitment corridors from Kochi, Lahore, Manila, Colombo, Dhaka and Kathmandu.'],
-  [88, 15, 'Case file', '<b>Every signal and its points</b>, site inspection, screenshots, registrar, abuse contact, Explain (AR + EN), Strike pack.'],
-  [30, 11, 'The numbers', '<b>Sites analysed, flagged, strike queue, actors.</b> Counts from our test runs.'],
+  [29, 4.7, 'أداتان في منصة واحدة', 'تبويبا <b>صيد الاحتيال</b> و<b>حارس المكالمات</b>. يبقى الحارس يعمل في الخلفية مع شارة LIVE.'],
+  [62, 4.7, 'شريط الأوامر', '<b>اصطد أي اسم</b>: علامة تجارية أو فعالية أو جهة توظيف. ينشئ راصد قائمة المراقبة إن كانت جديدة.'],
+  [8, 30, 'سبعة مستشعرات', '<b>الخرائط، الأسماء المشابهة، النطاقات الجديدة، الإعلانات، بصمات العُدّة، الوظائف والتأشيرات، حارس المكالمات.</b> يمكن تشغيل أي منها أو إيقافه.'],
+  [9, 66, 'لغة الضحية', '<b>تصفية حسب اللغة</b>: «أرني ما يستهدف المتحدثين بالمالايالامية هذا الأسبوع».'],
+  [8, 87, 'المفاتيح', '<b>المستشعرات المجانية تعمل بلا مفاتيح.</b> والمدفوعة تعمل عند إضافة مفاتيحها.'],
+  [52, 30, 'الخريطة', '<b>أقواس من مكان الاستضافة إلى العلامة المنسوخة</b>؛ والأقواس الخضراء ممرات توظيف من كوتشي ولاهور ومانيلا وكولومبو ودكا وكاتماندو.'],
+  [88, 15, 'ملف القضية', '<b>كل مؤشر ونقاطه</b>، وفحص الموقع، واللقطات، وجهة التسجيل، وجهة البلاغ، والشرح (عربي + English)، وحزمة الإزالة.'],
+  [30, 11, 'الأرقام', '<b>المواقع المحلَّلة، والمصنَّفة، وقائمة الإزالة، والجهات.</b> الأرقام من تجاربنا الاختبارية.'],
 ];
 $('hot').insertAdjacentHTML('beforeend', H.map((s, i) => `<button class="spot" type="button" style="left:${s[0]}%;top:${s[1]}%" aria-pressed="false" aria-label="${s[2]}" data-i="${i}">${i + 1}</button>`).join(''));
 $('hot').querySelectorAll('.spot').forEach(b => b.addEventListener('click', e => {
