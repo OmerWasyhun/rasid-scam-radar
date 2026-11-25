@@ -13,7 +13,7 @@ from urllib.parse import parse_qsl
 from fastapi import Request
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 
-from . import config
+from . import config, i18n
 
 COOKIE = "rasid_session"
 TTL = 12 * 3600
@@ -42,25 +42,32 @@ async def middleware(request: Request, call_next):
     if not config.RASID_PASSWORD or request.url.path.startswith(OPEN_PATHS) or _valid(request.cookies.get(COOKIE)):
         return await call_next(request)
     if request.url.path.startswith("/api/"):
-        return JSONResponse({"detail": "Sign in to the RASID console first"}, status_code=401)
+        return JSONResponse({"detail": i18n.msg("Sign in to the RASID console first", "سجّل الدخول إلى منصة راصد أولاً")}, status_code=401)
     return RedirectResponse("/login", status_code=303)
 
 
-LOGIN_PAGE = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RASID sign in</title><link rel="stylesheet" href="/web/app.css"></head>
+LOGIN_PAGE = """<!doctype html><html lang="{lang}" dir="{dir}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{title}</title><link rel="stylesheet" href="/web/app.css"></head>
 <body style="display:grid;place-items:center;min-height:100vh">
 <form method="post" action="/login" class="loginbox">
   <div class="brand"><svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="#4cc9f0" stroke-width="1.5"/><path d="M15 15 L26 8" stroke="#4cc9f0" stroke-width="1.6"/><circle cx="21" cy="11.5" r="2" fill="#ff5470"/></svg>
   <div>RASID <span class="ar">راصد</span><small>Abu Dhabi Police · Fraud Hunt</small></div></div>
-  <label for="pw">Officer password</label>
+  <label for="pw">{pw}</label>
   <input id="pw" name="password" type="password" autocomplete="current-password" autofocus required>
   {error}
-  <button class="btn" type="submit">Sign in</button>
+  <button class="btn" type="submit">{btn}</button>
 </form></body></html>"""
 
 
+def _page(error: str = "") -> str:
+    ar = i18n.is_ar()
+    return LOGIN_PAGE.format(error=error, lang="ar" if ar else "en", dir="rtl" if ar else "ltr",
+                             title="تسجيل الدخول إلى راصد" if ar else "RASID sign in",
+                             pw="كلمة مرور الضابط" if ar else "Officer password", btn="دخول" if ar else "Sign in")
+
+
 async def login_page():
-    return HTMLResponse(LOGIN_PAGE.format(error=""))
+    return HTMLResponse(_page())
 
 
 async def login_submit(request: Request):
@@ -70,7 +77,7 @@ async def login_submit(request: Request):
         resp.set_cookie(COOKIE, _sign(f"officer:{time.time() + TTL}"), max_age=TTL, httponly=True, samesite="lax")
         return resp
     await asyncio.sleep(1)  # slow down guessing
-    return HTMLResponse(LOGIN_PAGE.format(error='<p class="err">Wrong password.</p>'), status_code=401)
+    return HTMLResponse(_page('<p class="err">' + i18n.msg("Wrong password.", "كلمة المرور غير صحيحة.") + '</p>'), status_code=401)
 
 
 async def logout():

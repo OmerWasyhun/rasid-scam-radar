@@ -9,7 +9,7 @@ from fastapi.responses import FileResponse, HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
-from . import auth, browser, cluster, config, db, enrich, generator, llm, pipeline, seeds, strike, voice
+from . import auth, browser, cluster, config, db, enrich, generator, i18n, llm, pipeline, seeds, strike, voice
 from .sensors import ads, jobs, maps, social_ads
 
 app = FastAPI(title="RASID", version="1.0")
@@ -24,6 +24,16 @@ async def no_stale_console(request, call_next):
     if p == "/" or p == "/guardian" or p.startswith("/web/"):
         resp.headers["Cache-Control"] = "no-cache"
     return resp
+
+
+@app.middleware("http")
+async def language(request, call_next):
+    """Console language for this request: the X-Lang header, ?lang= or the rasid-lang cookie; Arabic by default."""
+    lang = (request.headers.get("x-lang") or request.query_params.get("lang") or request.cookies.get("rasid-lang") or "ar").lower()
+    i18n.LANG.set("en" if lang.startswith("en") else "ar")
+    return await call_next(request)
+
+
 app.add_api_route("/login", auth.login_page, methods=["GET"], include_in_schema=False)
 app.add_api_route("/login", auth.login_submit, methods=["POST"], include_in_schema=False)
 app.add_api_route("/logout", auth.logout, methods=["GET"], include_in_schema=False)
@@ -99,7 +109,7 @@ def del_watch(wid: int):
 def candidates(wid: int):
     w = db.get_watch(wid)
     if not w:
-        raise HTTPException(404, "No such watchlist")
+        raise HTTPException(404, i18n.msg("No such watchlist", "قائمة المراقبة غير موجودة"))
     dom = w["official_domains"][0] if w["official_domains"] else None
     cands = generator.generate(w["name"], dom, w["lure"])
     words = {"event": "tickets", "religious": "visa", "jobs": "job"}.get(w["lure"], "fine")
@@ -119,7 +129,7 @@ def hunt(h: HuntIn):
     wid = h.watch_id
     if not wid:
         if not h.name:
-            raise HTTPException(400, "Give watch_id or name")
+            raise HTTPException(400, i18n.msg("Give watch_id or name", "أدخل رقم قائمة المراقبة أو اسماً"))
         existing = [w for w in db.list_watch() if w["name"].lower() == h.name.strip().lower()]
         if existing:
             wid = existing[0]["id"]
@@ -127,7 +137,7 @@ def hunt(h: HuntIn):
             wid = db.add_watch("brand" if h.lure in ("brand", "jobs") else "event", h.name.strip(),
                                [h.official_domain] if h.official_domain else [], [], h.lure, seeds.DEFAULT_LANGS)
     if not db.get_watch(wid):
-        raise HTTPException(404, "No such watchlist")
+        raise HTTPException(404, i18n.msg("No such watchlist", "قائمة المراقبة غير موجودة"))
     return {"job": pipeline.start("hunt", pipeline.hunt, wid), "watch_id": wid}
 
 
@@ -139,21 +149,21 @@ def newborn():
 @app.post("/api/maps/{wid}")
 def maps_scan(wid: int):
     if not config.GOOGLE_MAPS_API_KEY:
-        raise HTTPException(400, "Maps Verifier needs GOOGLE_MAPS_API_KEY in .env")
+        raise HTTPException(400, i18n.msg("Maps Verifier needs GOOGLE_MAPS_API_KEY in .env", "مدقق الخرائط يحتاج GOOGLE_MAPS_API_KEY في ملف .env"))
     return {"job": pipeline.start("maps", maps.scan, wid)}
 
 
 @app.post("/api/social/{wid}")
 def social_sweep(wid: int):
     if not (config.META_ACCESS_TOKEN or config.SERPAPI_KEY):
-        raise HTTPException(400, "Social media ads sweep needs META_ACCESS_TOKEN and/or SERPAPI_KEY in .env")
+        raise HTTPException(400, i18n.msg("Social media ads sweep needs META_ACCESS_TOKEN and/or SERPAPI_KEY in .env", "مسح إعلانات التواصل يحتاج META_ACCESS_TOKEN أو SERPAPI_KEY في ملف .env"))
     return {"job": pipeline.start("social", social_ads.sweep, wid)}
 
 
 @app.post("/api/search/{wid}")
 def search_sweep(wid: int):
     if not config.SERPAPI_KEY:
-        raise HTTPException(400, "Search sweep needs SERPAPI_KEY in .env")
+        raise HTTPException(400, i18n.msg("Search sweep needs SERPAPI_KEY in .env", "مسح البحث يحتاج SERPAPI_KEY في ملف .env"))
     return {"job": pipeline.start("search", ads.sweep, wid)}
 
 
@@ -167,10 +177,10 @@ class AdIn(BaseModel):
 @app.post("/api/ads/inspect")
 def inspect_ad(a: AdIn):
     if not (a.text or a.url or a.image_b64):
-        raise HTTPException(400, "Give ad text, a landing URL or a screenshot")
+        raise HTTPException(400, i18n.msg("Give ad text, a landing URL or a screenshot", "أدخل نص الإعلان أو رابطاً أو صورة"))
     if a.image_b64 and not llm.available():
-        raise HTTPException(400, "Reading screenshots needs ANTHROPIC_API_KEY in .env")
-    return db.get_case(ads.inspect(a.text, a.url, a.image_b64, a.media_type))
+        raise HTTPException(400, i18n.msg("Reading screenshots needs ANTHROPIC_API_KEY in .env", "قراءة الصور تحتاج ANTHROPIC_API_KEY في ملف .env"))
+    return i18n.case(db.get_case(ads.inspect(a.text, a.url, a.image_b64, a.media_type)))
 
 
 class CheckIn(BaseModel):
@@ -192,6 +202,7 @@ def check_urls(body: CheckIn):
             c = db.get_case(ads.inspect(url=u))
             out.append({"url": u, "score": c["score"], "verdict": "fraud" if c["score"] >= 50 else "suspicious" if c["score"] > 35 else "clean",
                         "target": c.get("target"), "reasons": [s["text"] for s in c.get("signals", []) if s.get("points", 0) > 0][:6],
+                        "reasons_ar": [i18n.tr(s["text"]) for s in c.get("signals", []) if s.get("points", 0) > 0][:6],
                         "case": c["id"]})
         except Exception as e:  # one bad link must not stop the batch
             out.append({"url": u, "error": str(e)[:200]})
@@ -213,13 +224,16 @@ def jobs_scan(j: JobsIn):
 def job(jid: str):
     j = db.get_job(jid)
     if not j:
-        raise HTTPException(404, "No such job")
-    return j
+        raise HTTPException(404, i18n.msg("No such job", "المهمة غير موجودة"))
+    return i18n.job(j)
 
 
 # ---------- cases / actors ----------
 def _slim(c):
-    return {k: c[k] for k in ("id", "sensor", "title", "target", "score", "langs", "lat", "lon", "where_txt", "actor", "created")}
+    d = {k: c[k] for k in ("id", "sensor", "title", "target", "score", "langs", "lat", "lon", "where_txt", "actor", "created")}
+    if i18n.is_ar():
+        d["title"], d["where_txt"] = i18n.title(d["title"]), i18n.place(d["where_txt"])
+    return d
 
 
 @app.get("/api/cases")
@@ -231,16 +245,16 @@ def cases(limit: int = 400, min_score: int = 0, since: float | None = None):
 def case(cid: int):
     c = db.get_case(cid)
     if not c:
-        raise HTTPException(404, "No such case")
+        raise HTTPException(404, i18n.msg("No such case", "القضية غير موجودة"))
     c["siblings"] = [_slim(s) for s in db.cases_for_actor(c["actor"]) if s["id"] != cid] if c["actor"] else []
-    return c
+    return i18n.case(c)
 
 
 @app.post("/api/cases/{cid}/explain")
 def explain(cid: int):
     c = db.get_case(cid)
     if not c:
-        raise HTTPException(404, "No such case")
+        raise HTTPException(404, i18n.msg("No such case", "القضية غير موجودة"))
     note = llm.explain(c)
     db.set_case_fields(cid, explanation=note)
     return note
@@ -251,28 +265,28 @@ def rescan(cid: int):
     """Open the site again in RASID's own browser: fresh screenshot, visual comparison and full inspection."""
     c = db.get_case(cid)
     if not c:
-        raise HTTPException(404, "No such case")
+        raise HTTPException(404, i18n.msg("No such case", "القضية غير موجودة"))
     host = c["key"]
     if c["sensor"] in ("maps", "jobs") or ":" in host or "." not in host:
-        raise HTTPException(400, "This case has no website to scan")
+        raise HTTPException(400, i18n.msg("This case has no website to scan", "لا يوجد موقع لفحصه في هذه القضية"))
     w = db.get_watch(c["watch_id"]) if c.get("watch_id") else None
     if not w:
-        raise HTTPException(400, "This case isn't linked to a watchlist")
+        raise HTTPException(400, i18n.msg("This case isn't linked to a watchlist", "هذه القضية غير مرتبطة بقائمة مراقبة"))
     pipeline.refresh_official_cache()
     p, why = generator.similarity(host, pipeline.watch_bases(w))
     prev = [s for s in c["signals"] if not s.get("kind") and s.get("points", 0) > 0 and not s["text"].startswith(("Name imitation", "Domain registered", "Page asks", "Page presents", "Lure language", "Contact through"))]
     pipeline.investigate({host: (max(p, 10), why or "lookalike")}, w, lambda m: None, {host: c["sensor"]}, {host: {"signals": prev}})
     cluster.recluster()
-    return db.get_case(cid)
+    return i18n.case(db.get_case(cid))
 
 
 @app.get("/api/shots/{name}")
 def shot(name: str):
     if not re.fullmatch(r"[a-f0-9]{16}(-full\.jpg|\.png)", name):
-        raise HTTPException(404, "No such screenshot")
+        raise HTTPException(404, i18n.msg("No such screenshot", "الصورة غير موجودة"))
     path = browser.SHOTS / name
     if not path.exists():
-        raise HTTPException(404, "Screenshot not found")
+        raise HTTPException(404, i18n.msg("Screenshot not found", "الصورة غير موجودة"))
     return FileResponse(path)
 
 
@@ -298,13 +312,13 @@ def _pack_ids(key: str) -> tuple[list[int], str | None]:
 def pack(key: str):
     ids, actor = _pack_ids(key)
     if not ids or not db.get_case(ids[0]):
-        raise HTTPException(404, "Nothing to pack")
+        raise HTTPException(404, i18n.msg("Nothing to pack", "لا شيء لتجميعه في ملف الأدلة"))
     return strike.build(ids, actor)
 
 
 @app.get("/api/pack/{key}/html", response_class=HTMLResponse)
 def pack_html(key: str):
-    return strike.to_html(pack(key))
+    return strike.to_html(pack(key), i18n.is_ar())
 
 
 @app.post("/api/recluster")

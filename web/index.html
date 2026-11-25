@@ -1,11 +1,13 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>RASID Scam Radar</title>
+<title>راصد · رادار الاحتيال</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Sans+Arabic:wght@400;600&family=JetBrains+Mono:wght@400;600&family=Noto+Nastaliq+Urdu&family=Noto+Sans+Devanagari&family=Noto+Sans+Malayalam&family=Noto+Sans+Tamil&family=Noto+Sans+Sinhala&family=Noto+Sans+Bengali&display=swap">
+<script src="/web/i18n.js"></script>
+<script src="/web/i18n-app.js"></script>
 <link rel="stylesheet" href="/web/app.css">
 <link rel="stylesheet" href="/web/guardian.css">
 </head>
@@ -14,59 +16,59 @@
   <header class="c-head">
     <div class="brand">
       <svg width="30" height="30" viewBox="0 0 30 30" aria-hidden="true"><circle cx="15" cy="15" r="13" fill="none" stroke="#4cc9f0" stroke-width="1.5"/><circle cx="15" cy="15" r="7.5" fill="none" stroke="#4cc9f0" stroke-opacity=".5"/><path d="M15 15 L26 8" stroke="#4cc9f0" stroke-width="1.6"/><circle cx="21" cy="11.5" r="2" fill="#ff5470"/></svg>
-      <div>RASID <span class="ar">راصد</span><small>Abu Dhabi Police · Fraud Hunt</small></div>
+      <div><span class="ar" translate="no">راصد</span> RASID<small class="ar">شرطة أبوظبي · تعقّب الاحتيال</small></div>
     </div>
-    <nav class="views" role="tablist" aria-label="RASID tools">
-      <a role="tab" href="#hunt" id="nav-hunt" aria-selected="true">Fraud Hunt</a>
-      <a role="tab" href="#guardian" id="nav-guardian" aria-selected="false">Call Guardian <span class="ar">حارس المكالمات</span></a>
+    <nav class="views" role="tablist" aria-label="أدوات راصد">
+      <a role="tab" href="#hunt" id="nav-hunt" aria-selected="true">تعقّب الاحتيال</a>
+      <a role="tab" href="#guardian" id="nav-guardian" aria-selected="false">حارس المكالمات</a>
     </nav>
     <form class="cmd" id="cmdform" autocomplete="off">
-      <span>&gt;</span>
-      <input id="cmd" placeholder="hunt an entity…  e.g. Etihad Airways, Abu Dhabi Grand Prix, Tadbeer" aria-label="Hunt an entity">
-      <input id="cmddom" class="dom" placeholder="official domain (optional)" aria-label="Official domain">
-      <button class="btn" type="submit">Hunt</button>
+      <span>&lt;</span>
+      <input id="cmd" placeholder="تعقّب جهة…  مثل: الاتحاد للطيران، جائزة أبوظبي الكبرى، تدبير" aria-label="تعقّب جهة">
+      <input id="cmddom" class="dom" dir="auto" placeholder="النطاق الرسمي (اختياري)" aria-label="النطاق الرسمي">
+      <button class="btn" type="submit">تعقّب</button>
     </form>
     <div class="clock"><b id="clock">--:--:--</b><small id="clockdate">GST</small></div>
   </header>
 
   <div id="view-hunt">
   <div class="kpis">
-    <div class="kpi"><b id="k-total">0</b><span>sites &amp; posts analysed</span></div>
-    <div class="kpi"><b id="k-flag">0</b><span>flagged (50+)</span></div>
-    <div class="kpi"><b id="k-crit">0</b><span>strike queue (80+)</span></div>
-    <div class="kpi"><b id="k-act">0</b><span>actors clustered</span></div>
+    <div class="kpi"><b id="k-total">0</b><span>مواقع ومنشورات حُلّلت</span></div>
+    <div class="kpi"><b id="k-flag">0</b><span>مُعلَّمة (50 فأكثر)</span></div>
+    <div class="kpi"><b id="k-crit">0</b><span>قائمة الإزالة (80 فأكثر)</span></div>
+    <div class="kpi"><b id="k-act">0</b><span>جهات احتيال مُجمَّعة</span></div>
   </div>
 
   <div class="c-body">
-    <nav class="rail" aria-label="Sensors">
-      <div class="eyebrow">Sensors</div>
+    <nav class="rail" aria-label="المستشعرات">
+      <div class="eyebrow">المستشعرات</div>
       <div id="sensorlist" class="sensorlist"></div>
-      <div class="viewsw" role="group" aria-label="Map view">
-        <button id="vw-world" aria-pressed="true">WORLD</button>
-        <button id="vw-uae" aria-pressed="false">UAE GROUND</button>
+      <div class="viewsw" role="group" aria-label="عرض الخريطة">
+        <button id="vw-world" aria-pressed="true">العالم</button>
+        <button id="vw-uae" aria-pressed="false">داخل الإمارات</button>
       </div>
-      <div class="eyebrow mt">Victim language</div>
+      <div class="eyebrow mt">لغة الضحية</div>
       <div class="langs" id="langs"></div>
-      <div class="eyebrow mt">Min score</div>
-      <input type="range" id="minscore" min="0" max="90" step="10" value="40" aria-label="Minimum score">
+      <div class="eyebrow mt">أدنى درجة</div>
+      <input type="range" id="minscore" min="0" max="90" step="10" value="40" aria-label="أدنى درجة">
       <div class="mono small" id="minscoreval">40+</div>
-      <div class="eyebrow mt">Keys</div>
+      <div class="eyebrow mt">المفاتيح</div>
       <div id="keys" class="keys"></div>
     </nav>
 
     <div class="mapbox">
-      <svg id="map" viewBox="0 0 1000 420" role="img" aria-label="Map of detected scam infrastructure"></svg>
+      <svg id="map" viewBox="0 0 1000 420" role="img" aria-label="خريطة البنية التحتية للاحتيال المرصودة"></svg>
       <div class="mapnote" id="mapnote"></div>
       <div class="maplegend" id="legend"></div>
-      <div class="jobbar" id="jobbar" hidden><span class="spin"></span><span id="jobmsg">Working…</span></div>
+      <div class="jobbar" id="jobbar" hidden><span class="spin"></span><span id="jobmsg">جارٍ العمل…</span></div>
     </div>
 
     <aside class="side">
       <div class="tabs" role="tablist">
-        <button role="tab" id="t-case" aria-selected="true">Case</button>
-        <button role="tab" id="t-watch" aria-selected="false">Watch</button>
-        <button role="tab" id="t-tools" aria-selected="false">Tools</button>
-        <button role="tab" id="t-actors" aria-selected="false">Actors</button>
+        <button role="tab" id="t-case" aria-selected="true">القضية</button>
+        <button role="tab" id="t-watch" aria-selected="false">المراقبة</button>
+        <button role="tab" id="t-tools" aria-selected="false">الأدوات</button>
+        <button role="tab" id="t-actors" aria-selected="false">الجهات</button>
       </div>
       <div class="pane" id="p-case"></div>
       <div class="pane" id="p-watch" hidden></div>
@@ -77,66 +79,66 @@
 
   <div class="c-foot">
     <div class="pulse">
-      <div class="pulse-h"><span class="eyebrow">Threat pulse · last 24h</span><span class="eyebrow" id="pulseval"></span></div>
-      <canvas id="pulse" height="140" aria-label="Detections over 24 hours"></canvas>
+      <div class="pulse-h"><span class="eyebrow">نبض التهديد · آخر 24 ساعة</span><span class="eyebrow" id="pulseval"></span></div>
+      <canvas id="pulse" height="140" aria-label="الرصدات خلال 24 ساعة"></canvas>
       <div class="events" id="events"></div>
     </div>
     <div class="feed">
-      <div class="feed-h"><span class="eyebrow">Latest detections</span><span class="eyebrow" id="feedfilter">all languages</span></div>
+      <div class="feed-h"><span class="eyebrow">أحدث الرصدات</span><span class="eyebrow" id="feedfilter">كل اللغات</span></div>
       <ul id="feed"></ul>
     </div>
   </div>
   </div><!-- /view-hunt -->
 
-  <section id="view-guardian" class="g-in-console" hidden aria-label="Call Guardian">
+  <section id="view-guardian" class="g-in-console" hidden aria-label="حارس المكالمات">
     <div class="g-body">
     <main class="g-main">
       <ol class="g-steps">
-        <li>Start a phone call and put it on <b>speakerphone</b>, next to this computer.</li>
-        <li>Choose the language the call is in and press <b>Listen</b>. Allow the microphone.</li>
-        <li>The Guardian speaks its warnings <b>out loud</b>, so the phone carries them to the caller as well.</li>
-        <li>Say <b>"RASID"</b> / <b>"راصد"</b> to ask its opinion, or <b>"RASID leave"</b> / <b>"راصد اطلع"</b> to end.</li>
+        <li data-i18n="g.step1">عند بدء مكالمة تشكّ فيها، اختر لغة المكالمة واضغط <b>استمع</b>، ثم اسمح باستخدام الميكروفون.</li>
+        <li data-i18n="g.step2">يسمع راصد المكالمة ويحلّل ما يُطلب فيها لحظة بلحظة.</li>
+        <li data-i18n="g.step3">إذا ظهرت علامات احتيال، يُحذّر راصد <b>بصوت مسموع</b> بالعربية والإنجليزية.</li>
+        <li data-i18n="g.step4">قل <b>«راصد»</b> لتسأله عن رأيه، أو <b>«راصد اطلع»</b> لإنهاء الاستماع. بعد المكالمة أبلِغ <b>بضغطة واحدة</b>.</li>
       </ol>
 
       <div class="g-ctl">
-        <label class="small" for="lang">Call language</label>
-        <select id="lang"><option value="ar-AE">العربية (ar-AE)</option><option value="en-US">English (en-US)</option></select>
-        <button class="btn big" id="start" type="button">Listen</button>
-        <button class="btn ghost" id="ask" type="button" disabled>Ask RASID</button>
-        <span class="mic" id="mic" role="status"><i></i><span id="micTxt">Not listening</span></span>
+        <label class="small" for="lang">لغة المكالمة</label>
+        <select id="lang"><option value="ar-AE">العربية (ar-AE)</option><option value="en-US">الإنجليزية (en-US)</option></select>
+        <button class="btn big" id="start" type="button">استمع</button>
+        <button class="btn ghost" id="ask" type="button" disabled>اسأل راصد</button>
+        <span class="mic" id="mic" role="status"><i></i><span id="micTxt">لا يستمع</span></span>
       </div>
       <p class="g-note" id="envNote"></p>
 
-      <div class="g-log" id="log" aria-live="polite" aria-label="Call transcript"></div>
+      <div class="g-log" id="log" aria-live="polite" aria-label="نص المكالمة"></div>
       <form class="g-type" id="typeForm" autocomplete="off">
-        <input id="typeIn" placeholder="No microphone? Type what the caller says and press Enter…" aria-label="Type a line from the call">
-        <button class="btn ghost" type="submit">Send</button>
+        <input id="typeIn" dir="auto" placeholder="لا يوجد ميكروفون؟ اكتب ما يقوله المتصل واضغط Enter…" aria-label="اكتب سطراً من المكالمة">
+        <button class="btn ghost" type="submit">إرسال</button>
       </form>
     </main>
 
     <aside class="g-side">
-      <section class="g-meter" aria-label="Scam risk">
-        <div class="eyebrow">Scam risk</div>
+      <section class="g-meter" aria-label="خطر الاحتيال">
+        <div class="eyebrow">خطر الاحتيال</div>
         <div class="num" id="risk">0</div>
         <div class="bar"><span id="bar"></span></div>
-        <div class="g-verdict" id="verdict">no scam signs</div>
+        <div class="g-verdict" id="verdict">لا توجد علامات احتيال</div>
         <ul class="g-flags small" id="flags"></ul>
         <div class="small" id="by"></div>
       </section>
 
       <section class="g-card">
-        <h3>Try a sample call</h3>
-        <p class="g-note">Plays a synthetic call through the Guardian as text, no microphone needed.</p>
+        <h3>جرّب مكالمة تجريبية</h3>
+        <p class="g-note">تُشغّل مكالمة مصطنعة نصّاً عبر الحارس، بلا حاجة إلى ميكروفون.</p>
         <div class="g-samples" id="samples"></div>
       </section>
 
       <section class="g-card" id="sumCard" hidden>
-        <h3>After the call</h3>
-        <p class="g-note">Only this summary is kept. No audio, no transcript.</p>
+        <h3>بعد المكالمة</h3>
+        <p class="g-note">لا يُحفظ إلا هذا الملخص. لا تسجيل صوتي ولا نص للمكالمة.</p>
         <div class="g-sms" id="sumText"></div>
         <form class="g-report" id="reportForm" autocomplete="off">
-          <input id="repNum" placeholder="Caller's number (optional)" aria-label="Caller's number">
-          <button class="btn" type="submit">Report</button>
+          <input id="repNum" dir="auto" inputmode="tel" placeholder="رقم المتصل (اختياري)" aria-label="رقم المتصل">
+          <button class="btn" type="submit">إبلاغ</button>
         </form>
         <p class="g-note" id="repMsg"></p>
       </section>

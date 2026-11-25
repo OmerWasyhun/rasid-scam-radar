@@ -284,19 +284,32 @@ class CallState:
         }
 
 
-def summary_text(s: dict) -> str:
-    """The short bilingual summary shown after the call."""
-    head = {"likely scam": "🚨 RASID: likely scam call / مكالمة احتيال على الأرجح",
-            "suspicious": "⚠️ RASID: suspicious call / مكالمة مشبوهة",
-            "no scam signs": "✅ RASID: no scam signs found / لا توجد علامات احتيال"}[s["verdict"]]
+def summary_text(s: dict, lang: str = "ar") -> str:
+    """The short summary shown after the call. Arabic by default (English only where no Arabic version exists);
+    lang="en" gives the English version."""
+    if lang.startswith("en"):
+        head = {"likely scam": "🚨 RASID: likely scam call",
+                "suspicious": "⚠️ RASID: suspicious call",
+                "no scam signs": "✅ RASID: no scam signs found"}[s["verdict"]]
+        parts = [f"{head} ({s['risk']}/100)"]
+        if s.get("summary_en"):
+            parts.append(s["summary_en"])
+        if s.get("red_flags"):
+            parts.append("Signs: " + "; ".join(s["red_flags"][:3]))
+        if s["verdict"] != "no scam signs":
+            parts.append("Never share codes or card details. Press Report to send this to Abu Dhabi Police.")
+        return "\n".join(parts)
+    head = {"likely scam": "🚨 راصد RASID: مكالمة احتيال على الأرجح",
+            "suspicious": "⚠️ راصد RASID: مكالمة مشبوهة",
+            "no scam signs": "✅ راصد RASID: لا توجد علامات احتيال"}[s["verdict"]]
     parts = [f"{head} ({s['risk']}/100)"]
-    if s.get("summary_en"):
-        parts.append(s["summary_en"])
     if s.get("summary_ar"):
         parts.append(s["summary_ar"])
-    if s.get("red_flags"):
-        parts.append("Signs: " + "; ".join(s["red_flags"][:3]))
+    elif s.get("summary_en"):
+        parts.append(s["summary_en"])
+    flags = s.get("red_flags_ar") or s.get("red_flags")
+    if flags:
+        parts.append("العلامات: " + "؛ ".join(flags[:3]))
     if s["verdict"] != "no scam signs":
-        parts.append("Never share codes or card details. Press Report to send this to Abu Dhabi Police / "
-                     "اضغط إبلاغ لإرسال البلاغ إلى شرطة أبوظبي.")
+        parts.append("لا تشارك الرموز أو بيانات البطاقة أبداً. اضغط «إبلاغ» لإرسال الملخص إلى شرطة أبوظبي.")
     return "\n".join(parts)

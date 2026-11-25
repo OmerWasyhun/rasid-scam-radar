@@ -21,7 +21,7 @@ import time
 from fastapi import APIRouter, HTTPException, Request, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel, Field
 
-from . import config, db, guardian
+from . import config, db, guardian, i18n
 from .config import GUARDIAN_LANG, ROOT
 from .guardian import LEAVE, LINES, WAKE, CallState
 
@@ -54,7 +54,7 @@ def _allowed(host: str) -> bool:
 
 def _local_only(request: Request) -> None:
     if not _allowed(request.client.host if request.client else ""):
-        raise HTTPException(403, "The Call Guardian listener only runs on this computer (open it via http://localhost)")
+        raise HTTPException(403, i18n.msg("The Call Guardian listener only runs on this computer (open it via http://localhost)", "حارس المكالمات يعمل على هذا الحاسوب فقط (افتحه عبر http://localhost)"))
 
 
 # ---------- the live session ----------
@@ -218,7 +218,7 @@ def local_report(body: LocalReport, request: Request):
     _prune()
     s = PENDING.pop("local", None)
     if not s:
-        raise HTTPException(404, "No finished call to report")
+        raise HTTPException(404, i18n.msg("No finished call to report", "لا توجد مكالمة منتهية للإبلاغ عنها"))
     return {"case": file_report(s, digits(body.number) or None)}
 
 
